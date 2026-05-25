@@ -1,0 +1,57 @@
+/* Periplus landing hero */
+.hero {
+  position: relative;
+  min-height: 62vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(2rem, 6vw, 5rem);
+  margin-bottom: 1.5rem;
+  border-radius: 16px;
+  overflow: hidden;
+  background-image:
+    linear-gradient(90deg, rgba(15,23,42,0.94) 0%, rgba(15,23,42,0.78) 32%, rgba(15,23,42,0.30) 62%, rgba(15,23,42,0.05) 100%),
+    var(--hero-image);
+  background-size: cover;
+  background-position: center right;
+}
+.hero h1 {
+  font-size: clamp(2.6rem, 6.5vw, 4.6rem);
+  line-height: 1.02;
+  margin: 0 0 .6rem;
+  letter-spacing: -0.03em;
+  color: var(--periplus-ink);
+}
+.hero .hero-subtitle {
+  max-width: 36ch;
+  font-size: clamp(1rem, 2.2vw, 1.22rem);
+  line-height: 1.5;
+  color: #cbd5e1;
+  margin: 0;
+}
+.hero-buttons {
+  margin-top: 1.6rem;
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
+
+/* Primary CTA in the Periplus sky accent */
+.md-typeset .md-button--primary {
+  background: var(--periplus-sky);
+  border-color: var(--periplus-sky);
+  color: var(--periplus-navy);
+}
+.md-typeset .md-button--primary:hover {
+  background: var(--periplus-sky-bright);
+  border-color: var(--periplus-sky-bright);
+  color: var(--periplus-navy);
+}
+
+/* CTA section at the foot of the landing */
+.landing-cta { text-align: center; }
+
+@media (max-width: 50rem) {
+  .hero { min-height: 68vh; background-position: center; }
+  .hero .hero-subtitle { max-width: none; }
+}

@@ -5,3 +5,10 @@ playwright-report/
 
 # local image candidates (not part of the app)
 /Screenshot*.png
+
+# python / zensical build artifacts
+.venv/
+site/
+
+# WSL download metadata
+*:Zone.Identifier

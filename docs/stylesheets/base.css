@@ -1,0 +1,28 @@
+/* Periplus — base tweaks over Material slate */
+.md-typeset h1,
+.md-typeset h2 { letter-spacing: -0.01em; }
+
+.md-typeset .lead {
+  font-size: 1.12rem;
+  line-height: 1.6;
+  color: var(--periplus-muted);
+}
+
+/* Feature cards (landing) */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.feature-card {
+  padding: 1.25rem 1.35rem;
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--periplus-navy-2) 85%, transparent);
+  border: 1px solid color-mix(in oklab, var(--periplus-sky) 18%, transparent);
+}
+.feature-card h3 { margin: 0 0 .4rem; font-size: 1.05rem; }
+.feature-card p { margin: 0; color: var(--periplus-muted); font-size: .95rem; }
+
+.landing-section { padding: 2.5rem 0; }
+.section-inner { max-width: 58rem; margin: 0 auto; }
