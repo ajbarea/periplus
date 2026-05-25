@@ -1,0 +1,2000 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>AJ's NC Summer Residency — June &amp; July 2026</title>
+<style>
+:root {
+  --bg: #fafaf9;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --ink: #0f172a;
+  --ink-2: #334155;
+  --muted: #64748b;
+  --brand: #2563eb;
+  --brand-2: #1d4ed8;
+  --brand-ink: #ffffff;
+  --accent: #ea580c;
+  --hike: #16a34a;
+  --beach: #0891b2;
+  --mountain: #7c3aed;
+  --city: #db2777;
+  --warn: #b45309;
+  --hot: #dc2626;
+  --money: #15803d;
+  --info: #0369a1;
+  --rest: #64748b;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 5%);
+  --shadow: 0 4px 12px -2px rgb(15 23 42 / 8%), 0 2px 4px -2px rgb(15 23 42 / 4%);
+  --shadow-lg: 0 12px 30px -8px rgb(15 23 42 / 14%);
+  --max-w: 1180px;
+  --gutter: clamp(1rem, 2.5vw, 1.75rem);
+  --tap: 44px;
+}
+
+@media (prefers-color-scheme: dark) {
+  /* light mode locked for now; printer-friendly */
+}
+
+* { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth; scroll-padding-top: 84px;
+  /* Allow animating to/from intrinsic sizes (height: auto, etc.) — Baseline-coming */
+  interpolate-size: allow-keywords;
+}
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-size: 16px; line-height: 1.55;
+  /* Tap variable axes when system-ui resolves to a variable font (Segoe UI Variable on Win 11, SF Pro on macOS) */
+  font-variation-settings: "wght" 380;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+h1, h2, h3 { font-variation-settings: "wght" 680; }
+
+/* Consistent focus ring for keyboard users only */
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+input:focus-visible, button:focus-visible, summary:focus-visible, a:focus-visible {
+  outline-offset: 2px;
+}
+
+/* Animated custom property for progress fills (compositor-friendly) */
+@property --progress {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+a { color: var(--brand-2); text-underline-offset: 2px; }
+a:hover { color: var(--brand); }
+
+/* ---------- Top bar (sticky) ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgb(255 255 255 / 88%);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-inner {
+  max-width: var(--max-w); margin: 0 auto;
+  padding: 0.55rem var(--gutter);
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.brand-pill {
+  font-weight: 700; font-size: 0.95rem; color: var(--ink);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.brand-pill .dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--brand);
+  box-shadow: 0 0 0 3px rgb(37 99 235 / 18%);
+}
+.status-chip {
+  margin-left: auto;
+  font-size: 0.78rem; font-weight: 600;
+  padding: 0.3rem 0.7rem; border-radius: 999px;
+  background: var(--surface-2); color: var(--ink-2);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.status-chip.live { background: #ecfeff; color: #155e75; border-color: #a5f3fc; }
+.status-chip.pre  { background: #eff6ff; color: #1e3a8a; border-color: #bfdbfe; }
+.status-chip.post { background: #f5f5f4; color: #44403c; border-color: #e7e5e4; }
+
+.share-btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: var(--surface); color: var(--ink-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem 0.3rem 0.6rem;
+  min-height: 32px; cursor: pointer;
+  font-size: 0.82rem; font-weight: 700;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.share-btn:hover { border-color: var(--brand); color: var(--brand-2); }
+.share-btn svg { width: 14px; height: 14px; flex: 0 0 14px; }
+@container (max-width: 360px) {
+  .share-btn span { display: none; }
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  max-width: var(--max-w); margin: 0 auto;
+  padding: clamp(1.25rem, 3vw, 2.5rem) var(--gutter) 0.75rem;
+}
+.hero h1 {
+  font-size: clamp(1.6rem, 4.5vw, 2.6rem);
+  line-height: 1.1; margin: 0 0 0.4rem; letter-spacing: -0.02em;
+}
+.hero .sub {
+  color: var(--muted); font-size: clamp(0.95rem, 2vw, 1.05rem);
+  margin: 0 0 1rem;
+}
+.kv-grid {
+  display: grid; gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  margin-top: 1.25rem;
+}
+.kv {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 0.85rem 1rem;
+  display: flex; flex-direction: column; gap: 0.15rem;
+  box-shadow: var(--shadow-sm);
+}
+.kv .label {
+  font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--muted); font-weight: 700;
+}
+.kv .value { font-weight: 600; color: var(--ink); font-size: 0.95rem; }
+.kv .small { color: var(--muted); font-weight: 500; font-size: 0.85rem; }
+
+/* ---------- Nav (table of contents) ---------- */
+.toc {
+  position: sticky; top: 50px; z-index: 40;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  margin-top: 1.25rem;
+}
+.toc-inner {
+  max-width: var(--max-w); margin: 0 auto;
+  padding: 0.4rem var(--gutter);
+  display: flex; gap: 0.4rem; overflow-x: auto;
+  scrollbar-width: thin;
+}
+.toc a {
+  flex: 0 0 auto;
+  font-size: 0.85rem; font-weight: 600; text-decoration: none;
+  color: var(--ink-2);
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  min-height: var(--tap);
+  display: inline-flex; align-items: center;
+}
+.toc a:hover { border-color: var(--brand); color: var(--brand-2); }
+.toc a.active { background: var(--brand); color: var(--brand-ink); border-color: var(--brand); }
+
+/* ---------- Sections ---------- */
+main { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--gutter) 4rem; }
+section { scroll-margin-top: 96px; padding-top: 1.75rem; }
+section h2 {
+  font-size: clamp(1.2rem, 2.6vw, 1.55rem);
+  margin: 0 0 0.5rem; letter-spacing: -0.01em;
+  display: flex; align-items: center; gap: 0.55rem;
+}
+section h2 .badge {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--muted);
+  background: var(--surface-2); padding: 0.2rem 0.55rem; border-radius: 999px;
+  border: 1px solid var(--border);
+}
+section > p.lede { color: var(--ink-2); margin: 0 0 1rem; max-width: 70ch; }
+
+/* ---------- Card primitive ---------- */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1rem 1.1rem;
+  box-shadow: var(--shadow-sm);
+  container-type: inline-size;
+}
+.card + .card { margin-top: 0.75rem; }
+.card h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
+.card .row { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; color: var(--ink-2); font-size: 0.92rem; }
+.card .row > div { display: flex; gap: 0.35rem; align-items: baseline; }
+.card .row .k { color: var(--muted); font-weight: 600; font-size: 0.78rem;
+  text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ---------- Calendar ---------- */
+.cal-legend {
+  display: flex; flex-wrap: wrap; gap: 0.4rem 0.75rem;
+  margin: 0.5rem 0 1rem; font-size: 0.78rem; color: var(--ink-2);
+}
+.cal-legend .swatch {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+}
+.cal-legend i {
+  width: 12px; height: 12px; border-radius: 3px; display: inline-block;
+}
+.cal {
+  display: grid; gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 0.8rem; box-shadow: var(--shadow-sm);
+  overflow-x: auto;
+}
+.cal-row {
+  display: grid;
+  grid-template-columns: 80px repeat(7, minmax(40px, 1fr));
+  gap: 4px; align-items: stretch;
+}
+.cal-row .week-label {
+  font-size: 0.78rem; font-weight: 700; color: var(--ink-2);
+  display: flex; flex-direction: column; justify-content: center;
+  padding-right: 0.5rem;
+}
+.cal-row .week-label small {
+  font-weight: 500; color: var(--muted); font-size: 0.7rem;
+}
+.cal-cell {
+  position: relative;
+  border-radius: 6px;
+  background: var(--surface-2);
+  min-height: 42px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 600; color: var(--ink-2);
+  border: 1px solid transparent;
+  padding: 2px;
+  text-align: center;
+}
+.cal-cell .d { font-size: 0.7rem; line-height: 1; opacity: 0.65; }
+.cal-cell .tag { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+.cal-cell.activity { color: white; border-color: rgb(0 0 0 / 8%); }
+.cal-cell.activity .d { opacity: 0.85; color: rgb(255 255 255 / 92%); }
+.cal-cell.hike     { background: var(--hike); }
+.cal-cell.beach    { background: var(--beach); }
+.cal-cell.mountain { background: var(--mountain); }
+.cal-cell.city     { background: var(--city); }
+.cal-cell.travel   { background: var(--brand); }
+.cal-cell.rest     { background: var(--rest); }
+.cal-cell.today {
+  outline: 3px solid var(--accent);
+  outline-offset: 1px;
+  z-index: 1;
+}
+.cal-row.is-current .week-label { color: var(--accent); }
+
+/* Calendar header */
+.cal-header {
+  display: grid;
+  grid-template-columns: 80px repeat(7, minmax(40px, 1fr));
+  gap: 4px; padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+.cal-header .week-label { font-size: 0.7rem; color: var(--muted); }
+.cal-header .dow {
+  text-align: center; font-size: 0.7rem; color: var(--muted); font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+
+/* ---------- Hour table ---------- */
+.timeline {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.timeline .row {
+  display: grid;
+  grid-template-columns: minmax(86px, 110px) 1fr;
+  border-top: 1px solid var(--border);
+  padding: 0.55rem 0.85rem;
+  gap: 0.75rem;
+  align-items: baseline;
+}
+.timeline .row:first-child { border-top: none; }
+.timeline .row .t {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700; color: var(--ink); font-size: 0.92rem;
+}
+.timeline .row .a { color: var(--ink-2); font-size: 0.95rem; }
+.timeline .row.highlight {
+  background: linear-gradient(90deg, color-mix(in oklch, var(--accent) 12%, white), white);
+  border-left: 4px solid var(--accent);
+}
+.timeline .row.highlight .t,
+.timeline .row.highlight .a { color: var(--ink); }
+
+/* ---------- Week-by-week ---------- */
+.week-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 0; margin-bottom: 0.75rem;
+  box-shadow: var(--shadow-sm); overflow: clip;
+  container-type: inline-size;
+}
+.week-card.is-current {
+  border-color: color-mix(in oklch, var(--accent) 55%, var(--border));
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 15%, transparent), var(--shadow);
+}
+.week-card > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.85rem 1rem;
+  display: flex; align-items: center; gap: 0.75rem;
+  min-height: var(--tap);
+}
+.week-card > summary::-webkit-details-marker { display: none; }
+.week-card > summary .wk {
+  font-weight: 700; font-size: 0.95rem;
+  display: flex; flex-direction: column;
+}
+.week-card > summary .wk small {
+  font-weight: 500; color: var(--muted); font-size: 0.78rem;
+}
+.week-card > summary .tag {
+  margin-left: auto;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em;
+  padding: 0.25rem 0.55rem; border-radius: 999px;
+  background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--border);
+  text-transform: uppercase;
+}
+.week-card > summary .chev {
+  width: 18px; height: 18px; transition: transform 0.2s ease;
+  color: var(--muted); flex: 0 0 auto;
+}
+.week-card[open] > summary .chev { transform: rotate(90deg); }
+.week-card .body { padding: 0 1rem 1rem; }
+.week-card .body ul { margin: 0; padding-left: 1.1rem; color: var(--ink-2); }
+.week-card .body li { margin: 0.25rem 0; }
+.week-card .body li b { color: var(--ink); }
+
+.tag.hike     { background: color-mix(in oklch, var(--hike) 12%, white); color: var(--hike); border-color: color-mix(in oklch, var(--hike) 35%, transparent); }
+.tag.beach    { background: color-mix(in oklch, var(--beach) 12%, white); color: var(--beach); border-color: color-mix(in oklch, var(--beach) 35%, transparent); }
+.tag.mountain { background: color-mix(in oklch, var(--mountain) 12%, white); color: var(--mountain); border-color: color-mix(in oklch, var(--mountain) 40%, transparent); }
+.tag.city     { background: color-mix(in oklch, var(--city) 12%, white); color: var(--city); border-color: color-mix(in oklch, var(--city) 35%, transparent); }
+.tag.travel   { background: color-mix(in oklch, var(--brand) 12%, white); color: var(--brand-2); border-color: color-mix(in oklch, var(--brand) 35%, transparent); }
+.tag.rest     { background: var(--surface-2); color: var(--ink-2); }
+
+/* ---------- Directory (food/outdoor) ---------- */
+.dir-toolbar {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+  margin-bottom: 0.75rem;
+}
+.dir-search {
+  flex: 1 1 220px;
+  min-height: var(--tap);
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface); color: var(--ink);
+  font-size: 0.95rem;
+}
+.dir-search:focus { outline: 2px solid var(--brand); outline-offset: 1px; border-color: var(--brand); }
+.dir-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.dir-chip {
+  font-size: 0.8rem; font-weight: 600; color: var(--ink-2);
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer; min-height: var(--tap);
+  display: inline-flex; align-items: center;
+}
+.dir-chip[aria-pressed="true"] {
+  background: var(--ink); color: white; border-color: var(--ink);
+}
+
+.dir-grid {
+  display: grid; gap: 0.65rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+}
+.dir-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 0.8rem 0.95rem;
+  display: flex; flex-direction: column; gap: 0.3rem;
+  box-shadow: var(--shadow-sm);
+}
+.dir-item .name {
+  display: flex; gap: 0.5rem; align-items: baseline;
+  font-weight: 700; color: var(--ink); font-size: 0.97rem;
+}
+.dir-item .meta {
+  color: var(--muted); font-size: 0.78rem;
+  text-transform: uppercase; letter-spacing: 0.04em; font-weight: 700;
+}
+.dir-item .note { color: var(--ink-2); font-size: 0.9rem; line-height: 1.45; }
+.dir-item .warn {
+  display: inline-block; font-size: 0.72rem; font-weight: 700;
+  background: color-mix(in oklch, var(--warn) 12%, white);
+  color: var(--warn);
+  padding: 0.15rem 0.5rem; border-radius: 999px;
+  border: 1px solid color-mix(in oklch, var(--warn) 35%, transparent);
+  margin-top: 0.2rem; align-self: flex-start;
+}
+.dir-item[hidden] { display: none; }
+.dir-empty {
+  padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.9rem;
+  background: var(--surface-2); border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+
+/* ---------- Checklist ---------- */
+details.accordion {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 0.65rem;
+  overflow: clip; box-shadow: var(--shadow-sm);
+}
+details.accordion > summary {
+  list-style: none;
+  cursor: pointer; min-height: var(--tap);
+  padding: 0.75rem 1rem;
+  display: flex; align-items: center; gap: 0.75rem;
+  font-weight: 700; color: var(--ink);
+}
+details.accordion > summary::-webkit-details-marker { display: none; }
+details.accordion > summary .chev {
+  width: 16px; height: 16px; transition: transform 0.2s ease;
+  color: var(--muted);
+}
+details.accordion[open] > summary .chev { transform: rotate(90deg); }
+details.accordion > summary .count {
+  margin-left: auto;
+  font-size: 0.78rem; font-weight: 600; color: var(--muted);
+  background: var(--surface-2); padding: 0.2rem 0.6rem; border-radius: 999px;
+  border: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+}
+details.accordion[open]:has(.checklist li.checked) > summary .count {
+  /* :has demo: highlight count when there are checked items inside */
+  color: var(--hike); border-color: color-mix(in oklch, var(--hike) 35%, transparent);
+  background: color-mix(in oklch, var(--hike) 10%, white);
+}
+details.accordion .body { padding: 0 1rem 0.9rem; }
+
+ul.checklist {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; gap: 0.2rem;
+}
+ul.checklist li {
+  display: flex; align-items: flex-start; gap: 0.65rem;
+  padding: 0.5rem 0.55rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  min-height: var(--tap);
+}
+ul.checklist li:hover { background: var(--surface-2); }
+ul.checklist input[type="checkbox"] {
+  appearance: none;
+  width: 22px; height: 22px; flex: 0 0 22px;
+  border-radius: 6px; border: 2px solid var(--border-strong);
+  background: var(--surface);
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-top: 0.05rem;
+  transition: background 0.15s, border-color 0.15s;
+}
+ul.checklist input[type="checkbox"]:checked {
+  background: var(--hike); border-color: var(--hike);
+}
+ul.checklist input[type="checkbox"]:checked::after {
+  content: ""; display: block;
+  width: 6px; height: 11px;
+  border: solid white; border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+ul.checklist input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--brand); outline-offset: 2px;
+}
+ul.checklist li.checked label {
+  color: var(--muted); text-decoration: line-through;
+}
+ul.checklist label {
+  cursor: pointer; color: var(--ink-2);
+  font-size: 0.94rem; flex: 1;
+  user-select: none;
+}
+
+/* ---------- Contacts ---------- */
+.contacts-grid {
+  display: grid; gap: 0.65rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+}
+.contact {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 0.85rem 1rem;
+  box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column; gap: 0.25rem;
+}
+.contact .who { font-weight: 700; color: var(--ink); font-size: 0.95rem; }
+.contact .info { color: var(--ink-2); font-size: 0.88rem; word-break: break-word; }
+.contact .info a { color: var(--brand-2); text-decoration: none; }
+.contact .info a:hover { text-decoration: underline; }
+.contact .use { color: var(--muted); font-size: 0.82rem; }
+
+/* ---------- Misc ---------- */
+.note-box {
+  background: color-mix(in oklch, var(--brand) 6%, white);
+  border: 1px solid color-mix(in oklch, var(--brand) 25%, transparent);
+  color: var(--ink-2);
+  padding: 0.7rem 0.95rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+}
+.note-box.warn {
+  background: color-mix(in oklch, var(--warn) 8%, white);
+  border-color: color-mix(in oklch, var(--warn) 30%, transparent);
+}
+
+hr.div { border: none; border-top: 1px solid var(--border); margin: 2rem 0 0; }
+
+footer.foot {
+  max-width: var(--max-w); margin: 2rem auto 0;
+  padding: 1.25rem var(--gutter) 2rem;
+  color: var(--muted); font-size: 0.82rem;
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+
+/* ---------- Container queries: stack rows on narrow cards ---------- */
+@container (max-width: 480px) {
+  .card .row { gap: 0.25rem; }
+}
+
+/* ---------- View transitions: smooth accordion open/close ---------- */
+@supports (view-transition-name: a) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation-duration: 0.2s; }
+}
+
+/* ---------- Topbar progress bar ---------- */
+.topbar { padding-bottom: 0; }
+.trip-progress {
+  height: 3px; width: 100%;
+  background: var(--surface-2);
+  position: relative; overflow: hidden;
+}
+.trip-progress .fill {
+  position: absolute; inset: 0 auto 0 0;
+  width: 0%;
+  background: linear-gradient(90deg, var(--brand), var(--accent));
+  transition: width 0.6s ease;
+}
+
+/* ---------- Intel cards (color-coded by type) ---------- */
+.intel-grid {
+  display: grid; gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  margin-top: 0.5rem;
+}
+.intel-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--brand);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem 0.85rem 0.9rem;
+  display: flex; flex-direction: column; gap: 0.2rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+@media (hover: hover) {
+  .intel-card:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+}
+.intel-card .label {
+  font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase;
+  font-weight: 700; display: inline-flex; align-items: center; gap: 0.4rem;
+  color: var(--muted);
+}
+.intel-card .label .ico {
+  width: 14px; height: 14px; flex: 0 0 14px;
+}
+.intel-card .value { font-weight: 700; color: var(--ink); font-size: 0.98rem; }
+.intel-card .small { color: var(--ink-2); font-weight: 500; font-size: 0.86rem; line-height: 1.45; }
+
+.intel-card[data-type="budget"]      { border-left-color: var(--warn);  background: color-mix(in oklch, var(--warn) 4%, white); }
+.intel-card[data-type="budget"] .label   { color: var(--warn); }
+.intel-card[data-type="risk"]        { border-left-color: var(--hot);   background: color-mix(in oklch, var(--hot) 4%, white); }
+.intel-card[data-type="risk"] .label     { color: var(--hot); }
+.intel-card[data-type="opportunity"] { border-left-color: var(--hike);  background: color-mix(in oklch, var(--hike) 4%, white); }
+.intel-card[data-type="opportunity"] .label { color: var(--hike); }
+.intel-card[data-type="info"]        { border-left-color: var(--info);  background: color-mix(in oklch, var(--info) 4%, white); }
+.intel-card[data-type="info"] .label     { color: var(--info); }
+
+/* ---------- Savings callout (special note-box variant) ---------- */
+.savings-callout {
+  margin-top: 1rem;
+  background: linear-gradient(135deg, color-mix(in oklch, var(--money) 10%, white), color-mix(in oklch, var(--hike) 6%, white));
+  border: 1px solid color-mix(in oklch, var(--money) 30%, transparent);
+  border-left: 4px solid var(--money);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  display: grid; grid-template-columns: 38px 1fr; gap: 0.8rem;
+  align-items: center;
+}
+.savings-callout .badge-ico {
+  width: 38px; height: 38px; border-radius: 999px;
+  background: var(--money); color: white;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: 0 0 38px;
+}
+.savings-callout .badge-ico svg { width: 20px; height: 20px; }
+.savings-callout strong { color: var(--money); }
+
+/* ---------- Directory item hover lift (desktop only) ---------- */
+.dir-item {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+@media (hover: hover) {
+  .dir-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+    border-color: color-mix(in oklch, var(--brand) 30%, var(--border));
+  }
+}
+
+/* ---------- Today calendar cell: animated pulse ---------- */
+@keyframes todayPulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--accent) 55%, transparent); }
+  50%      { box-shadow: 0 0 0 6px color-mix(in oklch, var(--accent) 0%,  transparent); }
+}
+.cal-cell.today {
+  animation: todayPulse 2.2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cal-cell.today { animation: none; }
+  .trip-progress .fill { transition: none; }
+}
+
+/* ---------- "Today / Up next" widget in hero ---------- */
+.now-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 1rem 0 0.25rem;
+  padding: 0.9rem 1.05rem;
+  background: linear-gradient(135deg, color-mix(in oklch, var(--brand) 8%, white), color-mix(in oklch, var(--accent) 6%, white));
+  border: 1px solid color-mix(in oklch, var(--brand) 25%, transparent);
+  border-left: 4px solid var(--brand);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+.now-card .now-ico {
+  width: 42px; height: 42px; border-radius: 12px;
+  background: var(--brand); color: white;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.now-card .now-ico svg { width: 22px; height: 22px; }
+.now-card .now-body { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+.now-card .now-label {
+  font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+  font-weight: 700; color: var(--brand-2);
+}
+.now-card .now-headline {
+  font-weight: 700; color: var(--ink); font-size: 1.02rem; line-height: 1.35;
+}
+.now-card .now-sub {
+  color: var(--ink-2); font-size: 0.88rem; line-height: 1.4;
+}
+.now-card .now-jump {
+  text-decoration: none; font-weight: 700; font-size: 0.82rem;
+  padding: 0.55rem 0.85rem; border-radius: 999px;
+  background: var(--brand); color: white;
+  min-height: var(--tap); display: inline-flex; align-items: center;
+  white-space: nowrap;
+}
+.now-card .now-jump:hover { background: var(--brand-2); color: white; }
+.now-card.is-live { border-left-color: var(--hike); }
+.now-card.is-live .now-ico { background: var(--hike); }
+.now-card.is-live .now-label { color: var(--hike); }
+.now-card.is-live .now-jump { background: var(--hike); }
+.now-card.is-live .now-jump:hover { background: color-mix(in oklch, var(--hike) 80%, black); }
+.now-card.is-post { border-left-color: var(--rest); opacity: 0.85; }
+.now-card.is-post .now-ico { background: var(--rest); }
+.now-card.is-post .now-label { color: var(--rest); }
+.now-card.is-post .now-jump { display: none; }
+
+@container (max-width: 480px) {
+  .now-card { grid-template-columns: auto 1fr; }
+  .now-card .now-jump { grid-column: 1 / -1; justify-content: center; }
+}
+
+/* ---------- Scroll-driven reveal for week cards & directory items ---------- */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes revealIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .week-card, .intel-card, .dir-item, .contact, .savings-callout {
+      animation: revealIn linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 25%;
+    }
+  }
+}
+
+/* ---------- content-visibility for scroll perf ---------- */
+.week-card { content-visibility: auto; contain-intrinsic-size: 0 220px; }
+details.accordion { content-visibility: auto; contain-intrinsic-size: 0 80px; }
+
+/* ---------- Smooth accordion height (interpolate-size makes height:auto animatable) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  details.accordion .body,
+  .week-card .body {
+    overflow: clip;
+    transition: height 0.3s ease, opacity 0.3s ease;
+  }
+}
+
+/* ---------- Checklist accordion progress bar ---------- */
+details.accordion .acc-progress {
+  height: 3px; width: 100%;
+  background: var(--surface-2);
+  position: relative; overflow: hidden;
+}
+details.accordion .acc-progress .fill {
+  position: absolute; inset: 0 auto 0 0;
+  width: 0%;
+  background: var(--hike);
+  transition: width 0.25s ease;
+}
+details.accordion[open] .acc-progress { background: transparent; }
+details.accordion[open] .acc-progress .fill { display: none; }
+
+/* ---------- Print ---------- */
+@media print {
+  :root { --shadow-sm: none; --shadow: none; --shadow-lg: none; }
+  body { background: white; }
+  .topbar, .toc, .dir-toolbar, .trip-progress, .acc-progress { display: none; }
+  section { break-inside: avoid; }
+  .week-card, .card, .timeline, .accordion, .contact, .kv, .cal, .intel-card, .savings-callout { box-shadow: none; }
+  .intel-card { background: white; border-left-width: 3px; }
+  details.accordion, .week-card { break-inside: avoid; }
+  details:not([open]) > summary + * { display: revert; } /* expand everything for print */
+  details > summary .chev { display: none; }
+  .cal-cell.today { animation: none; outline-width: 2px; }
+  a { color: black; text-decoration: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Sticky top bar -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <span class="brand-pill"><span class="dot"></span>AJ &middot; NC Summer Residency</span>
+    <span id="status-chip" class="status-chip pre">Loading…</span>
+    <button id="share-btn" class="share-btn" type="button" aria-label="Share this itinerary" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.6 13.5l6.8 3M15.4 7.5l-6.8 3"/></svg>
+      <span>Share</span>
+    </button>
+  </div>
+  <div class="trip-progress" role="progressbar" aria-label="Trip progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div class="fill" id="trip-progress-fill"></div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero" id="overview" aria-label="Overview">
+  <h1>North Carolina Summer Residency</h1>
+  <p class="sub">SCADS Research Residency &middot; NC State LAS &middot; <strong>Sun May 31 → Sat Jul 25, 2026</strong></p>
+
+  <aside class="now-card" id="now-card" aria-live="polite">
+    <span class="now-ico" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    </span>
+    <div class="now-body">
+      <span class="now-label" id="now-label">Loading…</span>
+      <span class="now-headline" id="now-headline"></span>
+      <span class="now-sub" id="now-sub"></span>
+    </div>
+    <a class="now-jump" id="now-jump" href="#arrival">Jump in</a>
+  </aside>
+
+  <div class="kv-grid">
+    <div class="kv">
+      <span class="label">Anchor</span>
+      <span class="value">SCADS @ NC State LAS</span>
+      <span class="small">Centennial Campus, Raleigh NC</span>
+    </div>
+    <div class="kv">
+      <span class="label">Lodging</span>
+      <span class="value">Hyatt House Downtown / Seaboard Station</span>
+      <span class="small">11 Seaboard Ave, Raleigh NC 27604 &middot; (984) 326-7710</span>
+    </div>
+    <div class="kv">
+      <span class="label">Drive</span>
+      <span class="value">~652 mi &middot; ~10 hr 11 min</span>
+      <span class="small">~11.5 hr door-to-door from Rochester</span>
+    </div>
+    <div class="kv">
+      <span class="label">Constraints</span>
+      <span class="value">No seafood. No nightlife.</span>
+      <span class="small">Hikes, beaches, sandwiches, BBQ, locals-only</span>
+    </div>
+  </div>
+</section>
+
+<!-- TOC -->
+<nav class="toc" aria-label="Sections">
+  <div class="toc-inner">
+    <a href="#intel">Intel</a>
+    <a href="#calendar">Calendar</a>
+    <a href="#arrival">Arrival</a>
+    <a href="#day-one">Day 1</a>
+    <a href="#venue">Venue</a>
+    <a href="#anchors">Anchors</a>
+    <a href="#weeks">Weeks</a>
+    <a href="#food">Food</a>
+    <a href="#outdoor">Outdoor</a>
+    <a href="#pretrip">Pre-trip</a>
+    <a href="#packing">Packing</a>
+    <a href="#contacts">Contacts</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- Critical pre-trip intel -->
+<section id="intel">
+  <h2>Critical Intel <span class="badge">Read first</span></h2>
+  <p class="lede">Late-May 2026 research turned up items that change the math on this trip. Color-coded by type: orange = cost, red = risk, green = opportunity, blue = info.</p>
+
+  <div class="intel-grid">
+    <div class="intel-card" data-type="budget">
+      <span class="label">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 10h5a2 2 0 0 1 0 4H10a2 2 0 0 0 0 4h5"/></svg>
+        Hyatt parking
+      </span>
+      <span class="value">~$25/night default</span>
+      <span class="small">~$1,400 over 8 weeks. Call front desk before arrival and ask for an extended-stay rate; clarify with Emily whether the LAS master account covers it.</span>
+    </div>
+    <div class="intel-card" data-type="budget">
+      <span class="label">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 14h2M7 10h6"/></svg>
+        Centennial parking
+      </span>
+      <span class="value">$15/day visitor</span>
+      <span class="small">~$600 over 8 weeks. Ask Emily about an LAS-sponsored researcher permit. Free after 5 PM weekdays and all weekend — evening hikes are no-cost.</span>
+    </div>
+    <div class="intel-card" data-type="risk">
+      <span class="label">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        July heat
+      </span>
+      <span class="value">Heat index ~106°F</span>
+      <span class="small">Start every hike before 10 AM. Treat noon–4 PM as indoor time (Hunt Library, NCMA, Natural Sciences).</span>
+    </div>
+    <div class="intel-card" data-type="risk">
+      <span class="label">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20 12 4l9 16Z"/><path d="M12 10v5M12 18h.01"/></svg>
+        Asheville (Jul 3–5)
+      </span>
+      <span class="value">Helene recovery active</span>
+      <span class="small">~35 mi of Blue Ridge Parkway (Linville Gorge → Mt. Mitchell) still closed; Mt. Pisgah trail status partial. Re-confirm the week before. Backups: DuPont, Graveyard Fields, Heartbreak Ridge.</span>
+    </div>
+    <div class="intel-card" data-type="risk">
+      <span class="label">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M5 6h14M5 18h14"/><path d="M9 6v12M15 6v12"/></svg>
+        I-95 closure
+      </span>
+      <span class="value">Benson Exit 79, May 28 →</span>
+      <span class="small">NC-50 bridge over I-95 closed ~45 days. Take I-81 over I-95 entering NC. (Already in your plan — extra reason to stick.)</span>
+    </div>
+    <div class="intel-card" data-type="info">
+      <span class="label">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        Raven Rock weekends
+      </span>
+      <span class="value">Up to 90-min entry wait</span>
+      <span class="small">Arrive before 9 AM Sat Jul 18 or shift to a weekday afternoon. No reservations required, but no line-jumping either.</span>
+    </div>
+    <div class="intel-card" data-type="opportunity">
+      <span class="label">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1h-5v-7H10v7H5a1 1 0 0 1-1-1V9"/></svg>
+        Common Market
+      </span>
+      <span class="value">Opens 2026 at Seaboard Station</span>
+      <span class="small">Sandwiches/grocer/bar literally next door to your Hyatt. Track opening date and visit week one.</span>
+    </div>
+    <div class="intel-card" data-type="info">
+      <span class="label">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c-4 0-4 4-8 4s-4-4-8-4M21 6c-4 0-4 4-8 4S9 6 5 6M21 18c-4 0-4 4-8 4s-4-4-8-4"/></svg>
+        2026 hurricane season
+      </span>
+      <span class="value">Below normal (NOAA)</span>
+      <span class="small">8–14 named storms forecast; El Niño wind shear suppressing development. Lower risk than 2024, but still real.</span>
+    </div>
+  </div>
+
+  <div class="savings-callout">
+    <span class="badge-ico" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 6H9a3 3 0 0 0 0 6h6a3 3 0 0 1 0 6H6"/></svg>
+    </span>
+    <div>
+      <strong>Two parking asks = up to ~$2,000 saved.</strong> If both land (LAS-sponsored Centennial permit + Hyatt extended-stay rate), you keep $2,000 over the 8 weeks. A 5-minute phone call and a 2-line email.
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- 8-week calendar -->
+<section id="calendar">
+  <h2>The 8 Weeks at a Glance <span class="badge">Calendar</span></h2>
+  <p class="lede">Weekday cells are work; weekend cells are color-coded by what's happening. Today's cell is outlined.</p>
+
+  <div class="cal-legend">
+    <span class="swatch"><i style="background:var(--brand)"></i> Travel day</span>
+    <span class="swatch"><i style="background:var(--hike)"></i> Hike / parks</span>
+    <span class="swatch"><i style="background:var(--beach)"></i> Beach</span>
+    <span class="swatch"><i style="background:var(--mountain)"></i> Mountains (Asheville)</span>
+    <span class="swatch"><i style="background:var(--city)"></i> City day-trip</span>
+    <span class="swatch"><i style="background:var(--rest)"></i> Rest / catch-up</span>
+  </div>
+
+  <div class="cal" role="table" aria-label="Eight week summer calendar">
+    <div class="cal-header">
+      <div class="week-label"></div>
+      <div class="dow">Mon</div><div class="dow">Tue</div><div class="dow">Wed</div>
+      <div class="dow">Thu</div><div class="dow">Fri</div>
+      <div class="dow">Sat</div><div class="dow">Sun</div>
+    </div>
+    <!-- Calendar rows are generated by JS so dates + today highlight stay correct -->
+    <div id="cal-body"></div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- Arrival day -->
+<section id="arrival">
+  <h2>Arrival Day <span class="badge">Sun May 31</span></h2>
+  <p class="lede">~652 mi / ~10 hr 11 min of pure driving — ~11.5 hr door-to-door. Single-day drive. Target arrival 4:00–5:00 PM.</p>
+
+  <div class="timeline" role="list">
+    <div class="row"><span class="t">5:30 AM</span><span class="a">Leave Rochester</span></div>
+    <div class="row"><span class="t">9:00 AM</span><span class="a">Stop 1 — Scranton / Wilkes-Barre area (~3.5 hr in), gas + breakfast</span></div>
+    <div class="row"><span class="t">12:30 PM</span><span class="a">Stop 2 — Hagerstown MD or Winchester VA (~7 hr in), lunch + leg stretch</span></div>
+    <div class="row"><span class="t">4:30–5 PM</span><span class="a">Arrive Hyatt House Downtown / Seaboard Station, check in</span></div>
+    <div class="row"><span class="t">6:00 PM</span><span class="a">Grocery run (Harris Teeter / Whole Foods) + easy dinner — save BBQ joints for when you're rested</span></div>
+    <div class="row"><span class="t">9:30 PM</span><span class="a">Lights out — sharp for Monday</span></div>
+  </div>
+
+  <div class="note-box" style="margin-top: 0.85rem;">
+    <strong>Routing tip.</strong> Take I-81 S through PA/VA — cleaner than I-95 through DC at rush hour. Download offline Google Maps for the PA/VA mountains; cell coverage gets patchy.
+  </div>
+</section>
+
+<!-- Day 1 -->
+<section id="day-one">
+  <h2>Day 1 — Monday, June 1 <span class="badge">Hour-by-hour</span></h2>
+  <p class="lede">The single highest-stakes day of the residency. You like arriving early; drive yourself so you get the prime pre-kickoff hour.</p>
+
+  <div class="timeline">
+    <div class="row"><span class="t">6:00 AM</span><span class="a">Wake</span></div>
+    <div class="row"><span class="t">6:15 AM</span><span class="a">Free hot breakfast at Hyatt House</span></div>
+    <div class="row"><span class="t">6:45 AM</span><span class="a">Shower, business-casual (chinos + button-down or polo; closed-toe shoes; belt)</span></div>
+    <div class="row"><span class="t">7:30 AM</span><span class="a">Drive to Centennial Campus (~10 min)</span></div>
+    <div class="row"><span class="t">7:45 AM</span><span class="a">Arrive. Park, walk in.</span></div>
+    <div class="row"><span class="t">7:55 AM</span><span class="a">Find SCADS check-in / orientation room. Sign in, name tag.</span></div>
+    <div class="row highlight"><span class="t">8:00 AM</span><span class="a"><strong>Coffee + low-pressure cohort chats</strong> — fewer people, longer conversations. Prime early-arrival networking.</span></div>
+    <div class="row"><span class="t">9:00 AM</span><span class="a">SCADS Day 1 kickoff — welcomes, intros, problem-book overview</span></div>
+    <div class="row highlight"><span class="t">12:00 PM</span><span class="a"><strong>Lunch with the cohort</strong> — the second prime networking window of Day 1</span></div>
+    <div class="row"><span class="t">1:00 PM</span><span class="a">Project team formation / problem assignment</span></div>
+    <div class="row"><span class="t">5:00 PM</span><span class="a">Day wraps — drive back to the Hyatt</span></div>
+    <div class="row"><span class="t">6:00 PM</span><span class="a">Light dinner (in-suite kitchen) or grocery</span></div>
+    <div class="row"><span class="t">7:00 PM</span><span class="a">Decompress; review project assignment; first-day notes</span></div>
+    <div class="row"><span class="t">9:30 PM</span><span class="a">Lights out — sustainable pace from Day 1</span></div>
+  </div>
+
+  <div class="card" style="margin-top: 0.85rem;">
+    <h3>Day 1 bag</h3>
+    <p style="margin:0; color: var(--ink-2);">Laptop + charger &middot; notebook + 2 pens &middot; water bottle &middot; RIT ID, license, NCSU Unity ID info &middot; light layer (offices over-AC) &middot; phone fully charged + battery pack.</p>
+  </div>
+</section>
+
+<!-- Venue -->
+<section id="venue">
+  <h2>Venue Logistics</h2>
+
+  <div class="card">
+    <h3>Commute</h3>
+    <p style="margin:0 0 0.5rem; color: var(--ink-2);"><strong>Drive yourself by default.</strong> ~3 mi / ~10 min from Hyatt House to Centennial Campus. You like arriving early; the SCADS shuttle pickup is fixed and may land you on campus right at kickoff. Use the shuttle occasionally for cohort social time.</p>
+    <div class="row">
+      <div><span class="k">Host</span> Laboratory for Analytic Sciences (LAS) &middot; Centennial Campus</div>
+    </div>
+    <div class="row" style="margin-top: 0.4rem;">
+      <div><span class="k">Dress code</span> Business casual for Day 1 + presentations; smart-casual or casual on normal work days</div>
+    </div>
+  </div>
+
+  <div class="note-box warn">
+    <strong>Open question.</strong> Confirm with Emily whether SCADS provides a Centennial Campus parking permit for the summer. Without one, daily-pay garages run ~$5–10/day.
+  </div>
+</section>
+
+<!-- Trip anchors -->
+<section id="anchors">
+  <h2>Trip Anchors</h2>
+  <p class="lede">Two multi-night trips bookend the local exploration. Everything else stays within ~1 hr of Raleigh.</p>
+
+  <div class="dir-grid">
+    <div class="card">
+      <h3 style="display:flex; align-items:center; gap:0.5rem;">
+        Wrightsville Beach <span class="tag beach">Beach</span>
+      </h3>
+      <div class="row">
+        <div><span class="k">Dates</span> Sat Jun 27 – Sun Jun 28</div>
+        <div><span class="k">Drive</span> ~2 hr (I-40 E)</div>
+      </div>
+      <p style="margin:0.5rem 0 0; color: var(--ink-2);">Closest real ocean beach. Overnight; book early — peak season.</p>
+    </div>
+    <div class="card">
+      <h3 style="display:flex; align-items:center; gap:0.5rem;">
+        Asheville long weekend <span class="tag mountain">Mountains</span>
+      </h3>
+      <div class="row">
+        <div><span class="k">Dates</span> Fri Jul 3 – Sun Jul 5</div>
+        <div><span class="k">Drive</span> ~4 hr (I-40 W)</div>
+      </div>
+      <p style="margin:0.5rem 0 0; color: var(--ink-2);">July 4 falls Saturday — federal holiday observed Fri Jul 3 = built-in 3-day weekend. Blue Ridge Parkway + downtown food.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Week-by-week -->
+<section id="weeks">
+  <h2>Week-by-Week</h2>
+  <p class="lede">Weeknights are intentionally light — one sandwich lunch, one dinner, one easy activity. Food + outdoor sections below are a menu; swap freely. The current week auto-expands.</p>
+
+  <details class="week-card" data-week-start="2026-05-31" data-week-end="2026-06-07">
+    <summary>
+      <span class="wk">Week 1 <small>Jun 1 – Jun 7 &middot; Settle in</small></span>
+      <span class="tag rest">Settle</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+    </summary>
+    <div class="body">
+      <ul>
+        <li><b>Mon–Fri</b> — SCADS Week 1; map the daily drive; one Pullen Park lunch walk</li>
+        <li><b>Sat Jun 6</b> — Big Ed's breakfast → Dorothea Dix Park → Clyde Cooper's BBQ lunch → easy evening</li>
+        <li><b>Sun Jun 7</b> — JC Raulston Arboretum (quiet morning) → laundry + prep</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="week-card" data-week-start="2026-06-08" data-week-end="2026-06-14">
+    <summary>
+      <span class="wk">Week 2 <small>Jun 8 – Jun 14 &middot; Umstead hike</small></span>
+      <span class="tag hike">Hike</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+    </summary>
+    <div class="body">
+      <ul>
+        <li><b>Weekday lunch</b> — Lunchbox Deli (Turkey Basil on Rosemary Focaccia)</li>
+        <li><b>Weekday evening</b> — Two Roosters Ice Cream walk after work</li>
+        <li><b>Sat Jun 13</b> — Umstead State Park, Company Mill Trail (~5.8 mi)</li>
+        <li><b>Sun Jun 14</b> — NC Museum of Natural Sciences + Daily Planet Cafe → easy hotel evening (Side Street closed Sun)</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="week-card" data-week-start="2026-06-15" data-week-end="2026-06-21">
+    <summary>
+      <span class="wk">Week 3 <small>Jun 15 – Jun 21 &middot; Durham day</small></span>
+      <span class="tag city">Day-trip</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+    </summary>
+    <div class="body">
+      <ul>
+        <li><b>Weekday lunch</b> — Eastcut Sandwich Bar</li>
+        <li><b>Weekday evening</b> — Fratelli's Delicatessen sit-down</li>
+        <li><b>Sat Jun 20</b> — Durham day: Ideal Sandwich → Eno River State Park → Hog Heaven BBQ</li>
+        <li><b>Sun Jun 21</b> — Big Ed's Sunday breakfast (Pam's closed Sun) → recovery</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="week-card" data-week-start="2026-06-22" data-week-end="2026-06-28">
+    <summary>
+      <span class="wk">Week 4 <small>Jun 22 – Jun 28 &middot; Beach overnight</small></span>
+      <span class="tag beach">Beach</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+    </summary>
+    <div class="body">
+      <ul>
+        <li><b>Weekday lunch</b> — Oakwood Deli</li>
+        <li><b>Weekday evening</b> — NC Museum of Art sculpture park (golden hour, outdoor grounds stay open)</li>
+        <li><b>Sat Jun 27</b> — Drive to Wrightsville Beach (~2 hr). Beach day + overnight</li>
+        <li><b>Sun Jun 28</b> — Beach morning → Wilmington lunch → drive back</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="week-card" data-week-start="2026-06-29" data-week-end="2026-07-05">
+    <summary>
+      <span class="wk">Week 5 <small>Jun 29 – Jul 5 &middot; Asheville long weekend</small></span>
+      <span class="tag mountain">Mountains</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+    </summary>
+    <div class="body">
+      <ul>
+        <li><b>Weekday lunch</b> — Pam's Farmhouse plate-lunch (Tue–Sat)</li>
+        <li><b>Weekday evening</b> — The Pit Authentic Barbecue dinner</li>
+        <li><b>Fri Jul 3</b> — Drive to Asheville (~4 hr). Federal holiday observed</li>
+        <li><b>Sat Jul 4</b> — Blue Ridge Parkway (pre-confirm mileposts — ~35 mi between Linville Gorge &amp; Mt. Mitchell still Helene-closed) + <strong>Mt. Pisgah Trail if open, else DuPont State Forest waterfalls or Graveyard Fields</strong> + downtown Asheville food crawl evening</li>
+        <li><b>Sun Jul 5</b> — Biltmore Estate + new "Luminere" after-dark light installation (2026 debut) → drive back. Enter via main gate, not Biltmore Village (still rebuilding post-Helene).</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="week-card" data-week-start="2026-07-06" data-week-end="2026-07-12">
+    <summary>
+      <span class="wk">Week 6 <small>Jul 6 – Jul 12 &middot; Hanging Rock waterfalls</small></span>
+      <span class="tag hike">Hike</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+    </summary>
+    <div class="body">
+      <ul>
+        <li><b>Weekday lunch</b> — Union Special Bread</li>
+        <li><b>Weekday evening</b> — Pullen Park or Dorothea Dix walk</li>
+        <li><b>Sat Jul 11</b> — Hanging Rock State Park: Hidden Falls + Window Falls + Upper Cascades (~2 hr drive each way; pack lunch)</li>
+        <li><b>Sun Jul 12</b> — Sam Jones BBQ lunch → rest</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="week-card" data-week-start="2026-07-13" data-week-end="2026-07-19">
+    <summary>
+      <span class="wk">Week 7 <small>Jul 13 – Jul 19 &middot; Raven Rock + Chapel Hill BBQ</small></span>
+      <span class="tag hike">Hike</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+    </summary>
+    <div class="body">
+      <ul>
+        <li><b>Weekday lunch</b> — Southern Craft Sandwiches</li>
+        <li><b>Weekday evening</b> — MoJoe's Burger Joint (add the Polaroid)</li>
+        <li><b>Sat Jul 18</b> — Raven Rock State Park hike — <strong>arrive by 9 AM</strong> (summer-weekend entry lines hit 90 min) → Allen &amp; Son BBQ in Pittsboro on the way home (Chapel Hill location closed). Alternative: shift to a weekday afternoon (Centennial parking free after 5 PM).</li>
+        <li><b>Sun Jul 19</b> — JC Raulston Arboretum farewell visit → start packing</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="week-card" data-week-start="2026-07-20" data-week-end="2026-07-25">
+    <summary>
+      <span class="wk">Week 8 <small>Jul 20 – Jul 25 &middot; Wrap-up</small></span>
+      <span class="tag travel">Travel</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+    </summary>
+    <div class="body">
+      <ul>
+        <li><b>Weekday lunch</b> — loop back to your favorite sandwich spot</li>
+        <li><b>Weekday evening</b> — Two Roosters Ice Cream closing dessert</li>
+        <li><b>Fri Jul 24</b> — SCADS closing day; farewell dinner with the cohort</li>
+        <li><b>Sat Jul 25</b> — Check out by hotel deadline. Drive home, or split with a stopover.</li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<!-- Food directory -->
+<section id="food">
+  <h2>Food Directory <span class="badge">Locals' picks</span></h2>
+  <p class="lede">No seafood. Sort by category or type to filter; tap a chip to narrow the list.</p>
+
+  <search class="dir-toolbar">
+    <input id="food-search" class="dir-search" type="search" placeholder="Search food spots…" aria-label="Search food spots">
+    <div class="dir-chips" role="group" aria-label="Food filters">
+      <button class="dir-chip" data-filter-target="food" aria-pressed="true" data-filter="all">All</button>
+      <button class="dir-chip" data-filter-target="food" aria-pressed="false" data-filter="sandwich">Sandwiches</button>
+      <button class="dir-chip" data-filter-target="food" aria-pressed="false" data-filter="bbq">BBQ</button>
+      <button class="dir-chip" data-filter-target="food" aria-pressed="false" data-filter="breakfast">Breakfast</button>
+      <button class="dir-chip" data-filter-target="food" aria-pressed="false" data-filter="dessert">Sweet</button>
+    </div>
+  </search>
+
+  <div class="dir-grid" id="food-grid">
+    <article class="dir-item" data-cat="sandwich" data-text="lunchbox deli turkey basil rosemary focaccia raleigh">
+      <div class="name">Lunchbox Deli <span class="meta">Sandwich · Raleigh</span></div>
+      <div class="note">Turkey Basil on Rosemary Focaccia.</div>
+    </article>
+    <article class="dir-item" data-cat="sandwich" data-text="eastcut sandwich bar chalkboard raleigh">
+      <div class="name">Eastcut Sandwich Bar <span class="meta">Sandwich · Raleigh</span></div>
+      <div class="note">Rotating chalkboard specials; locals' top pick.</div>
+    </article>
+    <article class="dir-item" data-cat="sandwich" data-text="oakwood deli downtown raleigh neighborhood">
+      <div class="name">Oakwood Deli <span class="meta">Sandwich · Raleigh (Oakwood)</span></div>
+      <div class="note">Neighborhood favorite, walkable from downtown.</div>
+    </article>
+    <article class="dir-item" data-cat="sandwich" data-text="fratellis delicatessen italian hot sub apex">
+      <div class="name">Fratelli's Delicatessen <span class="meta">Sandwich · Apex (~20 min)</span></div>
+      <div class="note">Old-school Italian deli, hot subs. 1481 Richardson Rd, Apex.</div>
+    </article>
+    <article class="dir-item" data-cat="sandwich" data-text="southern craft sandwiches scratch raleigh">
+      <div class="name">Southern Craft Sandwiches <span class="meta">Sandwich · Raleigh</span></div>
+      <div class="note">Scratch-made, Southern twist.</div>
+    </article>
+    <article class="dir-item" data-cat="sandwich" data-text="mojoes burger joint polaroid raleigh">
+      <div class="name">MoJoe's Burger Joint <span class="meta">Burger · Raleigh</span></div>
+      <div class="note">Burgers + sandwiches. Add your Polaroid to the wall.</div>
+    </article>
+    <article class="dir-item" data-cat="sandwich" data-text="union special bread sourdough crabtree raleigh">
+      <div class="name">Union Special Bread <span class="meta">Sandwich · Raleigh</span></div>
+      <div class="note">Sourdough-driven, locally sourced. 2409 Crabtree Blvd — downtown spot closed.</div>
+    </article>
+    <article class="dir-item" data-cat="sandwich" data-text="ideal sandwich grocery durham specials">
+      <div class="name">Ideal Sandwich &amp; Grocery <span class="meta">Sandwich · Durham</span></div>
+      <div class="note">Scratch specials; pair with the Durham day-trip.</div>
+      <span class="warn">Thu–Mon 12–3 PM, sells out — go early</span>
+    </article>
+    <article class="dir-item" data-cat="sandwich" data-text="common market seaboard station hotel sandwich grocer">
+      <div class="name">The Common Market <span class="meta">Sandwich · Seaboard Station</span></div>
+      <div class="note">Opening 2026 — literally next door to the Hyatt. Sandwiches/grocer/bar. Visit week one if it opens during your stay.</div>
+      <span class="warn">Watch for 2026 opening date</span>
+    </article>
+    <article class="dir-item" data-cat="sandwich" data-text="idle hour coffee five points sandwich globally">
+      <div class="name">Idle Hour Coffee <span class="meta">Sandwich + Coffee · Five Points</span></div>
+      <div class="note">Globally-inspired sandwiches; hidden-gem pick on locals' lists.</div>
+    </article>
+    <article class="dir-item" data-cat="sandwich" data-text="poppyseed market club sandwich raleigh">
+      <div class="name">Poppyseed Market <span class="meta">Sandwich · Raleigh</span></div>
+      <div class="note">Locals' best-club-sandwich pick. Solid lunch stop.</div>
+    </article>
+    <article class="dir-item" data-cat="sandwich" data-text="figulina james beard fresh pasta italian raleigh">
+      <div class="name">Figulina <span class="meta">Italian · Raleigh</span></div>
+      <div class="note">James Beard "Best New Restaurant" nominee — fresh pasta lunch. Not a sandwich, but a swap-in for one weekday.</div>
+    </article>
+
+    <article class="dir-item" data-cat="bbq" data-text="clyde coopers barbecue eastern nc vinegar 1938 millbrook raleigh">
+      <div class="name">Clyde Cooper's Barbecue <span class="meta">BBQ · Raleigh</span></div>
+      <div class="note">Open since 1938. Eastern NC vinegar style. 1326 E Millbrook Rd (moved from downtown). Tue–Sat to 8 PM.</div>
+    </article>
+    <article class="dir-item" data-cat="bbq" data-text="the pit ed mitchell raleigh sit-down">
+      <div class="name">The Pit Authentic BBQ <span class="meta">BBQ · Raleigh</span></div>
+      <div class="note">Sit-down dinner option; Ed Mitchell legacy.</div>
+    </article>
+    <article class="dir-item" data-cat="bbq" data-text="sam jones bbq whole hog raleigh">
+      <div class="name">Sam Jones BBQ <span class="meta">BBQ · Raleigh</span></div>
+      <div class="note">Whole-hog smokehouse, hearty sandwiches.</div>
+    </article>
+    <article class="dir-item" data-cat="bbq" data-text="allen son barbecue pittsboro wood fired">
+      <div class="name">Allen &amp; Son Bar-B-Que <span class="meta">BBQ · Pittsboro</span></div>
+      <div class="note">Wood-fired, locals' road-trip pick. 5650 US-15/501 N, Pittsboro — the Chapel Hill location closed.</div>
+    </article>
+    <article class="dir-item" data-cat="bbq" data-text="hog heaven durham vinegar chopped">
+      <div class="name">Hog Heaven <span class="meta">BBQ · Durham</span></div>
+      <div class="note">Vinegar-based chopped 'cue.</div>
+    </article>
+    <article class="dir-item" data-cat="bbq" data-text="pams farmhouse southern homestyle plate lunch raleigh">
+      <div class="name">Pam's Farmhouse <span class="meta">Southern · Raleigh</span></div>
+      <div class="note">Southern homestyle, plate-lunch energy. 5111 Western Blvd.</div>
+      <span class="warn">Tue–Sat 6 AM–2 PM · closed Sun &amp; Mon</span>
+    </article>
+    <article class="dir-item" data-cat="bbq" data-text="side street restaurant pub fare raleigh">
+      <div class="name">Side Street Restaurant <span class="meta">Pub · Raleigh</span></div>
+      <div class="note">Classic pub fare, low-key local. Lunch M–Thu; dinner Tue/Wed only.</div>
+      <span class="warn">Confirm hours before going</span>
+    </article>
+    <article class="dir-item" data-cat="bbq" data-text="lawrence barbecue jake wood brisket birria tex mex raleigh">
+      <div class="name">Lawrence Barbecue <span class="meta">BBQ · Raleigh</span></div>
+      <div class="note">Top of every 2025 Triangle list. Jake Wood — brisket birria, smoked-fried wings. Smoke + Tex-Mex/coastal fusion. <strong>Must-add.</strong></div>
+    </article>
+    <article class="dir-item" data-cat="bbq" data-text="lewis barbecue texas charleston michelin raleigh">
+      <div class="name">Lewis Barbecue <span class="meta">BBQ · Raleigh</span></div>
+      <div class="note">Michelin-recognized Texas BBQ expanding from Charleston.</div>
+      <span class="warn">Opening 2026 — verify status before going</span>
+    </article>
+
+    <article class="dir-item" data-cat="breakfast" data-text="big eds city market breakfast bowl biscuits gravy raleigh">
+      <div class="name">Big Ed's City Market <span class="meta">Breakfast · Raleigh</span></div>
+      <div class="note">Loaded breakfast bowl with biscuits, gravy, sausage, cheese, eggs. 220 Wolfe St.</div>
+      <span class="warn">Tue–Sun 7 AM–2 PM · closed Mon</span>
+    </article>
+    <article class="dir-item" data-cat="breakfast" data-text="daily planet cafe museum natural sciences lunch raleigh">
+      <div class="name">Daily Planet Cafe <span class="meta">Cafe · Raleigh</span></div>
+      <div class="note">Inside the NC Museum of Natural Sciences — pair with a museum visit.</div>
+    </article>
+    <article class="dir-item" data-cat="dessert" data-text="two roosters ice cream rotating flavors raleigh">
+      <div class="name">Two Roosters Ice Cream <span class="meta">Sweet · Raleigh</span></div>
+      <div class="note">Rotating unique local flavors.</div>
+    </article>
+  </div>
+</section>
+
+<!-- Outdoor directory -->
+<section id="outdoor">
+  <h2>Outdoor &amp; Cultural <span class="badge">Parks · Hikes · Beaches · Museums</span></h2>
+  <p class="lede">Filter by category, search by name or trail.</p>
+
+  <div class="note-box" style="margin-bottom: 1rem;">
+    <strong>Heat rule.</strong> July heat index averages ~106°F. Start every hike before <strong>10 AM</strong>; treat noon–4 PM as indoor time (Hunt Library, NCMA, Natural Sciences). None of Umstead, Eno River, Raven Rock, or Hanging Rock require day-use reservations or fees.
+  </div>
+
+  <search class="dir-toolbar">
+    <input id="outdoor-search" class="dir-search" type="search" placeholder="Search parks, hikes, beaches…" aria-label="Search outdoor spots">
+    <div class="dir-chips" role="group" aria-label="Outdoor filters">
+      <button class="dir-chip" data-filter-target="outdoor" aria-pressed="true" data-filter="all">All</button>
+      <button class="dir-chip" data-filter-target="outdoor" aria-pressed="false" data-filter="park">In-town parks</button>
+      <button class="dir-chip" data-filter-target="outdoor" aria-pressed="false" data-filter="hike">Hikes</button>
+      <button class="dir-chip" data-filter-target="outdoor" aria-pressed="false" data-filter="beach">Beaches</button>
+      <button class="dir-chip" data-filter-target="outdoor" aria-pressed="false" data-filter="museum">Museums</button>
+    </div>
+  </search>
+
+  <div class="dir-grid" id="outdoor-grid">
+    <article class="dir-item" data-cat="park" data-text="pullen park ncsu campus lunch walk">
+      <div class="name">Pullen Park <span class="meta">Park · 5 min</span></div>
+      <div class="note">Adjacent to NCSU campus; lunch-hour walk.</div>
+    </article>
+    <article class="dir-item" data-cat="park" data-text="dorothea dix park skyline reading fields raleigh">
+      <div class="name">Dorothea Dix Park <span class="meta">Park · in-town</span></div>
+      <div class="note">Skyline views, wide-open fields for reading.</div>
+    </article>
+    <article class="dir-item" data-cat="park" data-text="jc raulston arboretum botanical gardens">
+      <div class="name">JC Raulston Arboretum <span class="meta">Garden · 5 min</span></div>
+      <div class="note">Quiet botanical gardens, ~5 min from campus.</div>
+    </article>
+
+    <article class="dir-item" data-cat="hike" data-text="umstead state park company mill trail raleigh marquee">
+      <div class="name">William B. Umstead State Park <span class="meta">Hike · 15 min</span></div>
+      <div class="note">Company Mill Trail (5.8 mi loop) — Raleigh's marquee hike.</div>
+    </article>
+    <article class="dir-item" data-cat="hike" data-text="eno river state park durham cox mountain bobbitt hole swimming">
+      <div class="name">Eno River State Park <span class="meta">Hike · 45 min</span></div>
+      <div class="note">Cox Mountain or Bobbitt Hole — river swimming spot.</div>
+    </article>
+    <article class="dir-item" data-cat="hike" data-text="raven rock state park loop cliff overlook rapids">
+      <div class="name">Raven Rock State Park <span class="meta">Hike · 1 hr</span></div>
+      <div class="note">Raven Rock Loop (~2.5 mi); cliff overlook + rapids.</div>
+    </article>
+    <article class="dir-item" data-cat="hike" data-text="hanging rock state park hidden falls window falls upper cascades waterfalls">
+      <div class="name">Hanging Rock State Park <span class="meta">Hike · ~2 hr 10</span></div>
+      <div class="note">Hidden Falls + Window Falls + Upper Cascades — three waterfalls in one day.</div>
+    </article>
+
+    <article class="dir-item" data-cat="beach" data-text="wrightsville beach closest ocean wilmington">
+      <div class="name">Wrightsville Beach <span class="meta">Beach · ~2 hr</span></div>
+      <div class="note">Closest real beach; clean sand, college-town energy in Wilmington. Paid parking $5/hr or $25/day (Mar 1–Oct 31). Lifeguards 10 AM–5 PM.</div>
+      <span class="warn">Download ParkMobile app before going</span>
+    </article>
+    <article class="dir-item" data-cat="beach" data-text="carolina beach boardwalk fireworks">
+      <div class="name">Carolina Beach <span class="meta">Beach · ~2 hr 20</span></div>
+      <div class="note">Boardwalk + Friday-night fireworks.</div>
+    </article>
+    <article class="dir-item" data-cat="beach" data-text="topsail island laid back quiet">
+      <div class="name">Topsail Island <span class="meta">Beach · ~2 hr 20</span></div>
+      <div class="note">Quieter, laid-back.</div>
+    </article>
+    <article class="dir-item" data-cat="beach" data-text="outer banks nags head corolla wild historic">
+      <div class="name">Outer Banks (Nags Head / Corolla) <span class="meta">Beach · ~3.5 hr</span></div>
+      <div class="note">Wild, historic — save for an overnight if doing OBX.</div>
+    </article>
+
+    <article class="dir-item" data-cat="museum" data-text="nc museum natural sciences free downtown daily planet">
+      <div class="name">NC Museum of Natural Sciences <span class="meta">Museum · Free</span></div>
+      <div class="note">Pair with lunch at Daily Planet Cafe inside.</div>
+    </article>
+    <article class="dir-item" data-cat="museum" data-text="nc museum art sculpture park outdoor grounds golden hour">
+      <div class="name">NC Museum of Art <span class="meta">Museum · Free</span></div>
+      <div class="note">Massive outdoor sculpture park — golden-hour walk.</div>
+    </article>
+  </div>
+
+  <div class="note-box" style="margin-top: 0.85rem;">
+    <strong>Coastal packing.</strong> Bring water shoes. NC sand is less powdery than the Gulf and shell beds are tough on bare feet.
+  </div>
+</section>
+
+<!-- Pre-trip -->
+<section id="pretrip">
+  <h2>Pre-Trip <span class="badge">Setup &amp; Checklist</span></h2>
+
+  <details class="accordion" open data-checklist-id="pretrip-setup">
+    <summary>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      Saturday May 30 — time-anchored prep
+      <span class="count" data-count>0 / 8</span>
+    </summary>
+    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
+    <div class="body">
+      <ul class="checklist">
+        <li><input type="checkbox" id="ps1"><label for="ps1"><strong>5:00 PM</strong> — Top off the gas tank at home</label></li>
+        <li><input type="checkbox" id="ps2"><label for="ps2"><strong>6:00 PM</strong> — Pack the car (suitcase, laptop, hike bag, beach bag, snack bag, water bottle)</label></li>
+        <li><input type="checkbox" id="ps3"><label for="ps3"><strong>7:00 PM</strong> — EZ-Pass balance or stash $30 in singles/fives for cash tolls</label></li>
+        <li><input type="checkbox" id="ps4"><label for="ps4"><strong>8:00 PM</strong> — Offline Google Maps for Rochester→Raleigh; AllTrails maps for Umstead, Eno River, Raven Rock, Hanging Rock</label></li>
+        <li><input type="checkbox" id="ps5"><label for="ps5"><strong>8:30 PM</strong> — Spotify / podcast downloads for offline (10+ hr)</label></li>
+        <li><input type="checkbox" id="ps6"><label for="ps6"><strong>9:00 PM</strong> — Save offline: Hyatt conf, Emily's emails, this itinerary, Unity ID info</label></li>
+        <li><input type="checkbox" id="ps7"><label for="ps7"><strong>9:30 PM</strong> — Alarms 5:00 AM + 5:25 AM Sun; lay out driving outfit + Day 1 work outfit</label></li>
+        <li><input type="checkbox" id="ps8"><label for="ps8"><strong>10:00 PM</strong> — Lights out</label></li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="accordion" data-checklist-id="pretrip-master">
+    <summary>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      Master checklist (before May 31)
+      <span class="count" data-count>0 / 11</span>
+    </summary>
+    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
+    <div class="body">
+      <ul class="checklist">
+        <li><input type="checkbox" id="m1"><label for="m1">Confirm hotel confirmation number with Emily Keller</label></li>
+        <li><input type="checkbox" id="m2"><label for="m2"><strong>Call Hyatt House front desk and ask for an extended-stay parking rate</strong> (default ~$25/night = ~$1,400 over 8 weeks)</label></li>
+        <li><input type="checkbox" id="m2b"><label for="m2b"><strong>Ask Emily about an LAS-sponsored Centennial Campus parking permit</strong> (default $15/day visitor = ~$600 over 8 weeks)</label></li>
+        <li><input type="checkbox" id="m3"><label for="m3">Download offline Google Maps for the Rochester → Raleigh route</label></li>
+        <li><input type="checkbox" id="m4"><label for="m4">Reserve Wrightsville Beach lodging for Sat Jun 27 (book early — peak season)</label></li>
+        <li><input type="checkbox" id="m5"><label for="m5">Reserve Asheville lodging for Fri Jul 3 – Sun Jul 5</label></li>
+        <li><input type="checkbox" id="m5b"><label for="m5b">Re-confirm Blue Ridge Parkway milepost status + Mt. Pisgah Trail with the Pisgah Ranger District the week of Jul 3</label></li>
+        <li><input type="checkbox" id="m6"><label for="m6">Confirm whether LAS observes Fri Jul 3 federal holiday</label></li>
+        <li><input type="checkbox" id="m6b"><label for="m6b">Download the ParkMobile app (Wrightsville Beach parking $5/hr or $25/day)</label></li>
+        <li><input type="checkbox" id="m6c"><label for="m6c">Watch for The Common Market at Seaboard Station opening — visit week one if it lands during your stay</label></li>
+        <li><input type="checkbox" id="m8"><label for="m8">Download AllTrails offline maps (Umstead, Eno River, Raven Rock, Hanging Rock) + DuPont State Forest &amp; Graveyard Fields as Helene-era Asheville backups</label></li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<!-- Packing -->
+<section id="packing">
+  <h2>Packing Checklist <span class="badge">8 weeks</span></h2>
+  <p class="lede">Hyatt House has in-suite kitchen + on-site laundry. Pack <strong>2 weeks of clothes</strong>, wash weekly. Each section is collapsible; tap any checkbox and it persists.</p>
+
+  <details class="accordion" data-checklist-id="pack-docs">
+    <summary>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      Documents &amp; money
+      <span class="count" data-count>0 / 6</span>
+    </summary>
+    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
+    <div class="body">
+      <ul class="checklist">
+        <li><input type="checkbox" id="d1"><label for="d1">Driver's license + passport (backup ID)</label></li>
+        <li><input type="checkbox" id="d2"><label for="d2">Primary credit card + backup card</label></li>
+        <li><input type="checkbox" id="d3"><label for="d3">$80–100 cash for emergencies and tolls</label></li>
+        <li><input type="checkbox" id="d4"><label for="d4">Health insurance card</label></li>
+        <li><input type="checkbox" id="d5"><label for="d5">RIT ID + NCSU Unity ID printout</label></li>
+        <li><input type="checkbox" id="d6"><label for="d6">AAA membership card (if applicable)</label></li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="accordion" data-checklist-id="pack-tech">
+    <summary>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      Tech (never leave in the car overnight)
+      <span class="count" data-count>0 / 9</span>
+    </summary>
+    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
+    <div class="body">
+      <ul class="checklist">
+        <li><input type="checkbox" id="t1"><label for="t1">Laptop + charger</label></li>
+        <li><input type="checkbox" id="t2"><label for="t2">External monitor cable (HDMI + USB-C adapter)</label></li>
+        <li><input type="checkbox" id="t3"><label for="t3">Wireless mouse</label></li>
+        <li><input type="checkbox" id="t4"><label for="t4">Headphones / earbuds</label></li>
+        <li><input type="checkbox" id="t5"><label for="t5">Phone + cable + small wall plug</label></li>
+        <li><input type="checkbox" id="t6"><label for="t6">Portable battery pack (10,000mAh)</label></li>
+        <li><input type="checkbox" id="t7"><label for="t7">USB drive (for poster/presentation handoffs)</label></li>
+        <li><input type="checkbox" id="t8"><label for="t8">Business cards or QR cards (portfolio)</label></li>
+        <li><input type="checkbox" id="t9"><label for="t9">Camera body + spare battery + SD cards + charger (if bringing)</label></li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="accordion" data-checklist-id="pack-work">
+    <summary>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      Work outfits (business casual)
+      <span class="count" data-count>0 / 6</span>
+    </summary>
+    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
+    <div class="body">
+      <ul class="checklist">
+        <li><input type="checkbox" id="w1"><label for="w1">3 button-downs or polos</label></li>
+        <li><input type="checkbox" id="w2"><label for="w2">2 pairs chinos</label></li>
+        <li><input type="checkbox" id="w3"><label for="w3">Blazer or sport coat (final-week presentations)</label></li>
+        <li><input type="checkbox" id="w4"><label for="w4">Belt (do not forget the belt)</label></li>
+        <li><input type="checkbox" id="w5"><label for="w5">Closed-toe loafers / dress shoes</label></li>
+        <li><input type="checkbox" id="w6"><label for="w6">Dress socks (one per work day; laundry midweek)</label></li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="accordion" data-checklist-id="pack-casual">
+    <summary>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      Casual &amp; lounge
+      <span class="count" data-count>0 / 6</span>
+    </summary>
+    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
+    <div class="body">
+      <ul class="checklist">
+        <li><input type="checkbox" id="c1"><label for="c1">6 t-shirts</label></li>
+        <li><input type="checkbox" id="c2"><label for="c2">2 pairs gym shorts</label></li>
+        <li><input type="checkbox" id="c3"><label for="c3">Hoodie / light sweater (offices over-AC, mountain evenings)</label></li>
+        <li><input type="checkbox" id="c4"><label for="c4">2 pairs jeans</label></li>
+        <li><input type="checkbox" id="c5"><label for="c5">Pajamas / sleep clothes</label></li>
+        <li><input type="checkbox" id="c6"><label for="c6">Underwear + socks (10 days, laundry weekly)</label></li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="accordion" data-checklist-id="pack-outdoor">
+    <summary>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      Outdoor &amp; beach kit
+      <span class="count" data-count>0 / 10</span>
+    </summary>
+    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
+    <div class="body">
+      <ul class="checklist">
+        <li><input type="checkbox" id="o1"><label for="o1">Hiking shoes / trail runners</label></li>
+        <li><input type="checkbox" id="o2"><label for="o2">Daypack (15–20L)</label></li>
+        <li><input type="checkbox" id="o3"><label for="o3">Swim trunks</label></li>
+        <li><input type="checkbox" id="o4"><label for="o4">Beach towel</label></li>
+        <li><input type="checkbox" id="o5"><label for="o5">Water shoes (shell-heavy NC beaches)</label></li>
+        <li><input type="checkbox" id="o6"><label for="o6">Sunglasses + spare pair</label></li>
+        <li><input type="checkbox" id="o7"><label for="o7">Wide-brim hat or cap</label></li>
+        <li><input type="checkbox" id="o8"><label for="o8">Sunscreen (SPF 50+)</label></li>
+        <li><input type="checkbox" id="o9"><label for="o9">Bug spray (DEET or picaridin)</label></li>
+        <li><input type="checkbox" id="o10"><label for="o10">After-sun lotion / aloe</label></li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="accordion" data-checklist-id="pack-toiletries">
+    <summary>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      Toiletries
+      <span class="count" data-count>0 / 6</span>
+    </summary>
+    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
+    <div class="body">
+      <ul class="checklist">
+        <li><input type="checkbox" id="tt1"><label for="tt1">Toothbrush + toothpaste + floss</label></li>
+        <li><input type="checkbox" id="tt2"><label for="tt2">Deodorant</label></li>
+        <li><input type="checkbox" id="tt3"><label for="tt3">Razor + cartridges</label></li>
+        <li><input type="checkbox" id="tt4"><label for="tt4">Body wash + shampoo (or use hotel)</label></li>
+        <li><input type="checkbox" id="tt5"><label for="tt5">Face wash + lip balm</label></li>
+        <li><input type="checkbox" id="tt6"><label for="tt6">Glasses, contacts, solution</label></li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="accordion" data-checklist-id="pack-meds">
+    <summary>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      Health &amp; meds
+      <span class="count" data-count>0 / 4</span>
+    </summary>
+    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
+    <div class="body">
+      <ul class="checklist">
+        <li><input type="checkbox" id="h1"><label for="h1">Prescriptions in original labeled bottles + buffer days</label></li>
+        <li><input type="checkbox" id="h2"><label for="h2">OTC: Advil, Tylenol, Pepto, Band-Aids, Benadryl, hydrocortisone</label></li>
+        <li><input type="checkbox" id="h3"><label for="h3">Hand sanitizer</label></li>
+        <li><input type="checkbox" id="h4"><label for="h4">Electrolyte packets (NC summer heat)</label></li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="accordion" data-checklist-id="pack-car">
+    <summary>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      Day-pack / car kit
+      <span class="count" data-count>0 / 6</span>
+    </summary>
+    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
+    <div class="body">
+      <ul class="checklist">
+        <li><input type="checkbox" id="ca1"><label for="ca1">Reusable water bottle (24 oz+)</label></li>
+        <li><input type="checkbox" id="ca2"><label for="ca2">Snack bag: granola bars, jerky, trail mix, fruit</label></li>
+        <li><input type="checkbox" id="ca3"><label for="ca3">Phone car charger + mount</label></li>
+        <li><input type="checkbox" id="ca4"><label for="ca4">Paper map of NC as backup</label></li>
+        <li><input type="checkbox" id="ca5"><label for="ca5">Notebook + 2 pens</label></li>
+        <li><input type="checkbox" id="ca6"><label for="ca6">Sunglasses</label></li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="accordion" data-checklist-id="pack-forget">
+    <summary>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      Easy to forget
+      <span class="count" data-count>0 / 5</span>
+    </summary>
+    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
+    <div class="body">
+      <ul class="checklist">
+        <li><input type="checkbox" id="f1"><label for="f1">Laundry detergent pods + dryer sheets</label></li>
+        <li><input type="checkbox" id="f2"><label for="f2">Reusable grocery bags</label></li>
+        <li><input type="checkbox" id="f3"><label for="f3">Slippers / shower sandals</label></li>
+        <li><input type="checkbox" id="f4"><label for="f4">Travel umbrella (NC summer thunderstorms)</label></li>
+        <li><input type="checkbox" id="f5"><label for="f5">Refillable coffee tumbler</label></li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<!-- Contacts -->
+<section id="contacts">
+  <h2>Key Contacts</h2>
+
+  <div class="contacts-grid">
+    <div class="contact">
+      <div class="who">Emily Keller (LAS host)</div>
+      <div class="info"><a href="mailto:eekeller@ncsu.edu">eekeller@ncsu.edu</a></div>
+      <div class="use">Primary contact — logistics, master account, hotel issues</div>
+    </div>
+    <div class="contact">
+      <div class="who">SCADS Organizing Team</div>
+      <div class="info"><a href="mailto:scads-apply@ncsu.edu">scads-apply@ncsu.edu</a></div>
+      <div class="use">General SCADS questions, Unity ID, paperwork</div>
+    </div>
+    <div class="contact">
+      <div class="who">Hyatt House — Front desk</div>
+      <div class="info"><a href="tel:+19843267710">(984) 326-7710</a><br>11 Seaboard Ave, Raleigh NC 27604</div>
+      <div class="use">Shuttle, room issues, in-room dining, laundry</div>
+    </div>
+    <div class="contact">
+      <div class="who">NCSU Unity ID Help</div>
+      <div class="info"><a href="https://help.ncsu.edu" rel="noopener" target="_blank">help.ncsu.edu</a></div>
+      <div class="use">Login or account access problems</div>
+    </div>
+    <div class="contact">
+      <div class="who">RIT Service Center</div>
+      <div class="info"><a href="tel:+15854755000">585-475-5000</a></div>
+      <div class="use">Backup for anything RIT-side</div>
+    </div>
+    <div class="contact">
+      <div class="who">AAA Roadside</div>
+      <div class="info"><a href="tel:+18002224357">1-800-AAA-HELP</a></div>
+      <div class="use">Breakdown on the drive (if member)</div>
+    </div>
+    <div class="contact">
+      <div class="who">Emergency</div>
+      <div class="info"><a href="tel:911">911</a></div>
+      <div class="use">Medical / safety</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  Built for AJ Barea &middot; SCADS Summer Residency, June &amp; July 2026 &middot; offline-friendly, prints clean
+</footer>
+
+<script>
+// ===========================================================================
+// Calendar generation — 8 weeks Mon–Sun starting May 25, 2026 (Mon of week 0)
+// ===========================================================================
+const TRIP_START = new Date(2026, 4, 31);   // May 31, 2026 (Sun = arrival)
+const TRIP_END   = new Date(2026, 6, 25);   // Jul 25, 2026 (Sat = checkout)
+
+// week markers: each row is the Mon-Sun span containing a trip week's main activity
+const weeks = [
+  { label: "Wk 1", sub: "Settle in",       mon: new Date(2026,5,1) },
+  { label: "Wk 2", sub: "Umstead hike",    mon: new Date(2026,5,8) },
+  { label: "Wk 3", sub: "Durham day",      mon: new Date(2026,5,15) },
+  { label: "Wk 4", sub: "Beach overnight", mon: new Date(2026,5,22) },
+  { label: "Wk 5", sub: "Asheville",       mon: new Date(2026,5,29) },
+  { label: "Wk 6", sub: "Hanging Rock",    mon: new Date(2026,6,6) },
+  { label: "Wk 7", sub: "Raven Rock",      mon: new Date(2026,6,13) },
+  { label: "Wk 8", sub: "Wrap-up",         mon: new Date(2026,6,20) },
+];
+
+// activity map (yyyy-mm-dd -> {cls, tag})
+const A = (k,v)=>v;
+const activity = {
+  "2026-05-31": { cls: "travel",   tag: "Drive" },
+  "2026-06-01": { cls: "travel",   tag: "Day 1" },
+  "2026-06-06": { cls: "rest",     tag: "BBQ" },
+  "2026-06-07": { cls: "rest",     tag: "Rest" },
+  "2026-06-13": { cls: "hike",     tag: "Umstead" },
+  "2026-06-14": { cls: "rest",     tag: "Museum" },
+  "2026-06-20": { cls: "city",     tag: "Durham" },
+  "2026-06-21": { cls: "rest",     tag: "Rest" },
+  "2026-06-27": { cls: "beach",    tag: "Beach" },
+  "2026-06-28": { cls: "beach",    tag: "Beach" },
+  "2026-07-03": { cls: "mountain", tag: "Drive" },
+  "2026-07-04": { cls: "mountain", tag: "Asheville" },
+  "2026-07-05": { cls: "mountain", tag: "Drive back" },
+  "2026-07-11": { cls: "hike",     tag: "Hanging Rk" },
+  "2026-07-12": { cls: "rest",     tag: "Rest" },
+  "2026-07-18": { cls: "hike",     tag: "Raven Rk" },
+  "2026-07-19": { cls: "rest",     tag: "Pack" },
+  "2026-07-24": { cls: "rest",     tag: "Farewell" },
+  "2026-07-25": { cls: "travel",   tag: "Check out" },
+};
+
+function ymd(d){ const z=n=>String(n).padStart(2,"0"); return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`; }
+function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function sameDate(a,b){ return ymd(a)===ymd(b); }
+
+const today = new Date();
+const tripActive = today >= TRIP_START && today <= TRIP_END;
+const tripPre = today < TRIP_START;
+const tripPost = today > TRIP_END;
+
+// Render calendar rows
+const calBody = document.getElementById("cal-body");
+weeks.forEach(w => {
+  const row = document.createElement("div");
+  row.className = "cal-row";
+  const lab = document.createElement("div");
+  lab.className = "week-label";
+  lab.innerHTML = `${w.label}<small>${w.sub}</small>`;
+  row.appendChild(lab);
+
+  let containsToday = false;
+  for (let i = 0; i < 7; i++) {
+    const d = addDays(w.mon, i);
+    const key = ymd(d);
+    const cell = document.createElement("div");
+    cell.className = "cal-cell";
+    const a = activity[key];
+    if (a) {
+      cell.classList.add("activity", a.cls);
+      cell.innerHTML = `<span class="d">${d.getDate()}</span><span class="tag">${a.tag}</span>`;
+    } else {
+      cell.innerHTML = `<span class="d">${d.getDate()}</span>`;
+    }
+    if (sameDate(d, today)) { cell.classList.add("today"); containsToday = true; }
+    row.appendChild(cell);
+  }
+  if (containsToday) row.classList.add("is-current");
+  calBody.appendChild(row);
+});
+
+// ===========================================================================
+// Status chip in topbar
+// ===========================================================================
+const chip = document.getElementById("status-chip");
+const progressFill = document.getElementById("trip-progress-fill");
+const progressBar = progressFill?.parentElement;
+const TRIP_TOTAL_MS = TRIP_END - TRIP_START;
+function setStatus() {
+  let pct = 0;
+  if (tripPre) {
+    const days = Math.ceil((TRIP_START - today) / 86400000);
+    chip.textContent = `T-${days} days to Raleigh`;
+    chip.className = "status-chip pre";
+    pct = 0;
+  } else if (tripActive) {
+    const day = Math.floor((today - TRIP_START) / 86400000) + 1;
+    chip.textContent = `Day ${day} of 56`;
+    chip.className = "status-chip live";
+    pct = Math.max(0, Math.min(100, ((today - TRIP_START) / TRIP_TOTAL_MS) * 100));
+  } else {
+    chip.textContent = "Trip complete";
+    chip.className = "status-chip post";
+    pct = 100;
+  }
+  if (progressFill) {
+    // requestAnimationFrame so the CSS transition runs from 0 -> pct
+    requestAnimationFrame(() => { progressFill.style.width = pct.toFixed(1) + "%"; });
+    progressBar?.setAttribute("aria-valuenow", Math.round(pct));
+  }
+}
+setStatus();
+
+// ===========================================================================
+// "Today / Up next" widget — populates from activity[] + weeks[]
+// ===========================================================================
+(function setNowCard() {
+  const card = document.getElementById("now-card");
+  const lab  = document.getElementById("now-label");
+  const head = document.getElementById("now-headline");
+  const sub  = document.getElementById("now-sub");
+  const jump = document.getElementById("now-jump");
+  if (!card) return;
+
+  const fmt = (d) => d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+  const todayKey = ymd(today);
+  const todayAct = activity[todayKey];
+
+  // Find next activity from today forward
+  function findNext(fromDate) {
+    for (let i = 0; i < 90; i++) {
+      const d = addDays(fromDate, i);
+      const a = activity[ymd(d)];
+      if (a) return { date: d, act: a };
+    }
+    return null;
+  }
+
+  if (tripPre) {
+    const days = Math.ceil((TRIP_START - today) / 86400000);
+    card.classList.add("is-pre");
+    lab.textContent = days <= 1 ? "Tomorrow" : `In ${days} days`;
+    head.textContent = days === 0
+      ? "Today: leave Rochester at 5:30 AM."
+      : `Trip begins ${fmt(TRIP_START)} — drive day.`;
+    sub.textContent = days > 14
+      ? "Focus on the pre-trip checklist; hotel & parking asks first."
+      : "Pre-trip checklist + packing. Confirm Hyatt parking rate with Emily.";
+    jump.textContent = "Pre-trip checklist";
+    jump.href = "#pretrip";
+  } else if (tripActive) {
+    card.classList.add("is-live");
+    const dayNum = Math.floor((today - TRIP_START) / 86400000) + 1;
+    lab.textContent = `Day ${dayNum} of 56 · ${today.toLocaleDateString("en-US",{weekday:"long"})}`;
+    if (todayAct) {
+      head.textContent = `Today: ${todayAct.tag}`;
+      sub.textContent = "See your week card below for the full plan.";
+    } else {
+      // find next activity within 7 days
+      const next = findNext(addDays(today, 1));
+      if (next) {
+        const dd = Math.ceil((next.date - today) / 86400000);
+        head.textContent = `Up next: ${next.act.tag} — ${fmt(next.date)}`;
+        sub.textContent = dd === 1 ? "Tomorrow. Pack the day-pack tonight."
+                       : dd <= 7  ? `${dd} days out. This weekend's anchor.`
+                       :            `${dd} days out. Plenty of time to prep.`;
+      } else {
+        head.textContent = "Quiet week — focus on SCADS work.";
+        sub.textContent = "Use the food directory below for lunch picks.";
+      }
+    }
+    jump.textContent = "Today's week";
+    // Jump to current week card
+    const wkSection = document.querySelector(".week-card.is-current") || document.getElementById("weeks");
+    jump.href = "#" + (wkSection.id || "weeks");
+  } else {
+    card.classList.add("is-post");
+    lab.textContent = "Trip complete";
+    head.textContent = "Eight weeks done.";
+    sub.textContent = "Calendar + checklists below stay as a record.";
+  }
+})();
+
+// ===========================================================================
+// Web Share API — share-from-laptop, native sheet on phone
+// ===========================================================================
+(function wireShare(){
+  const btn = document.getElementById("share-btn");
+  if (!btn) return;
+  if (!navigator.canShare || !navigator.canShare({title:"x"})) {
+    btn.hidden = true; return;
+  }
+  btn.addEventListener("click", async () => {
+    try {
+      await navigator.share({
+        title: "AJ — NC Summer Residency 2026",
+        text: "8-week SCADS residency itinerary",
+        url: location.href,
+      });
+    } catch (e) { /* user cancelled — fine */ }
+  });
+})();
+
+// ===========================================================================
+// Auto-expand the current week (only if trip is active)
+// ===========================================================================
+document.querySelectorAll(".week-card").forEach(card => {
+  const start = new Date(card.dataset.weekStart);
+  const end = new Date(card.dataset.weekEnd);
+  end.setHours(23,59,59);
+  if (today >= start && today <= end) {
+    card.classList.add("is-current");
+    card.open = true;
+  }
+});
+
+// ===========================================================================
+// Checklist persistence (localStorage)
+// ===========================================================================
+const STORAGE_KEY = "ajscads2026:checks:v1";
+function loadChecks(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; } }
+function saveChecks(state){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {} }
+
+const checkState = loadChecks();
+
+document.querySelectorAll("ul.checklist input[type=checkbox]").forEach(box => {
+  const id = box.id;
+  if (checkState[id]) { box.checked = true; box.closest("li").classList.add("checked"); }
+  box.addEventListener("change", () => {
+    const li = box.closest("li");
+    li.classList.toggle("checked", box.checked);
+    checkState[id] = box.checked;
+    saveChecks(checkState);
+    refreshCounts();
+  });
+});
+
+function refreshCounts(){
+  document.querySelectorAll("details.accordion").forEach(acc => {
+    const boxes = acc.querySelectorAll("ul.checklist input[type=checkbox]");
+    const done = Array.from(boxes).filter(b => b.checked).length;
+    const total = boxes.length;
+    const c = acc.querySelector("[data-count]");
+    if (c) c.textContent = `${done} / ${total}`;
+    const pf = acc.querySelector(".acc-progress .fill");
+    if (pf) pf.style.width = total ? ((done / total) * 100).toFixed(1) + "%" : "0%";
+  });
+}
+refreshCounts();
+
+// ===========================================================================
+// Search + filter (food + outdoor)
+// ===========================================================================
+function wireDir(searchId, gridId) {
+  const search = document.getElementById(searchId);
+  const grid = document.getElementById(gridId);
+  const target = grid.id.replace("-grid","");
+  const chips = document.querySelectorAll(`.dir-chip[data-filter-target="${target}"]`);
+  let activeFilter = "all";
+
+  function apply() {
+    const q = (search.value || "").trim().toLowerCase();
+    let visible = 0;
+    grid.querySelectorAll(".dir-item").forEach(item => {
+      const matchCat = activeFilter === "all" || item.dataset.cat === activeFilter;
+      const matchText = !q || item.dataset.text.includes(q);
+      const show = matchCat && matchText;
+      item.hidden = !show;
+      if (show) visible++;
+    });
+    // empty state
+    let empty = grid.querySelector(".dir-empty");
+    if (visible === 0) {
+      if (!empty) {
+        empty = document.createElement("div");
+        empty.className = "dir-empty";
+        empty.textContent = "Nothing matches that yet.";
+        grid.appendChild(empty);
+      }
+    } else if (empty) {
+      empty.remove();
+    }
+  }
+
+  search.addEventListener("input", apply);
+  chips.forEach(chip => {
+    chip.addEventListener("click", () => {
+      chips.forEach(c => c.setAttribute("aria-pressed", "false"));
+      chip.setAttribute("aria-pressed", "true");
+      activeFilter = chip.dataset.filter;
+      apply();
+    });
+  });
+}
+wireDir("food-search", "food-grid");
+wireDir("outdoor-search", "outdoor-grid");
+
+// ===========================================================================
+// TOC active section highlighting via IntersectionObserver
+// ===========================================================================
+const tocLinks = document.querySelectorAll(".toc a");
+const idToLink = new Map();
+tocLinks.forEach(a => idToLink.set(a.getAttribute("href").slice(1), a));
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      tocLinks.forEach(a => a.classList.remove("active"));
+      const link = idToLink.get(e.target.id);
+      if (link) link.classList.add("active");
+    }
+  });
+}, { rootMargin: "-30% 0px -65% 0px" });
+document.querySelectorAll("section[id]").forEach(s => io.observe(s));
+</script>
+</body>
+</html>
