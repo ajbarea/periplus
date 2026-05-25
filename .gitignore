@@ -12,3 +12,6 @@ site/
 
 # WSL download metadata
 *:Zone.Identifier
+
+# build caches
+.cache/
