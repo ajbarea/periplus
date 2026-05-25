@@ -10,7 +10,7 @@ hide:
 
 # Periplus
 
-**Your whole trip — offline, in your pocket.** An installable travel-itinerary planner that works with zero signal, opens every food and trail spot straight into your maps app, and is a single file you can fork for your own multi-week trip.
+**Your whole trip, offline, in your pocket.** An installable travel-itinerary planner that works with zero signal, opens every food and trail spot straight into your maps app, and is a single file you can fork for your own multi-week trip.
 { .hero-subtitle }
 
 <div class="hero-buttons" markdown>
@@ -27,7 +27,7 @@ hide:
 
 ## What is Periplus?
 
-A *periplus* was the ancient mariner's itinerary — a written log of ports and landmarks in order along a voyage. This one is a modern progressive web app: install it to your home screen and the entire itinerary works offline, in the dead zones where cell coverage drops.
+A *periplus* was the ancient mariner's itinerary: a written log of ports and landmarks in order along a voyage. This one is a modern progressive web app: install it to your home screen and the entire itinerary works offline, in the dead zones where cell coverage drops.
 
 </div>
 </section>
@@ -41,7 +41,7 @@ A *periplus* was the ancient mariner's itinerary — a written log of ports and 
 
 <div class="feature-card" markdown>
 ### :material-wifi-off: Works offline
-Open it once on signal and the whole plan is cached. Airplane mode, mountain passes, parkway dead zones — it just works.
+Open it once on signal and the whole plan is cached. Airplane mode, mountain passes, parkway dead zones: it just works.
 </div>
 
 <div class="feature-card" markdown>
@@ -51,7 +51,7 @@ Add to Home Screen on iOS or Android and it launches full-screen, its own icon, 
 
 <div class="feature-card" markdown>
 ### :material-map-marker-path: Tap to navigate
-Every spot has a Directions link that opens your maps app — Google or Apple, your choice, remembered.
+Every spot has a Directions link that opens your maps app: Google or Apple, your choice, remembered.
 </div>
 
 <div class="feature-card" markdown>
@@ -68,7 +68,7 @@ All the trip data lives in one `TRIP` config block. Edit it, redeploy, and it's 
 
 ## See it live
 
-The live demo is a real 8-week research residency in North Carolina — food, hikes, beaches, and a week-by-week plan, all offline-ready.
+The live demo is a real 8-week research residency in North Carolina: food, hikes, beaches, and a week-by-week plan, all offline-ready.
 
 [Open the planner](app/){ .md-button .md-button--primary }
 

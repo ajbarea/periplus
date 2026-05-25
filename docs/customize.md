@@ -1,6 +1,6 @@
 # Customize
 
-Periplus is built to fork. All the trip-specific data lives in one `TRIP` config block near the top of the app's `<script>` — change it and the app is yours.
+Periplus is built to fork. All the trip-specific data lives in one `TRIP` config block near the top of the app's `<script>`. Change it and the app is yours.
 
 ## Fork and edit
 
@@ -20,11 +20,11 @@ const TRIP = {
     },
     // …
   ],
-  outdoor: [ /* parks, hikes, beaches, museums — same shape */ ],
+  outdoor: [ /* parks, hikes, beaches, museums (same shape) */ ],
 };
 ```
 
 3. Each entry's `maps` field is the destination for its **Directions** link. `cat` matches the filter chips; `text` is what the search box matches against; `warn` (optional) renders a small caution badge.
-4. Commit and push — the site and app redeploy automatically.
+4. Commit and push; the site and app redeploy automatically.
 
 That's the whole edit surface: no build, no framework, no backend.
