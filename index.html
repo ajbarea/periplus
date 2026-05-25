@@ -2000,6 +2000,13 @@ const io = new IntersectionObserver((entries) => {
   });
 }, { rootMargin: "-30% 0px -65% 0px" });
 document.querySelectorAll("section[id]").forEach(s => io.observe(s));
+
+// Service worker registration (offline + installable)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
 </script>
 </body>
 </html>
