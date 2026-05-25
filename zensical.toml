@@ -29,6 +29,8 @@ nav = [
 [project.theme]
 name = "material"
 language = "en"
+custom_dir = "overrides"
+favicon = "assets/favicon.png"
 icon.logo = "material/map-marker-path"
 font.text = "Inter"
 font.code = "JetBrains Mono"
@@ -58,7 +60,6 @@ accent = "custom"
 # ---------------------------------------------------------------------------
 [project.plugins]
 search = { engine = "disco" }
-social = {}
 
 # ---------------------------------------------------------------------------
 # Social & Metadata

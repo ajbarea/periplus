@@ -1,5 +1,4 @@
 ---
-title: Periplus
 hide:
   - navigation
   - toc
