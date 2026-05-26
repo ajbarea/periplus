@@ -11,6 +11,9 @@ On iOS (Safari → Share → **Add to Home Screen**) or Android, Periplus instal
 ## Tap-to-navigate
 Every food spot, hike, beach, and your lodging has a **Directions** link that opens your maps app. A toggle lets you pick **Google** or **Apple** Maps, and your choice is remembered.
 
+## Add to calendar
+Every event in the 8-week calendar is an **Add to calendar** link. The same Google/Apple toggle decides whether it opens a pre-filled Google Calendar event or downloads an Apple/ICS file generated on-device, so it works with zero signal too.
+
 ## Searchable directories
 Filter food by type (sandwiches, BBQ, breakfast, sweet) or the outdoors by category (parks, hikes, beaches, museums), or just search by name. Filtering is instant.
 
