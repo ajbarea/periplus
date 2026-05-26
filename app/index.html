@@ -1040,50 +1040,7 @@ a.cal-cell.activity:hover::after, a.cal-cell.activity:focus-visible::after { col
 <section id="pretrip">
   <h2>Pre-Trip <span class="badge">Setup &amp; Checklist</span></h2>
 
-  <details class="accordion" open data-checklist-id="pretrip-setup">
-    <summary>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-      Saturday May 30 — time-anchored prep
-      <span class="count" data-count>0 / 8</span>
-    </summary>
-    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
-    <div class="body">
-      <ul class="checklist">
-        <li><input type="checkbox" id="ps1"><label for="ps1"><strong>5:00 PM</strong> — Top off the gas tank at home</label></li>
-        <li><input type="checkbox" id="ps2"><label for="ps2"><strong>6:00 PM</strong> — Pack the car (suitcase, laptop, hike bag, beach bag, snack bag, water bottle)</label></li>
-        <li><input type="checkbox" id="ps3"><label for="ps3"><strong>7:00 PM</strong> — EZ-Pass balance or stash $30 in singles/fives for cash tolls</label></li>
-        <li><input type="checkbox" id="ps4"><label for="ps4"><strong>8:00 PM</strong> — Offline Google Maps for Rochester→Raleigh; AllTrails maps for Umstead, Eno River, Raven Rock, Hanging Rock</label></li>
-        <li><input type="checkbox" id="ps5"><label for="ps5"><strong>8:30 PM</strong> — Spotify / podcast downloads for offline (10+ hr)</label></li>
-        <li><input type="checkbox" id="ps6"><label for="ps6"><strong>9:00 PM</strong> — Save offline: Hyatt conf, Emily's emails, this itinerary, Unity ID info</label></li>
-        <li><input type="checkbox" id="ps7"><label for="ps7"><strong>9:30 PM</strong> — Alarms 5:00 AM + 5:25 AM Sun; lay out driving outfit + Day 1 work outfit</label></li>
-        <li><input type="checkbox" id="ps8"><label for="ps8"><strong>10:00 PM</strong> — Lights out</label></li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="accordion" data-checklist-id="pretrip-master">
-    <summary>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-      Master checklist (before May 31)
-      <span class="count" data-count>0 / 11</span>
-    </summary>
-    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
-    <div class="body">
-      <ul class="checklist">
-        <li><input type="checkbox" id="m1"><label for="m1">Confirm hotel confirmation number with Emily Keller</label></li>
-        <li><input type="checkbox" id="m2"><label for="m2"><strong>Call the hotel about an extended-stay parking rate</strong></label></li>
-        <li><input type="checkbox" id="m2b"><label for="m2b"><strong>Ask your host about a sponsored campus parking permit</strong></label></li>
-        <li><input type="checkbox" id="m3"><label for="m3">Download offline Google Maps for the Rochester → Raleigh route</label></li>
-        <li><input type="checkbox" id="m4"><label for="m4">Reserve Wrightsville Beach lodging for Sat Jun 27 (book early — peak season)</label></li>
-        <li><input type="checkbox" id="m5"><label for="m5">Reserve Asheville lodging for Fri Jul 3 – Sun Jul 5</label></li>
-        <li><input type="checkbox" id="m5b"><label for="m5b">Re-confirm Blue Ridge Parkway milepost status + Mt. Pisgah Trail with the Pisgah Ranger District the week of Jul 3</label></li>
-        <li><input type="checkbox" id="m6"><label for="m6">Confirm whether LAS observes Fri Jul 3 federal holiday</label></li>
-        <li><input type="checkbox" id="m6b"><label for="m6b">Download the ParkMobile app (Wrightsville Beach parking $5/hr or $25/day)</label></li>
-        <li><input type="checkbox" id="m6c"><label for="m6c">Watch for The Common Market at Seaboard Station opening — visit week one if it lands during your stay</label></li>
-        <li><input type="checkbox" id="m8"><label for="m8">Download AllTrails offline maps (Umstead, Eno River, Raven Rock, Hanging Rock) + DuPont State Forest &amp; Graveyard Fields as Helene-era Asheville backups</label></li>
-      </ul>
-    </div>
-  </details>
+  <div id="pretrip-list"></div>
 </section>
 
 <!-- Packing -->
@@ -1091,180 +1048,7 @@ a.cal-cell.activity:hover::after, a.cal-cell.activity:focus-visible::after { col
   <h2>Packing Checklist <span class="badge">8 weeks</span></h2>
   <p class="lede">Hyatt House has in-suite kitchen + on-site laundry. Pack <strong>2 weeks of clothes</strong>, wash weekly. Each section is collapsible; tap any checkbox and it persists.</p>
 
-  <details class="accordion" data-checklist-id="pack-docs">
-    <summary>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-      Documents &amp; money
-      <span class="count" data-count>0 / 6</span>
-    </summary>
-    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
-    <div class="body">
-      <ul class="checklist">
-        <li><input type="checkbox" id="d1"><label for="d1">Driver's license + passport (backup ID)</label></li>
-        <li><input type="checkbox" id="d2"><label for="d2">Primary credit card + backup card</label></li>
-        <li><input type="checkbox" id="d3"><label for="d3">$80–100 cash for emergencies and tolls</label></li>
-        <li><input type="checkbox" id="d4"><label for="d4">Health insurance card</label></li>
-        <li><input type="checkbox" id="d5"><label for="d5">RIT ID + NCSU Unity ID printout</label></li>
-        <li><input type="checkbox" id="d6"><label for="d6">AAA membership card (if applicable)</label></li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="accordion" data-checklist-id="pack-tech">
-    <summary>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-      Tech (never leave in the car overnight)
-      <span class="count" data-count>0 / 9</span>
-    </summary>
-    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
-    <div class="body">
-      <ul class="checklist">
-        <li><input type="checkbox" id="t1"><label for="t1">Laptop + charger</label></li>
-        <li><input type="checkbox" id="t2"><label for="t2">External monitor cable (HDMI + USB-C adapter)</label></li>
-        <li><input type="checkbox" id="t3"><label for="t3">Wireless mouse</label></li>
-        <li><input type="checkbox" id="t4"><label for="t4">Headphones / earbuds</label></li>
-        <li><input type="checkbox" id="t5"><label for="t5">Phone + cable + small wall plug</label></li>
-        <li><input type="checkbox" id="t6"><label for="t6">Portable battery pack (10,000mAh)</label></li>
-        <li><input type="checkbox" id="t7"><label for="t7">USB drive (for poster/presentation handoffs)</label></li>
-        <li><input type="checkbox" id="t8"><label for="t8">Business cards or QR cards (portfolio)</label></li>
-        <li><input type="checkbox" id="t9"><label for="t9">Camera body + spare battery + SD cards + charger (if bringing)</label></li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="accordion" data-checklist-id="pack-work">
-    <summary>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-      Work outfits (business casual)
-      <span class="count" data-count>0 / 6</span>
-    </summary>
-    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
-    <div class="body">
-      <ul class="checklist">
-        <li><input type="checkbox" id="w1"><label for="w1">3 button-downs or polos</label></li>
-        <li><input type="checkbox" id="w2"><label for="w2">2 pairs chinos</label></li>
-        <li><input type="checkbox" id="w3"><label for="w3">Blazer or sport coat (final-week presentations)</label></li>
-        <li><input type="checkbox" id="w4"><label for="w4">Belt (do not forget the belt)</label></li>
-        <li><input type="checkbox" id="w5"><label for="w5">Closed-toe loafers / dress shoes</label></li>
-        <li><input type="checkbox" id="w6"><label for="w6">Dress socks (one per work day; laundry midweek)</label></li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="accordion" data-checklist-id="pack-casual">
-    <summary>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-      Casual &amp; lounge
-      <span class="count" data-count>0 / 6</span>
-    </summary>
-    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
-    <div class="body">
-      <ul class="checklist">
-        <li><input type="checkbox" id="c1"><label for="c1">6 t-shirts</label></li>
-        <li><input type="checkbox" id="c2"><label for="c2">2 pairs gym shorts</label></li>
-        <li><input type="checkbox" id="c3"><label for="c3">Hoodie / light sweater (offices over-AC, mountain evenings)</label></li>
-        <li><input type="checkbox" id="c4"><label for="c4">2 pairs jeans</label></li>
-        <li><input type="checkbox" id="c5"><label for="c5">Pajamas / sleep clothes</label></li>
-        <li><input type="checkbox" id="c6"><label for="c6">Underwear + socks (10 days, laundry weekly)</label></li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="accordion" data-checklist-id="pack-outdoor">
-    <summary>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-      Outdoor &amp; beach kit
-      <span class="count" data-count>0 / 10</span>
-    </summary>
-    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
-    <div class="body">
-      <ul class="checklist">
-        <li><input type="checkbox" id="o1"><label for="o1">Hiking shoes / trail runners</label></li>
-        <li><input type="checkbox" id="o2"><label for="o2">Daypack (15–20L)</label></li>
-        <li><input type="checkbox" id="o3"><label for="o3">Swim trunks</label></li>
-        <li><input type="checkbox" id="o4"><label for="o4">Beach towel</label></li>
-        <li><input type="checkbox" id="o5"><label for="o5">Water shoes (shell-heavy NC beaches)</label></li>
-        <li><input type="checkbox" id="o6"><label for="o6">Sunglasses + spare pair</label></li>
-        <li><input type="checkbox" id="o7"><label for="o7">Wide-brim hat or cap</label></li>
-        <li><input type="checkbox" id="o8"><label for="o8">Sunscreen (SPF 50+)</label></li>
-        <li><input type="checkbox" id="o9"><label for="o9">Bug spray (DEET or picaridin)</label></li>
-        <li><input type="checkbox" id="o10"><label for="o10">After-sun lotion / aloe</label></li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="accordion" data-checklist-id="pack-toiletries">
-    <summary>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-      Toiletries
-      <span class="count" data-count>0 / 6</span>
-    </summary>
-    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
-    <div class="body">
-      <ul class="checklist">
-        <li><input type="checkbox" id="tt1"><label for="tt1">Toothbrush + toothpaste + floss</label></li>
-        <li><input type="checkbox" id="tt2"><label for="tt2">Deodorant</label></li>
-        <li><input type="checkbox" id="tt3"><label for="tt3">Razor + cartridges</label></li>
-        <li><input type="checkbox" id="tt4"><label for="tt4">Body wash + shampoo (or use hotel)</label></li>
-        <li><input type="checkbox" id="tt5"><label for="tt5">Face wash + lip balm</label></li>
-        <li><input type="checkbox" id="tt6"><label for="tt6">Glasses, contacts, solution</label></li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="accordion" data-checklist-id="pack-meds">
-    <summary>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-      Health &amp; meds
-      <span class="count" data-count>0 / 4</span>
-    </summary>
-    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
-    <div class="body">
-      <ul class="checklist">
-        <li><input type="checkbox" id="h1"><label for="h1">Prescriptions in original labeled bottles + buffer days</label></li>
-        <li><input type="checkbox" id="h2"><label for="h2">OTC: Advil, Tylenol, Pepto, Band-Aids, Benadryl, hydrocortisone</label></li>
-        <li><input type="checkbox" id="h3"><label for="h3">Hand sanitizer</label></li>
-        <li><input type="checkbox" id="h4"><label for="h4">Electrolyte packets (NC summer heat)</label></li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="accordion" data-checklist-id="pack-car">
-    <summary>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-      Day-pack / car kit
-      <span class="count" data-count>0 / 6</span>
-    </summary>
-    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
-    <div class="body">
-      <ul class="checklist">
-        <li><input type="checkbox" id="ca1"><label for="ca1">Reusable water bottle (24 oz+)</label></li>
-        <li><input type="checkbox" id="ca2"><label for="ca2">Snack bag: granola bars, jerky, trail mix, fruit</label></li>
-        <li><input type="checkbox" id="ca3"><label for="ca3">Phone car charger + mount</label></li>
-        <li><input type="checkbox" id="ca4"><label for="ca4">Paper map of NC as backup</label></li>
-        <li><input type="checkbox" id="ca5"><label for="ca5">Notebook + 2 pens</label></li>
-        <li><input type="checkbox" id="ca6"><label for="ca6">Sunglasses</label></li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="accordion" data-checklist-id="pack-forget">
-    <summary>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-      Easy to forget
-      <span class="count" data-count>0 / 5</span>
-    </summary>
-    <div class="acc-progress" aria-hidden="true"><div class="fill"></div></div>
-    <div class="body">
-      <ul class="checklist">
-        <li><input type="checkbox" id="f1"><label for="f1">Laundry detergent pods + dryer sheets</label></li>
-        <li><input type="checkbox" id="f2"><label for="f2">Reusable grocery bags</label></li>
-        <li><input type="checkbox" id="f3"><label for="f3">Slippers / shower sandals</label></li>
-        <li><input type="checkbox" id="f4"><label for="f4">Travel umbrella (NC summer thunderstorms)</label></li>
-        <li><input type="checkbox" id="f5"><label for="f5">Refillable coffee tumbler</label></li>
-      </ul>
-    </div>
-  </details>
+  <div id="packing-list"></div>
 </section>
 
 <!-- Contacts -->
@@ -1585,20 +1369,6 @@ const STORAGE_KEY = "ajscads2026:checks:v1";
 function loadChecks(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; } }
 function saveChecks(state){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {} }
 
-const checkState = loadChecks();
-
-document.querySelectorAll("ul.checklist input[type=checkbox]").forEach(box => {
-  const id = box.id;
-  if (checkState[id]) { box.checked = true; box.closest("li").classList.add("checked"); }
-  box.addEventListener("change", () => {
-    const li = box.closest("li");
-    li.classList.toggle("checked", box.checked);
-    checkState[id] = box.checked;
-    saveChecks(checkState);
-    refreshCounts();
-  });
-});
-
 function refreshCounts(){
   document.querySelectorAll("details.accordion").forEach(acc => {
     const boxes = acc.querySelectorAll("ul.checklist input[type=checkbox]");
@@ -1610,7 +1380,21 @@ function refreshCounts(){
     if (pf) pf.style.width = total ? ((done / total) * 100).toFixed(1) + "%" : "0%";
   });
 }
-refreshCounts();
+function wireChecklists(){
+  const checkState = loadChecks();
+  document.querySelectorAll("ul.checklist input[type=checkbox]").forEach(box => {
+    const id = box.id;
+    if (checkState[id]) { box.checked = true; box.closest("li").classList.add("checked"); }
+    box.addEventListener("change", () => {
+      const li = box.closest("li");
+      li.classList.toggle("checked", box.checked);
+      checkState[id] = box.checked;
+      saveChecks(checkState);
+      refreshCounts();
+    });
+  });
+  refreshCounts();
+}
 
 // ===========================================================================
 // Search + filter (food + outdoor)
@@ -1808,6 +1592,122 @@ function renderTimeline(id, rows){
 }
 renderTimeline("arrival-timeline", TRIP.arrival);
 renderTimeline("dayone-timeline", TRIP.dayOne);
+
+TRIP.pretrip = [
+    { id: "pretrip-setup", open: true, title: "Saturday May 30 \u2014 time-anchored prep", items: [
+        { id: "ps1", label: "<strong>5:00 PM</strong> \u2014 Top off the gas tank at home" },
+        { id: "ps2", label: "<strong>6:00 PM</strong> \u2014 Pack the car (suitcase, laptop, hike bag, beach bag, snack bag, water bottle)" },
+        { id: "ps3", label: "<strong>7:00 PM</strong> \u2014 EZ-Pass balance or stash $30 in singles/fives for cash tolls" },
+        { id: "ps4", label: "<strong>8:00 PM</strong> \u2014 Offline Google Maps for Rochester\u2192Raleigh; AllTrails maps for Umstead, Eno River, Raven Rock, Hanging Rock" },
+        { id: "ps5", label: "<strong>8:30 PM</strong> \u2014 Spotify / podcast downloads for offline (10+ hr)" },
+        { id: "ps6", label: "<strong>9:00 PM</strong> \u2014 Save offline: Hyatt conf, Emily's emails, this itinerary, Unity ID info" },
+        { id: "ps7", label: "<strong>9:30 PM</strong> \u2014 Alarms 5:00 AM + 5:25 AM Sun; lay out driving outfit + Day 1 work outfit" },
+        { id: "ps8", label: "<strong>10:00 PM</strong> \u2014 Lights out" }
+    ] },
+    { id: "pretrip-master", title: "Master checklist (before May 31)", items: [
+        { id: "m1", label: "Confirm hotel confirmation number with Emily Keller" },
+        { id: "m2", label: "<strong>Call the hotel about an extended-stay parking rate</strong>" },
+        { id: "m2b", label: "<strong>Ask your host about a sponsored campus parking permit</strong>" },
+        { id: "m3", label: "Download offline Google Maps for the Rochester \u2192 Raleigh route" },
+        { id: "m4", label: "Reserve Wrightsville Beach lodging for Sat Jun 27 (book early \u2014 peak season)" },
+        { id: "m5", label: "Reserve Asheville lodging for Fri Jul 3 \u2013 Sun Jul 5" },
+        { id: "m5b", label: "Re-confirm Blue Ridge Parkway milepost status + Mt. Pisgah Trail with the Pisgah Ranger District the week of Jul 3" },
+        { id: "m6", label: "Confirm whether LAS observes Fri Jul 3 federal holiday" },
+        { id: "m6b", label: "Download the ParkMobile app (Wrightsville Beach parking $5/hr or $25/day)" },
+        { id: "m6c", label: "Watch for The Common Market at Seaboard Station opening \u2014 visit week one if it lands during your stay" },
+        { id: "m8", label: "Download AllTrails offline maps (Umstead, Eno River, Raven Rock, Hanging Rock) + DuPont State Forest &amp; Graveyard Fields as Helene-era Asheville backups" }
+    ] }
+  ];
+TRIP.packing = [
+    { id: "pack-docs", title: "Documents &amp; money", items: [
+        { id: "d1", label: "Driver's license + passport (backup ID)" },
+        { id: "d2", label: "Primary credit card + backup card" },
+        { id: "d3", label: "$80\u2013100 cash for emergencies and tolls" },
+        { id: "d4", label: "Health insurance card" },
+        { id: "d5", label: "RIT ID + NCSU Unity ID printout" },
+        { id: "d6", label: "AAA membership card (if applicable)" }
+    ] },
+    { id: "pack-tech", title: "Tech (never leave in the car overnight)", items: [
+        { id: "t1", label: "Laptop + charger" },
+        { id: "t2", label: "External monitor cable (HDMI + USB-C adapter)" },
+        { id: "t3", label: "Wireless mouse" },
+        { id: "t4", label: "Headphones / earbuds" },
+        { id: "t5", label: "Phone + cable + small wall plug" },
+        { id: "t6", label: "Portable battery pack (10,000mAh)" },
+        { id: "t7", label: "USB drive (for poster/presentation handoffs)" },
+        { id: "t8", label: "Business cards or QR cards (portfolio)" },
+        { id: "t9", label: "Camera body + spare battery + SD cards + charger (if bringing)" }
+    ] },
+    { id: "pack-work", title: "Work outfits (business casual)", items: [
+        { id: "w1", label: "3 button-downs or polos" },
+        { id: "w2", label: "2 pairs chinos" },
+        { id: "w3", label: "Blazer or sport coat (final-week presentations)" },
+        { id: "w4", label: "Belt (do not forget the belt)" },
+        { id: "w5", label: "Closed-toe loafers / dress shoes" },
+        { id: "w6", label: "Dress socks (one per work day; laundry midweek)" }
+    ] },
+    { id: "pack-casual", title: "Casual &amp; lounge", items: [
+        { id: "c1", label: "6 t-shirts" },
+        { id: "c2", label: "2 pairs gym shorts" },
+        { id: "c3", label: "Hoodie / light sweater (offices over-AC, mountain evenings)" },
+        { id: "c4", label: "2 pairs jeans" },
+        { id: "c5", label: "Pajamas / sleep clothes" },
+        { id: "c6", label: "Underwear + socks (10 days, laundry weekly)" }
+    ] },
+    { id: "pack-outdoor", title: "Outdoor &amp; beach kit", items: [
+        { id: "o1", label: "Hiking shoes / trail runners" },
+        { id: "o2", label: "Daypack (15\u201320L)" },
+        { id: "o3", label: "Swim trunks" },
+        { id: "o4", label: "Beach towel" },
+        { id: "o5", label: "Water shoes (shell-heavy NC beaches)" },
+        { id: "o6", label: "Sunglasses + spare pair" },
+        { id: "o7", label: "Wide-brim hat or cap" },
+        { id: "o8", label: "Sunscreen (SPF 50+)" },
+        { id: "o9", label: "Bug spray (DEET or picaridin)" },
+        { id: "o10", label: "After-sun lotion / aloe" }
+    ] },
+    { id: "pack-toiletries", title: "Toiletries", items: [
+        { id: "tt1", label: "Toothbrush + toothpaste + floss" },
+        { id: "tt2", label: "Deodorant" },
+        { id: "tt3", label: "Razor + cartridges" },
+        { id: "tt4", label: "Body wash + shampoo (or use hotel)" },
+        { id: "tt5", label: "Face wash + lip balm" },
+        { id: "tt6", label: "Glasses, contacts, solution" }
+    ] },
+    { id: "pack-meds", title: "Health &amp; meds", items: [
+        { id: "h1", label: "Prescriptions in original labeled bottles + buffer days" },
+        { id: "h2", label: "OTC: Advil, Tylenol, Pepto, Band-Aids, Benadryl, hydrocortisone" },
+        { id: "h3", label: "Hand sanitizer" },
+        { id: "h4", label: "Electrolyte packets (NC summer heat)" }
+    ] },
+    { id: "pack-car", title: "Day-pack / car kit", items: [
+        { id: "ca1", label: "Reusable water bottle (24 oz+)" },
+        { id: "ca2", label: "Snack bag: granola bars, jerky, trail mix, fruit" },
+        { id: "ca3", label: "Phone car charger + mount" },
+        { id: "ca4", label: "Paper map of NC as backup" },
+        { id: "ca5", label: "Notebook + 2 pens" },
+        { id: "ca6", label: "Sunglasses" }
+    ] },
+    { id: "pack-forget", title: "Easy to forget", items: [
+        { id: "f1", label: "Laundry detergent pods + dryer sheets" },
+        { id: "f2", label: "Reusable grocery bags" },
+        { id: "f3", label: "Slippers / shower sandals" },
+        { id: "f4", label: "Travel umbrella (NC summer thunderstorms)" },
+        { id: "f5", label: "Refillable coffee tumbler" }
+    ] }
+  ];
+function renderChecklist(containerId, sections){
+  const el = document.getElementById(containerId);
+  if (!el || !sections) return;
+  const chev = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>';
+  el.innerHTML = sections.map(sec => {
+    const items = sec.items.map(it => `<li><input type="checkbox" id="${it.id}"><label for="${it.id}">${it.label}</label></li>`).join("");
+    return `<details class="accordion"${sec.open ? " open" : ""} data-checklist-id="${sec.id}"><summary>${chev}${sec.title}<span class="count" data-count>0 / ${sec.items.length}</span></summary><div class="acc-progress" aria-hidden="true"><div class="fill"></div></div><div class="body"><ul class="checklist">${items}</ul></div></details>`;
+  }).join("");
+}
+renderChecklist("pretrip-list", TRIP.pretrip);
+renderChecklist("packing-list", TRIP.packing);
+wireChecklists();
 
 const MAPS_KEY = "periplus:maps-provider";
 function getMapsProvider(){ try { return localStorage.getItem(MAPS_KEY) || "google"; } catch { return "google"; } }
