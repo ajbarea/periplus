@@ -61,3 +61,43 @@ test('editing a heading inside a summary does not toggle the accordion', async (
   });
   expect(result.after).toBe(result.before);
 });
+
+test('directory cards can be added, reordered, and deleted', async ({ page }) => {
+  page.on('dialog', (d) => d.accept());
+  await page.goto('/');
+  const cards = page.locator('#food-grid .dir-item');
+  const start = await cards.count();
+  await page.locator('#edit-toggle').click();
+
+  await page.locator('.dir-add[data-arr="food"]').click();
+  await expect(cards).toHaveCount(start + 1);
+  await expect(cards.last().locator('[data-edit$=".name"]')).toHaveText('New entry');
+
+  const names = await page.locator('#food-grid [data-edit$=".name"]').allInnerTexts();
+  await cards.nth(1).locator('[data-act="up"]').click();
+  const reordered = await page.locator('#food-grid [data-edit$=".name"]').allInnerTexts();
+  expect(reordered[0]).toBe(names[1]);
+  expect(reordered[1]).toBe(names[0]);
+
+  await cards.first().locator('[data-act="del"]').click();
+  await expect(cards).toHaveCount(start);
+});
+
+test('structural edits persist via array snapshot and reset clears them', async ({ page }) => {
+  page.on('dialog', (d) => d.accept());
+  await page.goto('/');
+  const cards = page.locator('#food-grid .dir-item');
+  const start = await cards.count();
+  await page.locator('#edit-toggle').click();
+  await page.locator('.dir-add[data-arr="food"]').click();
+  await expect(cards).toHaveCount(start + 1);
+  expect(await page.evaluate(() => localStorage.getItem('periplus.arrays.v1'))).toContain('food');
+
+  await page.reload();
+  await expect(page.locator('#food-grid .dir-item')).toHaveCount(start + 1);
+
+  await page.locator('#edit-toggle').click();
+  await page.locator('#edit-reset').click();
+  await expect(page.locator('#food-grid .dir-item')).toHaveCount(start);
+  expect(await page.evaluate(() => localStorage.getItem('periplus.arrays.v1'))).toBeNull();
+});

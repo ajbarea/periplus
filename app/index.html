@@ -1684,6 +1684,11 @@ function dirCard(item, arr, i){
     ? `<a class="dir-go" href="${directionsUrl(item.maps)}" target="_blank" rel="noopener">Directions</a>`
     : "";
   return `<article class="dir-item" data-cat="${item.cat}" data-text="${item.text}">
+    <div class="card-ctrls">
+      <button type="button" class="cc" data-act="up" data-arr="${arr}" data-i="${i}" title="Move up" aria-label="Move up">↑</button>
+      <button type="button" class="cc" data-act="down" data-arr="${arr}" data-i="${i}" title="Move down" aria-label="Move down">↓</button>
+      <button type="button" class="cc cc-del" data-act="del" data-arr="${arr}" data-i="${i}" title="Delete entry" aria-label="Delete entry">&times;</button>
+    </div>
     <div class="name"><span data-edit="${arr}.${i}.name">${item.name}</span> <span class="meta" data-edit="${arr}.${i}.meta">${item.meta}</span></div>
     <div class="note" data-edit="${arr}.${i}.note">${item.note}</div>${warn}${go}
   </article>`;
@@ -1807,6 +1812,14 @@ if ('serviceWorker' in navigator) {
   const saveEdits = () => { try { localStorage.setItem(EDITS_KEY, JSON.stringify(edits)); } catch (e) {} };
   const esc = (s) => (window.CSS && CSS.escape) ? CSS.escape(s) : s.replace(/"/g, '\\"');
 
+  // Stage 2: structural edits (add/delete/reorder) persist the whole array, not a
+  // field diff — indices shift, so a snapshot is the honest unit. Directory field
+  // edits ride along in the same snapshot. STRUCTURAL maps array -> its grid id.
+  const ARRAYS_KEY = "periplus.arrays.v1";
+  const STRUCTURAL = { food: "food-grid", outdoor: "outdoor-grid" };
+  let arraysState = (() => { try { return JSON.parse(localStorage.getItem(ARRAYS_KEY)) || {}; } catch (e) { return {}; } })();
+  const saveArray = (arr) => { arraysState[arr] = TRIP[arr]; try { localStorage.setItem(ARRAYS_KEY, JSON.stringify(arraysState)); } catch (e) {} };
+
   function setPath(obj, path, val){
     const parts = path.split(".");
     let o = obj;
@@ -1823,10 +1836,53 @@ if ('serviceWorker' in navigator) {
   // Patch only the edited fields into TRIP + the already-rendered DOM (no re-render).
   function applyEdits(){
     for (const [path, val] of Object.entries(edits)){
+      if (STRUCTURAL[path.split(".")[0]]) continue;   // those ride in the array snapshot
       setPath(TRIP, path, val);
       document.querySelectorAll('[data-edit="' + esc(path) + '"]').forEach(el => { el.innerHTML = val; });
     }
   }
+
+  // Re-apply contenteditable to freshly-rendered nodes after a structural re-render.
+  function refreshEditable(root){
+    if (!document.body.classList.contains("editing")) return;
+    (root || document).querySelectorAll("[data-edit]").forEach(el => el.setAttribute("contenteditable", "true"));
+  }
+  function rerenderDir(arr){
+    renderDir(STRUCTURAL[arr], TRIP[arr], arr);   // safe: search/maps listeners live on static elements
+    refreshEditable(document.getElementById(STRUCTURAL[arr]));
+  }
+  // On load, swap directory arrays for their saved snapshots, then render.
+  function applyArrays(){
+    for (const arr of Object.keys(STRUCTURAL)){
+      if (Array.isArray(arraysState[arr])) { TRIP[arr] = arraysState[arr]; rerenderDir(arr); }
+    }
+  }
+  const blankEntry = (arr) => ({
+    name: "New entry", cat: (TRIP[arr] && TRIP[arr][0] && TRIP[arr][0].cat) || "",
+    meta: "", note: "Add a description.", text: "new entry", maps: ""
+  });
+
+  // Add / delete / reorder — single-pointer buttons, keyboard-operable (WCAG 2.2 SC 2.5.7;
+  // no drag required). Each mutates the TRIP array, snapshots it, and re-renders the grid.
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest && e.target.closest("[data-act]");
+    if (!btn || !document.body.classList.contains("editing")) return;
+    const act = btn.dataset.act, arr = btn.dataset.arr, list = TRIP[arr];
+    if (!list) return;
+    if (act === "add"){
+      list.push(blankEntry(arr));
+      saveArray(arr); rerenderDir(arr);
+      const el = document.querySelector('[data-edit="' + esc(arr + "." + (list.length - 1) + ".name") + '"]');
+      if (el){ el.focus(); const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+      return;
+    }
+    const i = +btn.dataset.i;
+    if (act === "up" && i > 0){ const t = list[i - 1]; list[i - 1] = list[i]; list[i] = t; }
+    else if (act === "down" && i < list.length - 1){ const t = list[i + 1]; list[i + 1] = list[i]; list[i] = t; }
+    else if (act === "del"){ if (!confirm('Delete "' + (list[i].name || "this entry") + '"?')) return; list.splice(i, 1); }
+    else return;
+    saveArray(arr); rerenderDir(arr);
+  });
 
   function setEditing(on){
     document.body.classList.toggle("editing", on);
@@ -1846,9 +1902,10 @@ if ('serviceWorker' in navigator) {
     if (!el || !document.body.classList.contains("editing")) return;
     const path = el.getAttribute("data-edit");
     const val = el.innerHTML.trim();
-    edits[path] = val;
     setPath(TRIP, path, val);
-    saveEdits();
+    const root = path.split(".")[0];
+    if (STRUCTURAL[root]) { saveArray(root); }   // field edit rides in the array snapshot
+    else { edits[path] = val; saveEdits(); }
   });
   // Enter commits a single-line field instead of inserting a newline.
   document.addEventListener("keydown", (e) => {
@@ -1896,7 +1953,18 @@ if ('serviceWorker' in navigator) {
     .edit-modal-actions button{ font:inherit; font-weight:600; padding:.45rem 1rem; border-radius:8px; cursor:pointer;
       border:1px solid var(--border,#e5e7eb); background:var(--surface,#fff); }
     #edit-copy{ background:var(--brand,#2563eb); color:#fff; border-color:var(--brand,#2563eb); }
-    @media print{ .edit-toggle, .edit-bar, .edit-modal{ display:none !important; } }
+    .card-ctrls{ display:none; }
+    body.editing .dir-item{ position:relative; }
+    body.editing .card-ctrls{ display:flex; gap:.2rem; position:absolute; top:6px; right:6px; z-index:2; }
+    .card-ctrls .cc{ font:inherit; font-size:.85rem; line-height:1; width:1.55rem; height:1.55rem; display:grid; place-items:center;
+      border:1px solid var(--border,#e5e7eb); background:var(--surface,#fff); color:var(--ink-2,#374151); border-radius:6px; cursor:pointer; box-shadow:0 1px 3px rgb(0 0 0 / 12%); }
+    .card-ctrls .cc:hover{ background:color-mix(in oklab,var(--brand,#2563eb) 12%,transparent); }
+    .card-ctrls .cc-del:hover{ background:#fee2e2; color:#b91c1c; border-color:#fecaca; }
+    .dir-add{ display:none; }
+    body.editing .dir-add{ display:inline-block; margin:.7rem 0 0; font:inherit; font-size:.85rem; font-weight:600;
+      padding:.45rem .9rem; border-radius:8px; border:1px dashed var(--brand,#2563eb); background:transparent; color:var(--brand,#2563eb); cursor:pointer; }
+    body.editing .dir-add:hover{ background:color-mix(in oklab,var(--brand,#2563eb) 10%,transparent); }
+    @media print{ .edit-toggle, .edit-bar, .edit-modal, .dir-add, .card-ctrls{ display:none !important; } }
   `;
   document.head.appendChild(style);
 
@@ -1928,7 +1996,9 @@ if ('serviceWorker' in navigator) {
   document.getElementById("edit-done").addEventListener("click", () => setEditing(false));
   document.getElementById("edit-reset").addEventListener("click", () => {
     if (confirm("Reset to the original itinerary? Your edits on this device will be cleared.")){
-      edits = {}; saveEdits(); location.reload();
+      edits = {}; saveEdits();
+      arraysState = {}; try { localStorage.removeItem(ARRAYS_KEY); } catch (e) {}
+      location.reload();
     }
   });
   const closeModal = () => { modal.hidden = true; };
@@ -1947,6 +2017,17 @@ if ('serviceWorker' in navigator) {
     btn.textContent = "Copied"; setTimeout(() => { btn.textContent = "Copy"; }, 1200);
   });
 
+  // "Add entry" button after each directory grid (shown only in edit mode).
+  for (const arr of Object.keys(STRUCTURAL)){
+    const grid = document.getElementById(STRUCTURAL[arr]);
+    if (!grid) continue;
+    const add = document.createElement("button");
+    add.type = "button"; add.className = "dir-add"; add.dataset.act = "add"; add.dataset.arr = arr;
+    add.textContent = "+ Add entry";
+    grid.insertAdjacentElement("afterend", add);
+  }
+
+  applyArrays();
   applyEdits();
 })();
 </script>
