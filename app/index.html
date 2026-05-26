@@ -806,8 +806,8 @@ details.accordion[open] .acc-progress .fill { display: none; }
 
 <!-- Hero -->
 <section class="hero" id="overview" aria-label="Overview">
-  <h1 id="hero-title">North Carolina Summer Residency</h1>
-  <p class="sub" id="hero-sub">SCADS Research Residency &middot; NC State LAS &middot; <strong>Sun May 31 → Sat Jul 25, 2026</strong></p>
+  <h1 id="hero-title" data-edit="title">North Carolina Summer Residency</h1>
+  <p class="sub" id="hero-sub" data-edit="subtitle">SCADS Research Residency &middot; NC State LAS &middot; <strong>Sun May 31 → Sat Jul 25, 2026</strong></p>
 
   <aside class="now-card" id="now-card" aria-live="polite">
     <span class="now-ico" aria-hidden="true">
@@ -1398,26 +1398,26 @@ const icoSvg = (k) => `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="
 
 function renderIntel(){
   const g = document.getElementById("intel-grid"); if (!g) return;
-  g.innerHTML = (TRIP.intel || []).map((c) => `<div class="intel-card" data-type="${c.cat || c.type}">
-    <span class="label">${icoSvg(c.icon)} ${c.label}</span>
-    <span class="value">${c.value}</span>
-    <span class="small">${c.note}</span>
+  g.innerHTML = (TRIP.intel || []).map((c, i) => `<div class="intel-card" data-type="${c.cat || c.type}">
+    <span class="label">${icoSvg(c.icon)} <span data-edit="intel.${i}.label">${c.label}</span></span>
+    <span class="value" data-edit="intel.${i}.value">${c.value}</span>
+    <span class="small" data-edit="intel.${i}.note">${c.note}</span>
   </div>`).join("");
 }
 function renderAnchors(){
   const g = document.getElementById("anchors-grid"); if (!g) return;
-  g.innerHTML = (TRIP.anchors || []).map((a) => `<div class="card">
-    <h3 style="display:flex; align-items:center; gap:0.5rem;">${a.name} <span class="tag ${a.tag}">${a.tagLabel}</span></h3>
-    <div class="row"><div><span class="k">Dates</span> ${a.dates}</div><div><span class="k">Drive</span> ${a.drive}</div></div>
-    <p style="margin:0.5rem 0 0; color: var(--ink-2);">${a.note}</p>
+  g.innerHTML = (TRIP.anchors || []).map((a, i) => `<div class="card">
+    <h3 style="display:flex; align-items:center; gap:0.5rem;"><span data-edit="anchors.${i}.name">${a.name}</span> <span class="tag ${a.tag}">${a.tagLabel}</span></h3>
+    <div class="row"><div><span class="k">Dates</span> <span data-edit="anchors.${i}.dates">${a.dates}</span></div><div><span class="k">Drive</span> <span data-edit="anchors.${i}.drive">${a.drive}</span></div></div>
+    <p style="margin:0.5rem 0 0; color: var(--ink-2);" data-edit="anchors.${i}.note">${a.note}</p>
   </div>`).join("");
 }
 function renderContacts(){
   const g = document.getElementById("contacts-grid"); if (!g) return;
-  g.innerHTML = (TRIP.contacts || []).map((c) => `<div class="contact">
-    <div class="who">${c.who}</div>
+  g.innerHTML = (TRIP.contacts || []).map((c, i) => `<div class="contact">
+    <div class="who" data-edit="contacts.${i}.who">${c.who}</div>
     <div class="info">${c.info}</div>
-    <div class="use">${c.use}</div>
+    <div class="use" data-edit="contacts.${i}.use">${c.use}</div>
   </div>`).join("");
 }
 renderIntel(); renderAnchors(); renderContacts();
@@ -1435,7 +1435,7 @@ function renderHero(){
   const t = document.getElementById("hero-title"); if (t) t.textContent = TRIP.title;
   const s = document.getElementById("hero-sub"); if (s) s.innerHTML = TRIP.subtitle;
   const g = document.getElementById("kv-grid"); if (!g) return;
-  g.innerHTML = (TRIP.overview || []).map((k) => `<div class="kv"><span class="label">${k.label}</span><span class="value">${k.value}</span><span class="small">${k.small}</span></div>`).join("");
+  g.innerHTML = (TRIP.overview || []).map((k, i) => `<div class="kv"><span class="label" data-edit="overview.${i}.label">${k.label}</span><span class="value" data-edit="overview.${i}.value">${k.value}</span><span class="small" data-edit="overview.${i}.small">${k.small}</span></div>`).join("");
 }
 renderHero();
 
@@ -1450,8 +1450,8 @@ function renderVenue(){
   const el = document.getElementById("venue-card");
   if (!el || !TRIP.venue) return;
   const rows = TRIP.venue.rows.map((r, i) =>
-    `<div class="row"${i ? ' style="margin-top: 0.4rem;"' : ''}><div><span class="k">${r.k}</span> ${r.v}</div></div>`).join("");
-  el.innerHTML = `<div class="card"><h3>Commute</h3><p style="margin:0 0 0.5rem; color: var(--ink-2);">${TRIP.venue.commute}</p>${rows}</div>`;
+    `<div class="row"${i ? ' style="margin-top: 0.4rem;"' : ''}><div><span class="k">${r.k}</span> <span data-edit="venue.rows.${i}.v">${r.v}</span></div></div>`).join("");
+  el.innerHTML = `<div class="card"><h3>Commute</h3><p style="margin:0 0 0.5rem; color: var(--ink-2);" data-edit="venue.commute">${TRIP.venue.commute}</p>${rows}</div>`;
 }
 renderVenue();
 
@@ -1508,13 +1508,13 @@ TRIP.weeks = [
 ];
 function renderWeeks(){
   const host = document.getElementById("weeks-list"); if (!host) return;
-  host.innerHTML = (TRIP.weeks || []).map((w) => `<details class="week-card" data-week-start="${w.start}" data-week-end="${w.end}">
+  host.innerHTML = (TRIP.weeks || []).map((w, wi) => `<details class="week-card" data-week-start="${w.start}" data-week-end="${w.end}">
     <summary>
-      <span class="wk">Week ${w.n} <small>${w.dates} · ${w.title}</small></span>
+      <span class="wk">Week ${w.n} <small>${w.dates} · <span data-edit="weeks.${wi}.title">${w.title}</span></small></span>
       <span class="tag ${w.tag}">${w.tagLabel}</span>
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
     </summary>
-    <div class="body"><ul>${w.items.map((i) => `<li>${i}</li>`).join("")}</ul></div>
+    <div class="body"><ul>${w.items.map((it, j) => `<li data-edit="weeks.${wi}.items.${j}">${it}</li>`).join("")}</ul></div>
   </details>`).join("");
 }
 renderWeeks();
@@ -1545,12 +1545,12 @@ TRIP.dayOne = [
   { t:"7:00 PM", a:"Decompress; review project assignment; first-day notes" },
   { t:"9:30 PM", a:"Lights out — sustainable pace from Day 1" },
 ];
-function renderTimeline(id, rows){
+function renderTimeline(id, rows, arr){
   const g = document.getElementById(id); if (!g) return;
-  g.innerHTML = (rows || []).map((r) => `<div class="row${r.hl ? " highlight" : ""}"><span class="t">${r.t}</span><span class="a">${r.a}</span></div>`).join("");
+  g.innerHTML = (rows || []).map((r, i) => `<div class="row${r.hl ? " highlight" : ""}"><span class="t" data-edit="${arr}.${i}.t">${r.t}</span><span class="a" data-edit="${arr}.${i}.a">${r.a}</span></div>`).join("");
 }
-renderTimeline("arrival-timeline", TRIP.arrival);
-renderTimeline("dayone-timeline", TRIP.dayOne);
+renderTimeline("arrival-timeline", TRIP.arrival, "arrival");
+renderTimeline("dayone-timeline", TRIP.dayOne, "dayOne");
 
 TRIP.pretrip = [
     { id: "pretrip-setup", open: true, title: "Saturday May 30 \u2014 time-anchored prep", items: [
@@ -1655,17 +1655,17 @@ TRIP.packing = [
         { id: "f5", label: "Refillable coffee tumbler" }
     ] }
   ];
-function renderChecklist(containerId, sections){
+function renderChecklist(containerId, sections, arr){
   const el = document.getElementById(containerId);
   if (!el || !sections) return;
   const chev = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>';
-  el.innerHTML = sections.map(sec => {
-    const items = sec.items.map(it => `<li><input type="checkbox" id="${it.id}"><label for="${it.id}">${it.label}</label></li>`).join("");
-    return `<details class="accordion"${sec.open ? " open" : ""} data-checklist-id="${sec.id}"><summary>${chev}${sec.title}<span class="count" data-count>0 / ${sec.items.length}</span></summary><div class="acc-progress" aria-hidden="true"><div class="fill"></div></div><div class="body"><ul class="checklist">${items}</ul></div></details>`;
+  el.innerHTML = sections.map((sec, si) => {
+    const items = sec.items.map((it, ii) => `<li><input type="checkbox" id="${it.id}"><label for="${it.id}"><span data-edit="${arr}.${si}.items.${ii}.label">${it.label}</span></label></li>`).join("");
+    return `<details class="accordion"${sec.open ? " open" : ""} data-checklist-id="${sec.id}"><summary>${chev}<span data-edit="${arr}.${si}.title">${sec.title}</span><span class="count" data-count>0 / ${sec.items.length}</span></summary><div class="acc-progress" aria-hidden="true"><div class="fill"></div></div><div class="body"><ul class="checklist">${items}</ul></div></details>`;
   }).join("");
 }
-renderChecklist("pretrip-list", TRIP.pretrip);
-renderChecklist("packing-list", TRIP.packing);
+renderChecklist("pretrip-list", TRIP.pretrip, "pretrip");
+renderChecklist("packing-list", TRIP.packing, "packing");
 wireChecklists();
 
 const MAPS_KEY = "periplus:maps-provider";
@@ -1678,23 +1678,23 @@ function directionsUrl(query, provider = getMapsProvider()){
     : `https://www.google.com/maps/dir/?api=1&destination=${q}`;
 }
 
-function dirCard(item){
-  const warn = item.warn ? `<span class="warn">${item.warn}</span>` : "";
+function dirCard(item, arr, i){
+  const warn = item.warn ? `<span class="warn" data-edit="${arr}.${i}.warn">${item.warn}</span>` : "";
   const go = item.maps
     ? `<a class="dir-go" href="${directionsUrl(item.maps)}" target="_blank" rel="noopener">Directions</a>`
     : "";
   return `<article class="dir-item" data-cat="${item.cat}" data-text="${item.text}">
-    <div class="name">${item.name} <span class="meta">${item.meta}</span></div>
-    <div class="note">${item.note}</div>${warn}${go}
+    <div class="name"><span data-edit="${arr}.${i}.name">${item.name}</span> <span class="meta" data-edit="${arr}.${i}.meta">${item.meta}</span></div>
+    <div class="note" data-edit="${arr}.${i}.note">${item.note}</div>${warn}${go}
   </article>`;
 }
-function renderDir(gridId, items){
+function renderDir(gridId, items, arr){
   const grid = document.getElementById(gridId);
-  if (grid) grid.innerHTML = items.map(dirCard).join("");
+  if (grid) grid.innerHTML = items.map((it, i) => dirCard(it, arr, i)).join("");
 }
 function renderDirectories(){
-  renderDir("food-grid", TRIP.food);
-  renderDir("outdoor-grid", TRIP.outdoor);
+  renderDir("food-grid", TRIP.food, "food");
+  renderDir("outdoor-grid", TRIP.outdoor, "outdoor");
 }
 renderDirectories();
 
@@ -1791,6 +1791,164 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   });
 }
+
+// ===========================================================================
+// No-code editing — edit any [data-edit] field inline, saved as a sparse
+// path->value diff in localStorage. research(2026-05): in-place contenteditable
+// (Atlassian inline-edit pattern) with no re-render, so the existing search /
+// maps / calendar listeners survive untouched. TRIP is mutated on edit so it
+// stays the source of truth for export. Reset restores the built-in itinerary.
+// Structural add/reorder + JSON import are a later pass.
+// ===========================================================================
+(function noCodeEditing(){
+  const EDITS_KEY = "periplus.edits.v1";
+  const loadEdits = () => { try { return JSON.parse(localStorage.getItem(EDITS_KEY)) || {}; } catch (e) { return {}; } };
+  let edits = loadEdits();
+  const saveEdits = () => { try { localStorage.setItem(EDITS_KEY, JSON.stringify(edits)); } catch (e) {} };
+  const esc = (s) => (window.CSS && CSS.escape) ? CSS.escape(s) : s.replace(/"/g, '\\"');
+
+  function setPath(obj, path, val){
+    const parts = path.split(".");
+    let o = obj;
+    for (let k = 0; k < parts.length - 1; k++){
+      const key = /^\d+$/.test(parts[k]) ? +parts[k] : parts[k];
+      if (o == null || o[key] == null) return false;
+      o = o[key];
+    }
+    const last = parts[parts.length - 1];
+    o[/^\d+$/.test(last) ? +last : last] = val;
+    return true;
+  }
+
+  // Patch only the edited fields into TRIP + the already-rendered DOM (no re-render).
+  function applyEdits(){
+    for (const [path, val] of Object.entries(edits)){
+      setPath(TRIP, path, val);
+      document.querySelectorAll('[data-edit="' + esc(path) + '"]').forEach(el => { el.innerHTML = val; });
+    }
+  }
+
+  function setEditing(on){
+    document.body.classList.toggle("editing", on);
+    document.querySelectorAll("[data-edit]").forEach(el => {
+      if (on) el.setAttribute("contenteditable", "true");
+      else el.removeAttribute("contenteditable");
+    });
+    const t = document.getElementById("edit-toggle");
+    if (t){ t.setAttribute("aria-pressed", String(on)); t.textContent = on ? "Done" : "Edit"; }
+    const bar = document.getElementById("edit-bar");
+    if (bar) bar.hidden = !on;
+  }
+
+  // Save a field when focus leaves it.
+  document.addEventListener("focusout", (e) => {
+    const el = e.target.closest && e.target.closest("[data-edit]");
+    if (!el || !document.body.classList.contains("editing")) return;
+    const path = el.getAttribute("data-edit");
+    const val = el.innerHTML.trim();
+    edits[path] = val;
+    setPath(TRIP, path, val);
+    saveEdits();
+  });
+  // Enter commits a single-line field instead of inserting a newline.
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey && document.body.classList.contains("editing")
+        && e.target.closest && e.target.closest("[data-edit]")){
+      e.preventDefault();
+      e.target.blur();
+    }
+  });
+  // Editing a heading nested in a <summary>/<label> must not toggle the accordion/checkbox.
+  document.addEventListener("click", (e) => {
+    if (!document.body.classList.contains("editing")) return;
+    const ed = e.target.closest && e.target.closest("[data-edit]");
+    if (ed && ed.closest("summary, label")) e.preventDefault();
+  }, true);
+
+  // --- Injected UI: styles, topbar toggle, toolbar, export modal ---
+  const style = document.createElement("style");
+  style.textContent = `
+    .edit-toggle{ font:inherit; font-size:.8rem; font-weight:600; padding:.3rem .7rem; border-radius:999px;
+      border:1px solid var(--border,#e5e7eb); background:var(--surface,#fff); color:var(--ink-2,#374151); cursor:pointer; }
+    .edit-toggle[aria-pressed="true"]{ background:var(--brand,#2563eb); color:#fff; border-color:var(--brand,#2563eb); }
+    body.editing [data-edit]{ outline:1px dashed color-mix(in oklab,var(--brand,#2563eb) 55%,transparent);
+      outline-offset:2px; border-radius:4px; cursor:text; transition:background .12s ease; }
+    body.editing [data-edit]:hover{ background:color-mix(in oklab,var(--brand,#2563eb) 8%,transparent); }
+    body.editing [data-edit]:focus{ outline:2px solid var(--brand,#2563eb); background:var(--surface,#fff); }
+    .edit-bar{ position:fixed; left:0; right:0; bottom:0; z-index:50; display:flex; gap:.5rem; align-items:center;
+      padding:.6rem .9rem; background:var(--surface,#fff); border-top:1px solid var(--border,#e5e7eb);
+      box-shadow:0 -4px 16px rgb(0 0 0 / 12%); flex-wrap:wrap; }
+    .edit-bar[hidden]{ display:none; }
+    .edit-bar-label{ flex:1; min-width:12rem; font-size:.82rem; color:var(--ink-2,#374151); }
+    .edit-bar button{ font:inherit; font-size:.82rem; font-weight:600; padding:.4rem .85rem; border-radius:8px;
+      border:1px solid var(--border,#e5e7eb); background:var(--surface,#fff); color:var(--ink,#111); cursor:pointer; }
+    #edit-done{ background:var(--brand,#2563eb); color:#fff; border-color:var(--brand,#2563eb); }
+    .edit-modal{ position:fixed; inset:0; z-index:60; background:rgb(0 0 0 / 50%); display:flex;
+      align-items:center; justify-content:center; padding:1rem; }
+    .edit-modal[hidden]{ display:none; }
+    .edit-modal-card{ background:var(--surface,#fff); color:var(--ink,#111); border-radius:14px; padding:1.25rem;
+      max-width:680px; width:100%; box-shadow:0 12px 48px rgb(0 0 0 / 35%); }
+    .edit-modal-card h3{ margin:0 0 .35rem; }
+    .edit-modal-card p{ margin:0 0 .75rem; font-size:.88rem; color:var(--ink-2,#374151); }
+    #edit-json{ width:100%; height:46vh; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.78rem;
+      border:1px solid var(--border,#e5e7eb); border-radius:8px; padding:.6rem; resize:vertical; box-sizing:border-box; }
+    .edit-modal-actions{ display:flex; gap:.5rem; justify-content:flex-end; margin-top:.75rem; }
+    .edit-modal-actions button{ font:inherit; font-weight:600; padding:.45rem 1rem; border-radius:8px; cursor:pointer;
+      border:1px solid var(--border,#e5e7eb); background:var(--surface,#fff); }
+    #edit-copy{ background:var(--brand,#2563eb); color:#fff; border-color:var(--brand,#2563eb); }
+    @media print{ .edit-toggle, .edit-bar, .edit-modal{ display:none !important; } }
+  `;
+  document.head.appendChild(style);
+
+  const toggle = document.createElement("button");
+  toggle.id = "edit-toggle"; toggle.type = "button"; toggle.className = "edit-toggle";
+  toggle.setAttribute("aria-pressed", "false"); toggle.textContent = "Edit";
+  toggle.addEventListener("click", () => setEditing(!document.body.classList.contains("editing")));
+  const ti = document.querySelector(".topbar-inner");
+  if (ti) ti.appendChild(toggle);
+
+  const bar = document.createElement("div");
+  bar.id = "edit-bar"; bar.className = "edit-bar"; bar.hidden = true;
+  bar.innerHTML = '<span class="edit-bar-label">Editing — tap any text to change it. Saved on this device.</span>'
+    + '<button type="button" id="edit-export">Export</button>'
+    + '<button type="button" id="edit-reset">Reset</button>'
+    + '<button type="button" id="edit-done">Done</button>';
+  document.body.appendChild(bar);
+
+  const modal = document.createElement("div");
+  modal.id = "edit-modal"; modal.className = "edit-modal"; modal.hidden = true;
+  modal.innerHTML = '<div class="edit-modal-card" role="dialog" aria-modal="true" aria-label="Export trip">'
+    + '<h3>Export your trip</h3>'
+    + '<p>Copy this JSON to back up or share your edits. Paste it over the <code>TRIP</code> data in a fork to make it permanent.</p>'
+    + '<textarea id="edit-json" readonly spellcheck="false"></textarea>'
+    + '<div class="edit-modal-actions"><button type="button" id="edit-copy">Copy</button>'
+    + '<button type="button" id="edit-close">Close</button></div></div>';
+  document.body.appendChild(modal);
+
+  document.getElementById("edit-done").addEventListener("click", () => setEditing(false));
+  document.getElementById("edit-reset").addEventListener("click", () => {
+    if (confirm("Reset to the original itinerary? Your edits on this device will be cleared.")){
+      edits = {}; saveEdits(); location.reload();
+    }
+  });
+  const closeModal = () => { modal.hidden = true; };
+  document.getElementById("edit-export").addEventListener("click", () => {
+    document.getElementById("edit-json").value = JSON.stringify(TRIP, null, 2);
+    modal.hidden = false;
+  });
+  document.getElementById("edit-close").addEventListener("click", closeModal);
+  modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !modal.hidden) closeModal(); });
+  document.getElementById("edit-copy").addEventListener("click", async () => {
+    const ta = document.getElementById("edit-json");
+    try { await navigator.clipboard.writeText(ta.value); }
+    catch (e) { ta.focus(); ta.select(); try { document.execCommand("copy"); } catch (e2) {} }
+    const btn = document.getElementById("edit-copy");
+    btn.textContent = "Copied"; setTimeout(() => { btn.textContent = "Copy"; }, 1200);
+  });
+
+  applyEdits();
+})();
 </script>
 </body>
 </html>
