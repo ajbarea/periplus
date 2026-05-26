@@ -101,3 +101,21 @@ test('structural edits persist via array snapshot and reset clears them', async 
   await expect(page.locator('#food-grid .dir-item')).toHaveCount(start);
   expect(await page.evaluate(() => localStorage.getItem('periplus.arrays.v1'))).toBeNull();
 });
+
+test('card CRUD generalizes beyond directories (intel) and persists', async ({ page }) => {
+  page.on('dialog', (d) => d.accept());
+  await page.goto('/');
+  const cards = page.locator('#intel-grid .intel-card');
+  const start = await cards.count();
+  await page.locator('#edit-toggle').click();
+  await expect(page.locator('.dir-add')).toHaveCount(5); // food, outdoor, intel, contacts, anchors
+
+  await page.locator('.dir-add[data-arr="intel"]').click();
+  await expect(cards).toHaveCount(start + 1);
+  await page.reload();
+  await expect(page.locator('#intel-grid .intel-card')).toHaveCount(start + 1);
+
+  await page.locator('#edit-toggle').click();
+  await page.locator('#edit-reset').click();
+  await expect(page.locator('#intel-grid .intel-card')).toHaveCount(start);
+});
