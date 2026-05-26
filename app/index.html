@@ -804,6 +804,24 @@ details.accordion[open] .acc-progress .fill { display: none; }
   #cal-body { min-height: 330px; }
   #food-grid { min-height: 600px; }
   #outdoor-grid { min-height: 360px; }
+
+  /* a11y: darken color-coded calendar cells so white text clears AA 4.5:1 */
+  .cal-cell.hike     { background: color-mix(in oklab, var(--hike) 58%, #000); }
+  .cal-cell.beach    { background: color-mix(in oklab, var(--beach) 44%, #000); }
+  .cal-cell.mountain { background: color-mix(in oklab, var(--mountain) 80%, #000); }
+  .cal-cell.city     { background: color-mix(in oklab, var(--city) 58%, #000); }
+  .cal-cell.travel   { background: color-mix(in oklab, var(--brand) 60%, #000); }
+  .cal-cell.rest     { background: color-mix(in oklab, var(--rest) 64%, #000); }
+  .cal-cell.activity .d { color: #fff; opacity: 1; }
+  .cal-cell.activity .tag { color: #fff; }
+  .tag.hike { color: color-mix(in oklab, var(--hike) 48%, #000); }
+  .tag.beach { color: color-mix(in oklab, var(--beach) 48%, #000); }
+  .tag.mountain { color: color-mix(in oklab, var(--mountain) 72%, #000); }
+  .tag.city { color: color-mix(in oklab, var(--city) 54%, #000); }
+  .tag.travel { color: color-mix(in oklab, var(--brand-2) 80%, #000); }
+  .cal-cell .d { color: var(--ink-2); opacity: 1; }
+  details.accordion > summary .count { color: var(--ink-2); }
+  details.accordion[open]:has(.checklist li.checked) > summary .count { color: color-mix(in oklab, var(--hike) 50%, #000); }
 </style>
 </head>
 <body>
