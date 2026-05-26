@@ -26,3 +26,4 @@ Let the trip owner add, remove, reorder, and rename **sections and cards** — a
 - [x] Consolidate **all** content into the `TRIP` block (directories, calendar, timelines, intel, venue, checklists, contacts).
 - [x] Google/Apple add-to-calendar integration, mirroring the maps toggle.
 - [x] Brand the footer to match the rest of the fleet.
+- [x] Docs hero polish + scroll-reveal, hero-entrance, and card-hover interactivity, matching the sister sites (IntersectionObserver `reveal.js`; CSS scroll-driven deferred until Firefox ships full support).

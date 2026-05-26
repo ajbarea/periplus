@@ -51,7 +51,31 @@
   color: var(--periplus-navy);
 }
 
+/* research(2026-05): primary CTA larger + heavier than the secondary — color
+   alone is an insufficient hierarchy signal; equal-sized buttons are an
+   anti-pattern. Mirrors phalanx-fl / kourai. Plus a hover lift on the main CTA. */
+.hero-buttons .md-button { transition: transform .2s ease, box-shadow .2s ease; }
+.hero-buttons .md-button--primary {
+  font-weight: 700;
+}
+.hero-buttons .md-button--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px color-mix(in oklab, var(--periplus-sky) 35%, transparent);
+}
+
 .landing-cta { text-align: center; }
+
+/* Hero entrance — title, subtitle, and buttons rise + fade in on load.
+   CSS-only and reduced-motion safe (skipped entirely when motion is reduced). */
+@media (prefers-reduced-motion: no-preference) {
+  .hero h1 { animation: hero-rise .6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .hero .hero-subtitle { animation: hero-rise .6s cubic-bezier(0.16, 1, 0.3, 1) .1s both; }
+  .hero-buttons { animation: hero-rise .6s cubic-bezier(0.16, 1, 0.3, 1) .2s both; }
+  @keyframes hero-rise {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
 
 /* Mobile: vertical scrim over a centered image, full-width text */
 @media (max-width: 50rem) {

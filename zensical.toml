@@ -11,6 +11,7 @@ extra_css = [
   "stylesheets/base.css",
   "stylesheets/hero.css",
 ]
+extra_javascript = ["javascripts/reveal.js"]
 
 # ---------------------------------------------------------------------------
 # Navigation

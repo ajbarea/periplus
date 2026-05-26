@@ -69,3 +69,36 @@
   opacity: 0.75;
   filter: invert(1);
 }
+
+/* ==========================================================================
+   Interactivity — scroll-reveal + card hover, matching the sister docs
+   (reveal.js adds .js-ready on <html> and .visible per section as it enters
+   view). Easing is a touch smoother than the sisters' plain `ease`.
+   ========================================================================== */
+
+.feature-card {
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in oklab, var(--periplus-sky) 45%, transparent);
+  box-shadow: 0 8px 24px color-mix(in oklab, var(--periplus-sky) 18%, transparent);
+}
+
+/* research(2026-05): kept the IntersectionObserver reveal (reveal.js) over pure
+   CSS animation-timeline: view() — scroll-driven CSS is compositor-cheap but
+   Firefox support is still partial in 2026, and the IO version matches every
+   sister. Easing is ease-out (easeOutQuint), duration <700ms per current
+   guidance. Sources: MDN scroll-driven-animations; joshwcomeau.com. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js-ready .landing-section {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform .6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  html.js-ready .landing-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
