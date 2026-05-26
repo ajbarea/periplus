@@ -108,7 +108,7 @@ test('card CRUD generalizes beyond directories (intel) and persists', async ({ p
   const cards = page.locator('#intel-grid .intel-card');
   const start = await cards.count();
   await page.locator('#edit-toggle').click();
-  await expect(page.locator('.dir-add')).toHaveCount(5); // food, outdoor, intel, contacts, anchors
+  await expect(page.locator('.dir-add')).toHaveCount(7); // 5 card grids + arrival + dayOne timelines
 
   await page.locator('.dir-add[data-arr="intel"]').click();
   await expect(cards).toHaveCount(start + 1);
@@ -118,4 +118,109 @@ test('card CRUD generalizes beyond directories (intel) and persists', async ({ p
   await page.locator('#edit-toggle').click();
   await page.locator('#edit-reset').click();
   await expect(page.locator('#intel-grid .intel-card')).toHaveCount(start);
+});
+
+// --- Stage 3: the interactive / thin list sections (weeks, checklists, timelines) ---
+// These differ from card grids: weeks/checklists are two-level (a list of
+// accordions, each holding a list of items) and carry per-element wiring
+// (checkbox change, current-week open). CRUD here exercises nested-path edits
+// and the delegated re-render path.
+
+test('week items can be added, reordered, and deleted, and persist', async ({ page }) => {
+  page.on('dialog', (d) => d.accept());
+  await page.goto('/');
+  await page.locator('#edit-toggle').click();
+  await page.evaluate(() => { document.querySelector('#weeks-list .week-card').open = true; });
+  const firstWeek = page.locator('#weeks-list .week-card').first();
+  const items = firstWeek.locator('ul li');
+  const start = await items.count();
+
+  await page.locator('.li-add[data-arr="weeks.0.items"]').click();
+  await expect(items).toHaveCount(start + 1);
+  await expect(firstWeek.locator('[data-edit="weeks.0.items.' + start + '"]')).toHaveText('New plan');
+
+  const before = await firstWeek.locator('[data-edit^="weeks.0.items."]').allInnerTexts();
+  await page.locator('[data-act="up"][data-arr="weeks.0.items"][data-i="1"]').click();
+  const after = await firstWeek.locator('[data-edit^="weeks.0.items."]').allInnerTexts();
+  expect(after[0]).toBe(before[1]);
+  expect(after[1]).toBe(before[0]);
+
+  await page.reload();
+  await expect(page.locator('#weeks-list .week-card').first().locator('ul li')).toHaveCount(start + 1);
+
+  await page.locator('#edit-toggle').click();
+  await page.evaluate(() => { document.querySelector('#weeks-list .week-card').open = true; });
+  await page.locator('[data-act="del"][data-arr="weeks.0.items"][data-i="0"]').click();
+  await expect(page.locator('#weeks-list .week-card').first().locator('ul li')).toHaveCount(start);
+});
+
+test('adding a week item preserves the open state of other weeks', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#edit-toggle').click();
+  await page.evaluate(() => {
+    const cards = document.querySelectorAll('#weeks-list .week-card');
+    cards[0].open = true; cards[2].open = true;
+  });
+  await page.locator('.li-add[data-arr="weeks.0.items"]').click();
+  // the re-render must not collapse week index 2
+  expect(await page.evaluate(() => document.querySelectorAll('#weeks-list .week-card')[2].open)).toBe(true);
+});
+
+test('checklist items can be added; a new checkbox toggles and persists (delegation)', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#edit-toggle').click();
+  const sec0 = page.locator('#pretrip-list details.accordion').first();
+  const items = sec0.locator('ul.checklist li');
+  const start = await items.count();
+
+  await page.locator('.li-add[data-arr="pretrip.0.items"]').click();
+  await expect(items).toHaveCount(start + 1);
+
+  // The freshly-rendered checkbox must work via the delegated change listener.
+  await items.last().locator('input[type=checkbox]').check();
+  await expect(items.last().locator('input[type=checkbox]')).toBeChecked();
+
+  await page.reload();
+  const items2 = page.locator('#pretrip-list details.accordion').first().locator('ul.checklist li');
+  await expect(items2).toHaveCount(start + 1);
+  await expect(items2.last().locator('input[type=checkbox]')).toBeChecked();
+});
+
+test('timeline rows can be added, reordered, and deleted', async ({ page }) => {
+  page.on('dialog', (d) => d.accept());
+  await page.goto('/');
+  await page.locator('#edit-toggle').click();
+  const rows = page.locator('#arrival-timeline .row');
+  const start = await rows.count();
+
+  await page.locator('.dir-add[data-arr="arrival"]').click();
+  await expect(rows).toHaveCount(start + 1);
+  await expect(rows.last().locator('[data-edit="arrival.' + start + '.a"]')).toHaveText('New step');
+
+  const before = await page.locator('#arrival-timeline [data-edit$=".a"]').allInnerTexts();
+  await rows.nth(1).locator('[data-act="up"]').click();
+  const after = await page.locator('#arrival-timeline [data-edit$=".a"]').allInnerTexts();
+  expect(after[0]).toBe(before[1]);
+
+  await rows.first().locator('[data-act="del"]').click();
+  await expect(rows).toHaveCount(start);
+});
+
+// The editing feature must be reachable on a phone — periplus is a mobile-first PWA.
+// The topbar Edit toggle previously overflowed off the right edge at phone widths.
+test.describe('mobile (iPhone-13 width)', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('edit mode is reachable and the page does not scroll sideways', async ({ page }) => {
+    await page.goto('/');
+    const overflow = await page.evaluate(() => document.body.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+
+    const box = await page.locator('#edit-toggle').boundingBox();
+    const cw = await page.evaluate(() => document.documentElement.clientWidth);
+    expect(box.x + box.width).toBeLessThanOrEqual(cw); // toggle fully within the viewport
+
+    await page.locator('#edit-toggle').click();
+    await expect(page.locator('body')).toHaveClass(/editing/);
+  });
 });
