@@ -21,10 +21,13 @@ test('core sections and key content render', async ({ page }) => {
 
 test('config-driven sections render from TRIP', async ({ page }) => {
   await page.goto('/');
+  await expect(page.locator('#hero-title')).toHaveText('North Carolina Summer Residency');
+  expect(await page.locator('#kv-grid .kv').count()).toBe(4);
   expect(await page.locator('#intel-grid .intel-card').count()).toBe(6);
   expect(await page.locator('#anchors-grid .card').count()).toBe(2);
+  expect(await page.locator('#weeks-list .week-card').count()).toBe(8);
   expect(await page.locator('#contacts-grid .contact').count()).toBe(7);
   await expect(page.locator('#intel-grid').getByText('July heat')).toBeVisible();
-  await expect(page.locator('#anchors-grid').getByText('Wrightsville Beach')).toBeVisible();
+  await expect(page.locator('#weeks-list').getByText('Settle in')).toBeVisible();
   await expect(page.locator('#contacts-grid').getByText('Emily Keller (LAS host)')).toBeVisible();
 });

@@ -843,8 +843,8 @@ details.accordion[open] .acc-progress .fill { display: none; }
 
 <!-- Hero -->
 <section class="hero" id="overview" aria-label="Overview">
-  <h1>North Carolina Summer Residency</h1>
-  <p class="sub">SCADS Research Residency &middot; NC State LAS &middot; <strong>Sun May 31 → Sat Jul 25, 2026</strong></p>
+  <h1 id="hero-title">North Carolina Summer Residency</h1>
+  <p class="sub" id="hero-sub">SCADS Research Residency &middot; NC State LAS &middot; <strong>Sun May 31 → Sat Jul 25, 2026</strong></p>
 
   <aside class="now-card" id="now-card" aria-live="polite">
     <span class="now-ico" aria-hidden="true">
@@ -858,27 +858,7 @@ details.accordion[open] .acc-progress .fill { display: none; }
     <a class="now-jump" id="now-jump" href="#arrival">Jump in</a>
   </aside>
 
-  <div class="kv-grid">
-    <div class="kv">
-      <span class="label">Anchor</span>
-      <span class="value">SCADS @ NC State LAS</span>
-      <span class="small">Centennial Campus, Raleigh NC</span>
-    </div>
-    <div class="kv">
-      <span class="label">Lodging</span>
-      <span class="value">Hyatt House Downtown / Seaboard Station</span>
-      <span class="small">11 Seaboard Ave, Raleigh NC 27604 &middot; (984) 326-7710</span>
-    </div>
-    <div class="kv">
-      <span class="label">Drive</span>
-      <span class="value">~652 mi &middot; ~10 hr 11 min</span>
-      <span class="small">~11.5 hr door-to-door from Rochester</span>
-    </div>
-    <div class="kv">
-      <span class="label">Constraints</span>
-      <span class="value">No seafood. No nightlife.</span>
-      <span class="small">Hikes, beaches, sandwiches, BBQ, locals-only</span>
-    </div>
+  <div class="kv-grid" id="kv-grid">
   </div>
 </section>
 
@@ -1013,134 +993,8 @@ details.accordion[open] .acc-progress .fill { display: none; }
 <section id="weeks">
   <h2>Week-by-Week</h2>
   <p class="lede">Weeknights are intentionally light — one sandwich lunch, one dinner, one easy activity. Food + outdoor sections below are a menu; swap freely. The current week auto-expands.</p>
+  <div id="weeks-list"></div>
 
-  <details class="week-card" data-week-start="2026-05-31" data-week-end="2026-06-07">
-    <summary>
-      <span class="wk">Week 1 <small>Jun 1 – Jun 7 &middot; Settle in</small></span>
-      <span class="tag rest">Settle</span>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-    </summary>
-    <div class="body">
-      <ul>
-        <li><b>Mon–Fri</b> — SCADS Week 1; map the daily drive; one Pullen Park lunch walk</li>
-        <li><b>Sat Jun 6</b> — Big Ed's breakfast → Dorothea Dix Park → Clyde Cooper's BBQ lunch → easy evening</li>
-        <li><b>Sun Jun 7</b> — JC Raulston Arboretum (quiet morning) → laundry + prep</li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="week-card" data-week-start="2026-06-08" data-week-end="2026-06-14">
-    <summary>
-      <span class="wk">Week 2 <small>Jun 8 – Jun 14 &middot; Umstead hike</small></span>
-      <span class="tag hike">Hike</span>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-    </summary>
-    <div class="body">
-      <ul>
-        <li><b>Weekday lunch</b> — Lunchbox Deli (Turkey Basil on Rosemary Focaccia)</li>
-        <li><b>Weekday evening</b> — Two Roosters Ice Cream walk after work</li>
-        <li><b>Sat Jun 13</b> — Umstead State Park, Company Mill Trail (~5.8 mi)</li>
-        <li><b>Sun Jun 14</b> — NC Museum of Natural Sciences + Daily Planet Cafe → easy hotel evening (Side Street closed Sun)</li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="week-card" data-week-start="2026-06-15" data-week-end="2026-06-21">
-    <summary>
-      <span class="wk">Week 3 <small>Jun 15 – Jun 21 &middot; Durham day</small></span>
-      <span class="tag city">Day-trip</span>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-    </summary>
-    <div class="body">
-      <ul>
-        <li><b>Weekday lunch</b> — Eastcut Sandwich Bar</li>
-        <li><b>Weekday evening</b> — Fratelli's Delicatessen sit-down</li>
-        <li><b>Sat Jun 20</b> — Durham day: Ideal Sandwich → Eno River State Park → Hog Heaven BBQ</li>
-        <li><b>Sun Jun 21</b> — Big Ed's Sunday breakfast (Pam's closed Sun) → recovery</li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="week-card" data-week-start="2026-06-22" data-week-end="2026-06-28">
-    <summary>
-      <span class="wk">Week 4 <small>Jun 22 – Jun 28 &middot; Beach overnight</small></span>
-      <span class="tag beach">Beach</span>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-    </summary>
-    <div class="body">
-      <ul>
-        <li><b>Weekday lunch</b> — Oakwood Deli</li>
-        <li><b>Weekday evening</b> — NC Museum of Art sculpture park (golden hour, outdoor grounds stay open)</li>
-        <li><b>Sat Jun 27</b> — Drive to Wrightsville Beach (~2 hr). Beach day + overnight</li>
-        <li><b>Sun Jun 28</b> — Beach morning → Wilmington lunch → drive back</li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="week-card" data-week-start="2026-06-29" data-week-end="2026-07-05">
-    <summary>
-      <span class="wk">Week 5 <small>Jun 29 – Jul 5 &middot; Asheville long weekend</small></span>
-      <span class="tag mountain">Mountains</span>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-    </summary>
-    <div class="body">
-      <ul>
-        <li><b>Weekday lunch</b> — Pam's Farmhouse plate-lunch (Tue–Sat)</li>
-        <li><b>Weekday evening</b> — The Pit Authentic Barbecue dinner</li>
-        <li><b>Fri Jul 3</b> — Drive to Asheville (~4 hr). Federal holiday observed</li>
-        <li><b>Sat Jul 4</b> — Blue Ridge Parkway (pre-confirm mileposts — ~35 mi between Linville Gorge &amp; Mt. Mitchell still Helene-closed) + <strong>Mt. Pisgah Trail if open, else DuPont State Forest waterfalls or Graveyard Fields</strong> + downtown Asheville food crawl evening</li>
-        <li><b>Sun Jul 5</b> — Biltmore Estate + new "Luminere" after-dark light installation (2026 debut) → drive back. Enter via main gate, not Biltmore Village (still rebuilding post-Helene).</li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="week-card" data-week-start="2026-07-06" data-week-end="2026-07-12">
-    <summary>
-      <span class="wk">Week 6 <small>Jul 6 – Jul 12 &middot; Hanging Rock waterfalls</small></span>
-      <span class="tag hike">Hike</span>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-    </summary>
-    <div class="body">
-      <ul>
-        <li><b>Weekday lunch</b> — Union Special Bread</li>
-        <li><b>Weekday evening</b> — Pullen Park or Dorothea Dix walk</li>
-        <li><b>Sat Jul 11</b> — Hanging Rock State Park: Hidden Falls + Window Falls + Upper Cascades (~2 hr drive each way; pack lunch)</li>
-        <li><b>Sun Jul 12</b> — Sam Jones BBQ lunch → rest</li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="week-card" data-week-start="2026-07-13" data-week-end="2026-07-19">
-    <summary>
-      <span class="wk">Week 7 <small>Jul 13 – Jul 19 &middot; Raven Rock + Chapel Hill BBQ</small></span>
-      <span class="tag hike">Hike</span>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-    </summary>
-    <div class="body">
-      <ul>
-        <li><b>Weekday lunch</b> — Southern Craft Sandwiches</li>
-        <li><b>Weekday evening</b> — MoJoe's Burger Joint (add the Polaroid)</li>
-        <li><b>Sat Jul 18</b> — Raven Rock State Park hike — <strong>arrive by 9 AM</strong> (summer-weekend entry lines hit 90 min) → Allen &amp; Son BBQ in Pittsboro on the way home (Chapel Hill location closed). Alternative: shift to a weekday afternoon (Centennial parking free after 5 PM).</li>
-        <li><b>Sun Jul 19</b> — JC Raulston Arboretum farewell visit → start packing</li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="week-card" data-week-start="2026-07-20" data-week-end="2026-07-25">
-    <summary>
-      <span class="wk">Week 8 <small>Jul 20 – Jul 25 &middot; Wrap-up</small></span>
-      <span class="tag travel">Travel</span>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-    </summary>
-    <div class="body">
-      <ul>
-        <li><b>Weekday lunch</b> — loop back to your favorite sandwich spot</li>
-        <li><b>Weekday evening</b> — Two Roosters Ice Cream closing dessert</li>
-        <li><b>Fri Jul 24</b> — SCADS closing day; farewell dinner with the cohort</li>
-        <li><b>Sat Jul 25</b> — Check out by hotel deadline. Drive home, or split with a stopover.</li>
-      </ul>
-    </div>
-  </details>
 </section>
 
 <!-- Food directory -->
@@ -1649,7 +1503,7 @@ setStatus();
 // ===========================================================================
 // Auto-expand the current week (only if trip is active)
 // ===========================================================================
-document.querySelectorAll(".week-card").forEach(card => {
+function expandCurrentWeek() { document.querySelectorAll(".week-card").forEach(card => {
   const start = new Date(card.dataset.weekStart);
   const end = new Date(card.dataset.weekEnd);
   end.setHours(23,59,59);
@@ -1657,7 +1511,7 @@ document.querySelectorAll(".week-card").forEach(card => {
     card.classList.add("is-current");
     card.open = true;
   }
-});
+}); }
 
 // ===========================================================================
 // Checklist persistence (localStorage)
@@ -1802,6 +1656,88 @@ function renderContacts(){
   </div>`).join("");
 }
 renderIntel(); renderAnchors(); renderContacts();
+
+// ---- Hero (title / subtitle / overview KV) ----
+TRIP.title = "North Carolina Summer Residency";
+TRIP.subtitle = "SCADS Research Residency · NC State LAS · <strong>Sun May 31 → Sat Jul 25, 2026</strong>";
+TRIP.overview = [
+  { label:"Anchor", value:"SCADS @ NC State LAS", small:"Centennial Campus, Raleigh NC" },
+  { label:"Lodging", value:"Hyatt House Downtown / Seaboard Station", small:"11 Seaboard Ave, Raleigh NC 27604 · (984) 326-7710" },
+  { label:"Drive", value:"~652 mi · ~10 hr 11 min", small:"~11.5 hr door-to-door from Rochester" },
+  { label:"Constraints", value:"No seafood. No nightlife.", small:"Hikes, beaches, sandwiches, BBQ, locals-only" },
+];
+function renderHero(){
+  const t = document.getElementById("hero-title"); if (t) t.textContent = TRIP.title;
+  const s = document.getElementById("hero-sub"); if (s) s.innerHTML = TRIP.subtitle;
+  const g = document.getElementById("kv-grid"); if (!g) return;
+  g.innerHTML = (TRIP.overview || []).map((k) => `<div class="kv"><span class="label">${k.label}</span><span class="value">${k.value}</span><span class="small">${k.small}</span></div>`).join("");
+}
+renderHero();
+
+// ---- Week-by-week plan ----
+TRIP.weeks = [
+  { start:"2026-05-31", end:"2026-06-07", n:1, dates:"Jun 1 – Jun 7", title:"Settle in", tag:"rest", tagLabel:"Settle", items:[
+    `<b>Mon–Fri</b> — SCADS Week 1; map the daily drive; one Pullen Park lunch walk`,
+    `<b>Sat Jun 6</b> — Big Ed's breakfast → Dorothea Dix Park → Clyde Cooper's BBQ lunch → easy evening`,
+    `<b>Sun Jun 7</b> — JC Raulston Arboretum (quiet morning) → laundry + prep`,
+  ]},
+  { start:"2026-06-08", end:"2026-06-14", n:2, dates:"Jun 8 – Jun 14", title:"Umstead hike", tag:"hike", tagLabel:"Hike", items:[
+    `<b>Weekday lunch</b> — Lunchbox Deli (Turkey Basil on Rosemary Focaccia)`,
+    `<b>Weekday evening</b> — Two Roosters Ice Cream walk after work`,
+    `<b>Sat Jun 13</b> — Umstead State Park, Company Mill Trail (~5.8 mi)`,
+    `<b>Sun Jun 14</b> — NC Museum of Natural Sciences + Daily Planet Cafe → easy hotel evening (Side Street closed Sun)`,
+  ]},
+  { start:"2026-06-15", end:"2026-06-21", n:3, dates:"Jun 15 – Jun 21", title:"Durham day", tag:"city", tagLabel:"Day-trip", items:[
+    `<b>Weekday lunch</b> — Eastcut Sandwich Bar`,
+    `<b>Weekday evening</b> — Fratelli's Delicatessen sit-down`,
+    `<b>Sat Jun 20</b> — Durham day: Ideal Sandwich → Eno River State Park → Hog Heaven BBQ`,
+    `<b>Sun Jun 21</b> — Big Ed's Sunday breakfast (Pam's closed Sun) → recovery`,
+  ]},
+  { start:"2026-06-22", end:"2026-06-28", n:4, dates:"Jun 22 – Jun 28", title:"Beach overnight", tag:"beach", tagLabel:"Beach", items:[
+    `<b>Weekday lunch</b> — Oakwood Deli`,
+    `<b>Weekday evening</b> — NC Museum of Art sculpture park (golden hour, outdoor grounds stay open)`,
+    `<b>Sat Jun 27</b> — Drive to Wrightsville Beach (~2 hr). Beach day + overnight`,
+    `<b>Sun Jun 28</b> — Beach morning → Wilmington lunch → drive back`,
+  ]},
+  { start:"2026-06-29", end:"2026-07-05", n:5, dates:"Jun 29 – Jul 5", title:"Asheville long weekend", tag:"mountain", tagLabel:"Mountains", items:[
+    `<b>Weekday lunch</b> — Pam's Farmhouse plate-lunch (Tue–Sat)`,
+    `<b>Weekday evening</b> — The Pit Authentic Barbecue dinner`,
+    `<b>Fri Jul 3</b> — Drive to Asheville (~4 hr). Federal holiday observed`,
+    `<b>Sat Jul 4</b> — Blue Ridge Parkway (pre-confirm mileposts — ~35 mi between Linville Gorge &amp; Mt. Mitchell still Helene-closed) + <strong>Mt. Pisgah Trail if open, else DuPont State Forest waterfalls or Graveyard Fields</strong> + downtown Asheville food crawl evening`,
+    `<b>Sun Jul 5</b> — Biltmore Estate + new "Luminere" after-dark light installation (2026 debut) → drive back. Enter via main gate, not Biltmore Village (still rebuilding post-Helene).`,
+  ]},
+  { start:"2026-07-06", end:"2026-07-12", n:6, dates:"Jul 6 – Jul 12", title:"Hanging Rock waterfalls", tag:"hike", tagLabel:"Hike", items:[
+    `<b>Weekday lunch</b> — Union Special Bread`,
+    `<b>Weekday evening</b> — Pullen Park or Dorothea Dix walk`,
+    `<b>Sat Jul 11</b> — Hanging Rock State Park: Hidden Falls + Window Falls + Upper Cascades (~2 hr drive each way; pack lunch)`,
+    `<b>Sun Jul 12</b> — Sam Jones BBQ lunch → rest`,
+  ]},
+  { start:"2026-07-13", end:"2026-07-19", n:7, dates:"Jul 13 – Jul 19", title:"Raven Rock + Chapel Hill BBQ", tag:"hike", tagLabel:"Hike", items:[
+    `<b>Weekday lunch</b> — Southern Craft Sandwiches`,
+    `<b>Weekday evening</b> — MoJoe's Burger Joint (add the Polaroid)`,
+    `<b>Sat Jul 18</b> — Raven Rock State Park hike — <strong>arrive by 9 AM</strong> (summer-weekend entry lines hit 90 min) → Allen &amp; Son BBQ in Pittsboro on the way home (Chapel Hill location closed). Alternative: shift to a weekday afternoon (Centennial parking free after 5 PM).`,
+    `<b>Sun Jul 19</b> — JC Raulston Arboretum farewell visit → start packing`,
+  ]},
+  { start:"2026-07-20", end:"2026-07-25", n:8, dates:"Jul 20 – Jul 25", title:"Wrap-up", tag:"travel", tagLabel:"Travel", items:[
+    `<b>Weekday lunch</b> — loop back to your favorite sandwich spot`,
+    `<b>Weekday evening</b> — Two Roosters Ice Cream closing dessert`,
+    `<b>Fri Jul 24</b> — SCADS closing day; farewell dinner with the cohort`,
+    `<b>Sat Jul 25</b> — Check out by hotel deadline. Drive home, or split with a stopover.`,
+  ]},
+];
+function renderWeeks(){
+  const host = document.getElementById("weeks-list"); if (!host) return;
+  host.innerHTML = (TRIP.weeks || []).map((w) => `<details class="week-card" data-week-start="${w.start}" data-week-end="${w.end}">
+    <summary>
+      <span class="wk">Week ${w.n} <small>${w.dates} · ${w.title}</small></span>
+      <span class="tag ${w.tag}">${w.tagLabel}</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+    </summary>
+    <div class="body"><ul>${w.items.map((i) => `<li>${i}</li>`).join("")}</ul></div>
+  </details>`).join("");
+}
+renderWeeks();
+expandCurrentWeek();
 
 const MAPS_KEY = "periplus:maps-provider";
 function getMapsProvider(){ try { return localStorage.getItem(MAPS_KEY) || "google"; } catch { return "google"; } }
