@@ -56,11 +56,13 @@
 /* Mobile: vertical scrim over a centered image, full-width text */
 @media (max-width: 50rem) {
   .hero {
-    min-height: 66vh;
+    min-height: 62vh;
     background-image:
-      linear-gradient(180deg, rgba(15,23,42,0.88) 0%, rgba(15,23,42,0.66) 60%, rgba(15,23,42,0.82) 100%),
+      linear-gradient(180deg, rgba(15,23,42,0.30) 0%, rgba(15,23,42,0.58) 48%, rgba(15,23,42,0.36) 100%),
       var(--hero-image);
     background-position: center;
   }
+  .hero h1,
+  .hero .hero-subtitle { text-shadow: 0 1px 16px rgba(15,23,42,0.9); }
   .hero .hero-subtitle, .hero-buttons { max-width: none; }
 }

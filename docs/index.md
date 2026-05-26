@@ -9,7 +9,7 @@ hide:
 
 # Periplus
 
-**Your whole trip, offline, in your pocket.** An installable travel-itinerary planner that works with zero signal, opens every food and trail spot straight into your maps app, and is a single file you can fork for your own multi-week trip.
+**Your whole trip, offline, in your pocket.** An installable itinerary planner you can fork for your own multi-week trip.
 { .hero-subtitle }
 
 <div class="hero-buttons" markdown>
