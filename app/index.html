@@ -863,6 +863,13 @@ a.cal-cell.activity:hover::after, a.cal-cell.activity:focus-visible::after { col
   .cal-agenda { display: block; }
   .cal-legend { display: none; }
 }
+
+/* Mobile tap targets (>=44px touch guideline) */
+@media (max-width: 640px) {
+  .dir-go { min-height: 44px; padding: 0 14px; display: inline-flex; align-items: center; border: 1px solid color-mix(in oklch, var(--brand) 35%, transparent); border-radius: 10px; font-size: 0.9rem; }
+  .share-btn { min-height: 40px; }
+  .maps-toggle label { min-height: 40px; padding: 4px 6px; }
+}
 </style>
 </head>
 <body>
