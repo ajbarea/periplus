@@ -27,3 +27,4 @@ Let the trip owner add, remove, reorder, and rename **sections and cards** — a
 - [x] Google/Apple add-to-calendar integration, mirroring the maps toggle.
 - [x] Brand the footer to match the rest of the fleet.
 - [x] Docs hero polish + scroll-reveal, hero-entrance, and card-hover interactivity, matching the sister sites (IntersectionObserver `reveal.js`; CSS scroll-driven deferred until Firefox ships full support).
+- [x] Calendar reliability + a11y after the month-view refactor: repaired the stale `e2e` selector that had left **Tests** red on `main` (now web-first assertions on `#cal-months`/`#cal-agenda`, agenda locked to event count), restored WCAG AA 4.5:1 on the event chips (`hike`/`beach` were failing white-on-color — darkened ~80% in oklab to 5.6:1 / 6.2:1, verified in-browser), and removed ~85 lines of dead `.cal-cell`/`.cal-row`/`.cal-header` CSS the refactor orphaned.
