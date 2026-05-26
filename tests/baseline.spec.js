@@ -8,7 +8,7 @@ test('core sections and key content render', async ({ page }) => {
   // calendar is JS-generated
   expect(await page.locator('#cal-body > *').count()).toBeGreaterThan(0);
 
-  // food directory — locked so the Task 4 refactor can't silently drop content
+  // food directory — locked so refactors can't silently drop content
   const food = page.locator('#food-grid .dir-item');
   expect(await food.count()).toBeGreaterThanOrEqual(20);
   const grid = page.locator('#food-grid');
@@ -17,4 +17,14 @@ test('core sections and key content render', async ({ page }) => {
   await expect(grid.getByText('Two Roosters Ice Cream')).toBeVisible();
 
   await expect(page.locator('#outdoor-grid .dir-item').first()).toBeVisible();
+});
+
+test('config-driven sections render from TRIP', async ({ page }) => {
+  await page.goto('/');
+  expect(await page.locator('#intel-grid .intel-card').count()).toBe(6);
+  expect(await page.locator('#anchors-grid .card').count()).toBe(2);
+  expect(await page.locator('#contacts-grid .contact').count()).toBe(7);
+  await expect(page.locator('#intel-grid').getByText('July heat')).toBeVisible();
+  await expect(page.locator('#anchors-grid').getByText('Wrightsville Beach')).toBeVisible();
+  await expect(page.locator('#contacts-grid').getByText('Emily Keller (LAS host)')).toBeVisible();
 });

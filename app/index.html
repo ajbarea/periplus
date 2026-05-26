@@ -907,55 +907,7 @@ details.accordion[open] .acc-progress .fill { display: none; }
   <h2>Critical Intel <span class="badge">Read first</span></h2>
   <p class="lede">Late-May 2026 research turned up items that change the math on this trip. Color-coded by type: red = risk, green = opportunity, blue = info.</p>
 
-  <div class="intel-grid">
-    <div class="intel-card" data-type="risk">
-      <span class="label">
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-        July heat
-      </span>
-      <span class="value">Heat index ~106°F</span>
-      <span class="small">Start every hike before 10 AM. Treat noon–4 PM as indoor time (Hunt Library, NCMA, Natural Sciences).</span>
-    </div>
-    <div class="intel-card" data-type="risk">
-      <span class="label">
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20 12 4l9 16Z"/><path d="M12 10v5M12 18h.01"/></svg>
-        Asheville (Jul 3–5)
-      </span>
-      <span class="value">Helene recovery active</span>
-      <span class="small">~35 mi of Blue Ridge Parkway (Linville Gorge → Mt. Mitchell) still closed; Mt. Pisgah trail status partial. Re-confirm the week before. Backups: DuPont, Graveyard Fields, Heartbreak Ridge.</span>
-    </div>
-    <div class="intel-card" data-type="risk">
-      <span class="label">
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M5 6h14M5 18h14"/><path d="M9 6v12M15 6v12"/></svg>
-        I-95 closure
-      </span>
-      <span class="value">Benson Exit 79, May 28 →</span>
-      <span class="small">NC-50 bridge over I-95 closed ~45 days. Take I-81 over I-95 entering NC. (Already in your plan — extra reason to stick.)</span>
-    </div>
-    <div class="intel-card" data-type="info">
-      <span class="label">
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-        Raven Rock weekends
-      </span>
-      <span class="value">Up to 90-min entry wait</span>
-      <span class="small">Arrive before 9 AM Sat Jul 18 or shift to a weekday afternoon. No reservations required, but no line-jumping either.</span>
-    </div>
-    <div class="intel-card" data-type="opportunity">
-      <span class="label">
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1h-5v-7H10v7H5a1 1 0 0 1-1-1V9"/></svg>
-        Common Market
-      </span>
-      <span class="value">Opens 2026 at Seaboard Station</span>
-      <span class="small">Sandwiches/grocer/bar literally next door to your Hyatt. Track opening date and visit week one.</span>
-    </div>
-    <div class="intel-card" data-type="info">
-      <span class="label">
-        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c-4 0-4 4-8 4s-4-4-8-4M21 6c-4 0-4 4-8 4S9 6 5 6M21 18c-4 0-4 4-8 4s-4-4-8-4"/></svg>
-        2026 hurricane season
-      </span>
-      <span class="value">Below normal (NOAA)</span>
-      <span class="small">8–14 named storms forecast; El Niño wind shear suppressing development. Lower risk than 2024, but still real.</span>
-    </div>
+  <div class="intel-grid" id="intel-grid">
   </div>
 </section>
 
@@ -1053,27 +1005,7 @@ details.accordion[open] .acc-progress .fill { display: none; }
   <h2>Trip Anchors</h2>
   <p class="lede">Two multi-night trips bookend the local exploration. Everything else stays within ~1 hr of Raleigh.</p>
 
-  <div class="dir-grid">
-    <div class="card">
-      <h3 style="display:flex; align-items:center; gap:0.5rem;">
-        Wrightsville Beach <span class="tag beach">Beach</span>
-      </h3>
-      <div class="row">
-        <div><span class="k">Dates</span> Sat Jun 27 – Sun Jun 28</div>
-        <div><span class="k">Drive</span> ~2 hr (I-40 E)</div>
-      </div>
-      <p style="margin:0.5rem 0 0; color: var(--ink-2);">Closest real ocean beach. Overnight; book early — peak season.</p>
-    </div>
-    <div class="card">
-      <h3 style="display:flex; align-items:center; gap:0.5rem;">
-        Asheville long weekend <span class="tag mountain">Mountains</span>
-      </h3>
-      <div class="row">
-        <div><span class="k">Dates</span> Fri Jul 3 – Sun Jul 5</div>
-        <div><span class="k">Drive</span> ~4 hr (I-40 W)</div>
-      </div>
-      <p style="margin:0.5rem 0 0; color: var(--ink-2);">July 4 falls Saturday — federal holiday observed Fri Jul 3 = built-in 3-day weekend. Blue Ridge Parkway + downtown food.</p>
-    </div>
+  <div class="dir-grid" id="anchors-grid">
   </div>
 </section>
 
@@ -1500,42 +1432,7 @@ details.accordion[open] .acc-progress .fill { display: none; }
 <section id="contacts">
   <h2>Key Contacts</h2>
 
-  <div class="contacts-grid">
-    <div class="contact">
-      <div class="who">Emily Keller (LAS host)</div>
-      <div class="info"><a href="mailto:eekeller@ncsu.edu">eekeller@ncsu.edu</a></div>
-      <div class="use">Primary contact — logistics, master account, hotel issues</div>
-    </div>
-    <div class="contact">
-      <div class="who">SCADS Organizing Team</div>
-      <div class="info"><a href="mailto:scads-apply@ncsu.edu">scads-apply@ncsu.edu</a></div>
-      <div class="use">General SCADS questions, Unity ID, paperwork</div>
-    </div>
-    <div class="contact">
-      <div class="who">Hyatt House — Front desk</div>
-      <div class="info"><a href="tel:+19843267710">(984) 326-7710</a><br>11 Seaboard Ave, Raleigh NC 27604</div>
-      <div class="use">Shuttle, room issues, in-room dining, laundry</div>
-    </div>
-    <div class="contact">
-      <div class="who">NCSU Unity ID Help</div>
-      <div class="info"><a href="https://help.ncsu.edu" rel="noopener" target="_blank">help.ncsu.edu</a></div>
-      <div class="use">Login or account access problems</div>
-    </div>
-    <div class="contact">
-      <div class="who">RIT Service Center</div>
-      <div class="info"><a href="tel:+15854755000">585-475-5000</a></div>
-      <div class="use">Backup for anything RIT-side</div>
-    </div>
-    <div class="contact">
-      <div class="who">AAA Roadside</div>
-      <div class="info"><a href="tel:+18002224357">1-800-AAA-HELP</a></div>
-      <div class="use">Breakdown on the drive (if member)</div>
-    </div>
-    <div class="contact">
-      <div class="who">Emergency</div>
-      <div class="info"><a href="tel:911">911</a></div>
-      <div class="use">Medical / safety</div>
-    </div>
+  <div class="contacts-grid" id="contacts-grid">
   </div>
 </section>
 
@@ -1846,6 +1743,65 @@ const TRIP = {
   ],
 };
 window.TRIP = TRIP;
+
+// ---- More trip data (intel / anchors / contacts) ----
+TRIP.intel = [
+  { type:"risk", icon:"heat", label:"July heat", value:"Heat index ~106°F", note:"Start every hike before 10 AM. Treat noon–4 PM as indoor time (Hunt Library, NCMA, Natural Sciences)." },
+  { type:"risk", icon:"peak", label:"Asheville (Jul 3–5)", value:"Helene recovery active", note:"~35 mi of Blue Ridge Parkway (Linville Gorge → Mt. Mitchell) still closed; Mt. Pisgah trail status partial. Re-confirm the week before. Backups: DuPont, Graveyard Fields, Heartbreak Ridge." },
+  { type:"risk", icon:"road", label:"I-95 closure", value:"Benson Exit 79, May 28 →", note:"NC-50 bridge over I-95 closed ~45 days. Take I-81 over I-95 entering NC." },
+  { type:"info", icon:"clock", label:"Raven Rock weekends", value:"Up to 90-min entry wait", note:"Arrive before 9 AM Sat Jul 18 or shift to a weekday afternoon. No reservations required." },
+  { type:"opportunity", icon:"home", label:"Common Market", value:"Opens 2026 at Seaboard Station", note:"Sandwiches/grocer/bar next door to the Hyatt. Track the opening date and visit week one." },
+  { type:"info", icon:"waves", label:"2026 hurricane season", value:"Below normal (NOAA)", note:"8–14 named storms forecast; El Niño wind shear suppressing development. Lower risk than 2024, but still real." },
+];
+TRIP.anchors = [
+  { name:"Wrightsville Beach", tag:"beach", tagLabel:"Beach", dates:"Sat Jun 27 – Sun Jun 28", drive:"~2 hr (I-40 E)", note:"Closest real ocean beach. Overnight; book early — peak season." },
+  { name:"Asheville long weekend", tag:"mountain", tagLabel:"Mountains", dates:"Fri Jul 3 – Sun Jul 5", drive:"~4 hr (I-40 W)", note:"July 4 falls Saturday — the holiday is observed Fri Jul 3, a built-in 3-day weekend. Blue Ridge Parkway + downtown food." },
+];
+TRIP.contacts = [
+  { who:"Emily Keller (LAS host)", info:'<a href="mailto:eekeller@ncsu.edu">eekeller@ncsu.edu</a>', use:"Primary contact — logistics, master account, hotel issues" },
+  { who:"SCADS Organizing Team", info:'<a href="mailto:scads-apply@ncsu.edu">scads-apply@ncsu.edu</a>', use:"General SCADS questions, Unity ID, paperwork" },
+  { who:"Hyatt House — Front desk", info:'<a href="tel:+19843267710">(984) 326-7710</a><br>11 Seaboard Ave, Raleigh NC 27604', use:"Shuttle, room issues, in-room dining, laundry" },
+  { who:"NCSU Unity ID Help", info:'<a href="https://help.ncsu.edu" rel="noopener" target="_blank">help.ncsu.edu</a>', use:"Login or account access problems" },
+  { who:"RIT Service Center", info:'<a href="tel:+15854755000">585-475-5000</a>', use:"Backup for anything RIT-side" },
+  { who:"AAA Roadside", info:'<a href="tel:+18002224357">1-800-AAA-HELP</a>', use:"Breakdown on the drive (if member)" },
+  { who:"Emergency", info:'<a href="tel:911">911</a>', use:"Medical / safety" },
+];
+
+const INTEL_ICONS = {
+  heat: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>',
+  peak: '<path d="M3 20 12 4l9 16Z"/><path d="M12 10v5M12 18h.01"/>',
+  road: '<path d="M3 12h18M5 6h14M5 18h14"/><path d="M9 6v12M15 6v12"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  home: '<path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1h-5v-7H10v7H5a1 1 0 0 1-1-1V9"/>',
+  waves: '<path d="M21 12c-4 0-4 4-8 4s-4-4-8-4M21 6c-4 0-4 4-8 4S9 6 5 6M21 18c-4 0-4 4-8 4s-4-4-8-4"/>',
+};
+const icoSvg = (k) => `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${INTEL_ICONS[k] || ''}</svg>`;
+
+function renderIntel(){
+  const g = document.getElementById("intel-grid"); if (!g) return;
+  g.innerHTML = (TRIP.intel || []).map((c) => `<div class="intel-card" data-type="${c.cat || c.type}">
+    <span class="label">${icoSvg(c.icon)} ${c.label}</span>
+    <span class="value">${c.value}</span>
+    <span class="small">${c.note}</span>
+  </div>`).join("");
+}
+function renderAnchors(){
+  const g = document.getElementById("anchors-grid"); if (!g) return;
+  g.innerHTML = (TRIP.anchors || []).map((a) => `<div class="card">
+    <h3 style="display:flex; align-items:center; gap:0.5rem;">${a.name} <span class="tag ${a.tag}">${a.tagLabel}</span></h3>
+    <div class="row"><div><span class="k">Dates</span> ${a.dates}</div><div><span class="k">Drive</span> ${a.drive}</div></div>
+    <p style="margin:0.5rem 0 0; color: var(--ink-2);">${a.note}</p>
+  </div>`).join("");
+}
+function renderContacts(){
+  const g = document.getElementById("contacts-grid"); if (!g) return;
+  g.innerHTML = (TRIP.contacts || []).map((c) => `<div class="contact">
+    <div class="who">${c.who}</div>
+    <div class="info">${c.info}</div>
+    <div class="use">${c.use}</div>
+  </div>`).join("");
+}
+renderIntel(); renderAnchors(); renderContacts();
 
 const MAPS_KEY = "periplus:maps-provider";
 function getMapsProvider(){ try { return localStorage.getItem(MAPS_KEY) || "google"; } catch { return "google"; } }
