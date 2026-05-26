@@ -108,7 +108,7 @@ test('card CRUD generalizes beyond directories (intel) and persists', async ({ p
   const cards = page.locator('#intel-grid .intel-card');
   const start = await cards.count();
   await page.locator('#edit-toggle').click();
-  await expect(page.locator('.dir-add')).toHaveCount(7); // 5 card grids + arrival + dayOne timelines
+  await expect(page.locator('.dir-add')).toHaveCount(10); // 5 card grids + 2 timelines + weeks + pretrip + packing
 
   await page.locator('.dir-add[data-arr="intel"]').click();
   await expect(cards).toHaveCount(start + 1);
@@ -204,6 +204,60 @@ test('timeline rows can be added, reordered, and deleted', async ({ page }) => {
 
   await rows.first().locator('[data-act="del"]').click();
   await expect(rows).toHaveCount(start);
+});
+
+// --- Stage 4: whole weeks & checklist groups ---
+// Top-level CRUD for the two-level sections. Controls live in the body (a11y:
+// interactive controls must not be nested in a <summary>, which is itself a button).
+
+test('whole weeks can be added, reordered, and deleted, and persist', async ({ page }) => {
+  page.on('dialog', (d) => d.accept());
+  await page.goto('/');
+  await page.locator('#edit-toggle').click();
+  const weeks = page.locator('#weeks-list .week-card');
+  const start = await weeks.count();
+
+  await page.locator('.dir-add[data-arr="weeks"]').click();
+  await expect(weeks).toHaveCount(start + 1);
+  await expect(weeks.last().locator('[data-edit="weeks.' + start + '.title"]')).toHaveText('New week');
+
+  // whole-week controls live in the body, so open the new (last) week first
+  await weeks.last().evaluate((el) => { el.open = true; });
+  const titlesBefore = await page.locator('#weeks-list .week-card [data-edit$=".title"]').allInnerTexts();
+  await weeks.last().locator('.grp-bar [data-act="up"][data-arr="weeks"]').click();
+  const titlesAfter = await page.locator('#weeks-list .week-card [data-edit$=".title"]').allInnerTexts();
+  expect(titlesAfter[start - 1]).toBe('New week');
+  expect(titlesAfter[start]).toBe(titlesBefore[start - 1]);
+
+  await page.reload();
+  await expect(page.locator('#weeks-list .week-card')).toHaveCount(start + 1);
+
+  await page.locator('#edit-toggle').click();
+  const newCard = page.locator('#weeks-list .week-card').filter({ hasText: 'New week' });
+  await newCard.evaluate((el) => { el.open = true; });
+  await newCard.locator('.grp-bar [data-act="del"][data-arr="weeks"]').click();
+  await expect(page.locator('#weeks-list .week-card')).toHaveCount(start);
+});
+
+test('whole checklist groups can be added and deleted, and persist', async ({ page }) => {
+  page.on('dialog', (d) => d.accept());
+  await page.goto('/');
+  await page.locator('#edit-toggle').click();
+  const groups = page.locator('#packing-list details.accordion');
+  const start = await groups.count();
+
+  await page.locator('.dir-add[data-arr="packing"]').click();
+  await expect(groups).toHaveCount(start + 1);
+  await expect(groups.last().locator('[data-edit="packing.' + start + '.title"]')).toHaveText('New group');
+
+  await page.reload();
+  await expect(page.locator('#packing-list details.accordion')).toHaveCount(start + 1);
+
+  await page.locator('#edit-toggle').click();
+  const newGroup = page.locator('#packing-list details.accordion').filter({ hasText: 'New group' });
+  await newGroup.evaluate((el) => { el.open = true; });
+  await newGroup.locator('.grp-bar [data-act="del"][data-arr="packing"]').click();
+  await expect(page.locator('#packing-list details.accordion')).toHaveCount(start);
 });
 
 // The editing feature must be reachable on a phone — periplus is a mobile-first PWA.

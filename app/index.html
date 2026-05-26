@@ -1530,7 +1530,7 @@ function renderWeeks(){
       <span class="tag ${w.tag}">${w.tagLabel}</span>
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
     </summary>
-    <div class="body"><ul>${w.items.map((it, j) => `<li><span data-edit="weeks.${wi}.items.${j}">${it}</span>${ctrls("weeks." + wi + ".items", j)}</li>`).join("")}</ul><button type="button" class="li-add" data-act="add" data-arr="weeks.${wi}.items">+ Add plan</button></div>
+    <div class="body"><div class="grp-bar"><span class="grp-bar-label">Whole week</span>${ctrls("weeks", wi, "week")}</div><ul>${w.items.map((it, j) => `<li><span data-edit="weeks.${wi}.items.${j}">${it}</span>${ctrls("weeks." + wi + ".items", j, "plan")}</li>`).join("")}</ul><button type="button" class="li-add" data-act="add" data-arr="weeks.${wi}.items">+ Add plan</button></div>
   </details>`).join("");
 }
 renderWeeks();
@@ -1563,7 +1563,7 @@ TRIP.dayOne = [
 ];
 function renderTimeline(id, rows, arr){
   const g = document.getElementById(id); if (!g) return;
-  g.innerHTML = (rows || []).map((r, i) => `<div class="row${r.hl ? " highlight" : ""}"><span class="t" data-edit="${arr}.${i}.t">${r.t}</span><span class="a" data-edit="${arr}.${i}.a">${r.a}</span>${ctrls(arr, i)}</div>`).join("");
+  g.innerHTML = (rows || []).map((r, i) => `<div class="row${r.hl ? " highlight" : ""}"><span class="t" data-edit="${arr}.${i}.t">${r.t}</span><span class="a" data-edit="${arr}.${i}.a">${r.a}</span>${ctrls(arr, i, "step")}</div>`).join("");
 }
 renderTimeline("arrival-timeline", TRIP.arrival, "arrival");
 renderTimeline("dayone-timeline", TRIP.dayOne, "dayOne");
@@ -1676,8 +1676,8 @@ function renderChecklist(containerId, sections, arr){
   if (!el || !sections) return;
   const chev = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>';
   el.innerHTML = sections.map((sec, si) => {
-    const items = sec.items.map((it, ii) => `<li><input type="checkbox" id="${it.id}"><label for="${it.id}"><span data-edit="${arr}.${si}.items.${ii}.label">${it.label}</span></label>${ctrls(arr + "." + si + ".items", ii)}</li>`).join("");
-    return `<details class="accordion" data-okey="${sec.id}"${sec.open ? " open" : ""} data-checklist-id="${sec.id}"><summary>${chev}<span data-edit="${arr}.${si}.title">${sec.title}</span><span class="count" data-count>0 / ${sec.items.length}</span></summary><div class="acc-progress" aria-hidden="true"><div class="fill"></div></div><div class="body"><ul class="checklist">${items}</ul><button type="button" class="li-add" data-act="add" data-arr="${arr}.${si}.items">+ Add item</button></div></details>`;
+    const items = sec.items.map((it, ii) => `<li><input type="checkbox" id="${it.id}"><label for="${it.id}"><span data-edit="${arr}.${si}.items.${ii}.label">${it.label}</span></label>${ctrls(arr + "." + si + ".items", ii, "item")}</li>`).join("");
+    return `<details class="accordion" data-okey="${sec.id}"${sec.open ? " open" : ""} data-checklist-id="${sec.id}"><summary>${chev}<span data-edit="${arr}.${si}.title">${sec.title}</span><span class="count" data-count>0 / ${sec.items.length}</span></summary><div class="acc-progress" aria-hidden="true"><div class="fill"></div></div><div class="body"><div class="grp-bar"><span class="grp-bar-label">Whole group</span>${ctrls(arr, si, "group")}</div><ul class="checklist">${items}</ul><button type="button" class="li-add" data-act="add" data-arr="${arr}.${si}.items">+ Add item</button></div></details>`;
   }).join("");
 }
 renderChecklist("pretrip-list", TRIP.pretrip, "pretrip");
@@ -1696,11 +1696,12 @@ function directionsUrl(query, provider = getMapsProvider()){
 
 // Edit-mode reorder/delete controls (shown only in edit mode via CSS). Shared by
 // every structurally-editable card section; WCAG 2.2 SC 2.5.7 single-pointer buttons.
-function ctrls(arr, i){
+function ctrls(arr, i, noun){
+  noun = noun || "entry";
   return '<div class="card-ctrls">'
-    + `<button type="button" class="cc" data-act="up" data-arr="${arr}" data-i="${i}" title="Move up" aria-label="Move up">↑</button>`
-    + `<button type="button" class="cc" data-act="down" data-arr="${arr}" data-i="${i}" title="Move down" aria-label="Move down">↓</button>`
-    + `<button type="button" class="cc cc-del" data-act="del" data-arr="${arr}" data-i="${i}" title="Delete entry" aria-label="Delete entry">&times;</button>`
+    + `<button type="button" class="cc" data-act="up" data-arr="${arr}" data-i="${i}" title="Move ${noun} up" aria-label="Move ${noun} up">↑</button>`
+    + `<button type="button" class="cc" data-act="down" data-arr="${arr}" data-i="${i}" title="Move ${noun} down" aria-label="Move ${noun} down">↓</button>`
+    + `<button type="button" class="cc cc-del" data-act="del" data-arr="${arr}" data-i="${i}" title="Delete ${noun}" aria-label="Delete ${noun}">&times;</button>`
     + '</div>';
 }
 function dirCard(item, arr, i){
@@ -1846,14 +1847,15 @@ if ('serviceWorker' in navigator) {
     contacts: { grid: "contacts-grid", render: renderContacts, blank: () => ({ who: "New contact", info: "", use: "When to use this." }) },
     anchors:  { grid: "anchors-grid",  render: renderAnchors,  blank: () => ({ name: "New trip", tag: "rest", tagLabel: "Trip", dates: "", drive: "", note: "Add detail." }) },
     // Flat timeline sections — top-level rows, controls placed inline (thin rows).
-    arrival:  { grid: "arrival-timeline", render: () => renderTimeline("arrival-timeline", TRIP.arrival, "arrival"), blank: () => ({ t: "", a: "New step" }) },
-    dayOne:   { grid: "dayone-timeline",  render: () => renderTimeline("dayone-timeline", TRIP.dayOne, "dayOne"),    blank: () => ({ t: "", a: "New step" }) },
+    arrival:  { grid: "arrival-timeline", render: () => renderTimeline("arrival-timeline", TRIP.arrival, "arrival"), blank: () => ({ t: "", a: "New step" }), addLabel: "+ Add step" },
+    dayOne:   { grid: "dayone-timeline",  render: () => renderTimeline("dayone-timeline", TRIP.dayOne, "dayOne"),    blank: () => ({ t: "", a: "New step" }), addLabel: "+ Add step" },
     // Two-level sections — render re-runs the per-render wiring (current-week open /
-    // checkbox state via delegation); itemBlank seeds a new sub-item. No top-level
-    // blank: adding/removing whole weeks or checklist groups is a later pass.
-    weeks:    { grid: "weeks-list",   render: () => { renderWeeks(); expandCurrentWeek(); }, itemBlank: () => "New plan" },
-    pretrip:  { grid: "pretrip-list", render: () => { renderChecklist("pretrip-list", TRIP.pretrip, "pretrip"); applyCheckState(); }, itemBlank: () => ({ id: uid(), label: "New item" }) },
-    packing:  { grid: "packing-list", render: () => { renderChecklist("packing-list", TRIP.packing, "packing"); applyCheckState(); }, itemBlank: () => ({ id: uid(), label: "New item" }) },
+    // checkbox state via delegation). itemBlank seeds a sub-item; blank seeds a whole
+    // week / group (one item). Their CRUD controls render in the body, never the
+    // <summary> (a11y: a summary is itself a button — no nested interactive controls).
+    weeks:    { grid: "weeks-list",   render: () => { renderWeeks(); expandCurrentWeek(); }, itemBlank: () => "New plan", blank: () => ({ n: Math.max(0, ...TRIP.weeks.map((w) => +w.n || 0)) + 1, start: "", end: "", dates: "", title: "New week", tag: "rest", tagLabel: "Week", items: ["New plan"] }), addLabel: "+ Add week" },
+    pretrip:  { grid: "pretrip-list", render: () => { renderChecklist("pretrip-list", TRIP.pretrip, "pretrip"); applyCheckState(); }, itemBlank: () => ({ id: uid(), label: "New item" }), blank: () => ({ id: uid(), title: "New group", open: true, items: [{ id: uid(), label: "New item" }] }), addLabel: "+ Add group" },
+    packing:  { grid: "packing-list", render: () => { renderChecklist("packing-list", TRIP.packing, "packing"); applyCheckState(); }, itemBlank: () => ({ id: uid(), label: "New item" }), blank: () => ({ id: uid(), title: "New group", open: true, items: [{ id: uid(), label: "New item" }] }), addLabel: "+ Add group" },
   };
   let arraysState = (() => { try { return JSON.parse(localStorage.getItem(ARRAYS_KEY)) || {}; } catch (e) { return {}; } })();
   const saveArray = (arr) => { arraysState[arr] = TRIP[arr]; try { localStorage.setItem(ARRAYS_KEY, JSON.stringify(arraysState)); } catch (e) {} };
@@ -2037,6 +2039,11 @@ if ('serviceWorker' in navigator) {
     body.editing .li-add{ display:inline-block; margin:.5rem 0 .25rem; font:inherit; font-size:.8rem; font-weight:600;
       padding:.35rem .8rem; border-radius:8px; border:1px dashed var(--brand,#2563eb); background:transparent; color:var(--brand,#2563eb); cursor:pointer; }
     body.editing .li-add:hover{ background:color-mix(in oklab,var(--brand,#2563eb) 10%,transparent); }
+    /* Whole-week / whole-group controls — in the accordion body (never the summary), labeled. */
+    .grp-bar{ display:none; }
+    body.editing .grp-bar{ display:flex; align-items:center; gap:.5rem; margin:0 0 .6rem; padding-bottom:.5rem; border-bottom:1px dashed var(--border,#e5e7eb); }
+    body.editing .grp-bar-label{ font-size:.72rem; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--ink-2,#374151); }
+    body.editing .grp-bar .card-ctrls{ position:static; inset:auto; margin-left:auto; box-shadow:none; }
     /* Thin list/row contexts: controls sit inline at the row end, not the card corner. */
     body.editing .week-card .body li{ display:flex; align-items:flex-start; gap:.4rem; }
     body.editing .week-card .body li > span[data-edit]{ flex:1; }
@@ -2105,7 +2112,7 @@ if ('serviceWorker' in navigator) {
     if (!grid) continue;
     const add = document.createElement("button");
     add.type = "button"; add.className = "dir-add"; add.dataset.act = "add"; add.dataset.arr = arr;
-    add.textContent = "+ Add entry";
+    add.textContent = LISTS[arr].addLabel || "+ Add entry";
     grid.insertAdjacentElement("afterend", add);
   }
 
