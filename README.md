@@ -16,7 +16,7 @@ A *periplus* was the ancient mariner's itinerary, a written log of ports and lan
 - **No build, no backend, no framework.** One `index.html` you hand-edit.
 
 ## Make it yours
-All trip data lives in one `TRIP` config block in [`app/index.html`](app/index.html). Edit the `food` and `outdoor` arrays, commit, and the site and app redeploy. See [Customize](https://ajbarea.github.io/periplus/customize/).
+The trip's content lives in a `TRIP` config block in [`app/index.html`](app/index.html): overview, the food and outdoor directories, intel, trip anchors, the week-by-week plan, and contacts. Edit it, commit, and the site and app redeploy. See [Customize](https://ajbarea.github.io/periplus/customize/).
 
 ## Develop
 ```bash
