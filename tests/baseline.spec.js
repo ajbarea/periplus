@@ -5,8 +5,10 @@ test('core sections and key content render', async ({ page }) => {
   await expect(page).toHaveTitle(/Residency/);
   await expect(page.locator('#overview')).toBeVisible();
 
-  // calendar is JS-generated
-  expect(await page.locator('#cal-body > *').count()).toBeGreaterThan(0);
+  // calendar is JS-generated from TRIP.calendar — lock both views so a refactor can't silently drop it
+  await expect(page.locator('#cal-months .cal-month').first()).toBeVisible();
+  const calEvents = await page.evaluate(() => window.TRIP.calendar.events.length);
+  await expect(page.locator('#cal-agenda .cal-ag')).toHaveCount(calEvents);
 
   // food directory — locked so refactors can't silently drop content
   const food = page.locator('#food-grid .dir-item');
