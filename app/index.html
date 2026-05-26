@@ -822,6 +822,14 @@ details.accordion[open] .acc-progress .fill { display: none; }
   .cal-cell .d { color: var(--ink-2); opacity: 1; }
   details.accordion > summary .count { color: var(--ink-2); }
   details.accordion[open]:has(.checklist li.checked) > summary .count { color: color-mix(in oklab, var(--hike) 50%, #000); }
+
+/* Calendar events are clickable add-to-calendar links (Google Calendar / Apple ICS) */
+a.cal-cell.activity { text-decoration: none; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease, filter .12s ease; }
+a.cal-cell.activity:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgb(0 0 0 / 22%); filter: brightness(1.06); z-index: 2; }
+a.cal-cell.activity:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; z-index: 2; }
+a.cal-cell.activity::after { content: "+"; position: absolute; top: 1px; right: 3px; font-size: .72rem; font-weight: 800; line-height: 1; color: rgb(255 255 255 / 0%); transition: color .12s ease; }
+a.cal-cell.activity:hover::after, a.cal-cell.activity:focus-visible::after { color: rgb(255 255 255 / 90%); }
+.cal-toggle { margin: .8rem 0 .2rem; }
 </style>
 </head>
 <body>
@@ -906,6 +914,12 @@ details.accordion[open] .acc-progress .fill { display: none; }
     <span class="swatch"><i style="background:var(--city)"></i> City day-trip</span>
     <span class="swatch"><i style="background:var(--rest)"></i> Rest / catch-up</span>
   </div>
+  <fieldset class="maps-toggle cal-toggle" aria-label="Calendar app for events">
+    <legend class="sr-only">Calendar app for events</legend>
+    <span class="maps-toggle-label">Add events to</span>
+    <label><input type="radio" name="cal" id="cal-google" value="google"> Google</label>
+    <label><input type="radio" name="cal" id="cal-apple" value="apple"> Apple</label>
+  </fieldset>
 
   <div class="cal">
     <div class="cal-header">
@@ -1284,44 +1298,119 @@ const TRIP_START = new Date(2026, 4, 31);   // May 31, 2026 (Sun = arrival)
 const TRIP_END   = new Date(2026, 6, 25);   // Jul 25, 2026 (Sat = checkout)
 
 // week markers: each row is the Mon-Sun span containing a trip week's main activity
-const weeks = [
-  { label: "Wk 1", sub: "Settle in",       mon: new Date(2026,5,1) },
-  { label: "Wk 2", sub: "Umstead hike",    mon: new Date(2026,5,8) },
-  { label: "Wk 3", sub: "Durham day",      mon: new Date(2026,5,15) },
-  { label: "Wk 4", sub: "Beach overnight", mon: new Date(2026,5,22) },
-  { label: "Wk 5", sub: "Asheville",       mon: new Date(2026,5,29) },
-  { label: "Wk 6", sub: "Hanging Rock",    mon: new Date(2026,6,6) },
-  { label: "Wk 7", sub: "Raven Rock",      mon: new Date(2026,6,13) },
-  { label: "Wk 8", sub: "Wrap-up",         mon: new Date(2026,6,20) },
-];
+const TRIP = {
+  food: [
+    { name:"Lunchbox Deli", cat:"sandwich", meta:"Sandwich · Raleigh", note:"Turkey Basil on Rosemary Focaccia.", text:"lunchbox deli turkey basil rosemary focaccia raleigh", maps:"Lunchbox Deli, Raleigh, NC" },
+    { name:"Eastcut Sandwich Bar", cat:"sandwich", meta:"Sandwich · Raleigh", note:"Rotating chalkboard specials; locals' top pick.", text:"eastcut sandwich bar chalkboard raleigh", maps:"Eastcut Sandwich Bar, Raleigh, NC" },
+    { name:"Oakwood Deli", cat:"sandwich", meta:"Sandwich · Raleigh (Oakwood)", note:"Neighborhood favorite, walkable from downtown.", text:"oakwood deli downtown raleigh neighborhood", maps:"Oakwood Deli, Raleigh, NC" },
+    { name:"Fratelli's Delicatessen", cat:"sandwich", meta:"Sandwich · Apex (~20 min)", note:"Old-school Italian deli, hot subs. 1481 Richardson Rd, Apex.", text:"fratellis delicatessen italian hot sub apex", maps:"Fratelli's Delicatessen, 1481 Richardson Rd, Apex, NC" },
+    { name:"Southern Craft Sandwiches", cat:"sandwich", meta:"Sandwich · Raleigh", note:"Scratch-made, Southern twist.", text:"southern craft sandwiches scratch raleigh", maps:"Southern Craft Sandwiches, Raleigh, NC" },
+    { name:"MoJoe's Burger Joint", cat:"sandwich", meta:"Burger · Raleigh", note:"Burgers + sandwiches. Add your Polaroid to the wall.", text:"mojoes burger joint polaroid raleigh", maps:"MoJoe's Burger Joint, Raleigh, NC" },
+    { name:"Union Special Bread", cat:"sandwich", meta:"Sandwich · Raleigh", note:"Sourdough-driven, locally sourced. 2409 Crabtree Blvd — downtown spot closed.", text:"union special bread sourdough crabtree raleigh", maps:"Union Special Bread, 2409 Crabtree Blvd, Raleigh, NC" },
+    { name:"Ideal Sandwich & Grocery", cat:"sandwich", meta:"Sandwich · Durham", note:"Scratch specials; pair with the Durham day-trip.", text:"ideal sandwich grocery durham specials", warn:"Thu–Mon 12–3 PM, sells out — go early", maps:"Ideal Sandwich & Grocery, Durham, NC" },
+    { name:"The Common Market", cat:"sandwich", meta:"Sandwich · Seaboard Station", note:"Opening 2026 — literally next door to the Hyatt. Sandwiches/grocer/bar. Visit week one if it opens during your stay.", text:"common market seaboard station hotel sandwich grocer", warn:"Watch for 2026 opening date", maps:"The Common Market, Seaboard Station, Raleigh, NC" },
+    { name:"Idle Hour Coffee", cat:"sandwich", meta:"Sandwich + Coffee · Five Points", note:"Globally-inspired sandwiches; hidden-gem pick on locals' lists.", text:"idle hour coffee five points sandwich globally", maps:"Idle Hour Coffee, Five Points, Raleigh, NC" },
+    { name:"Poppyseed Market", cat:"sandwich", meta:"Sandwich · Raleigh", note:"Locals' best-club-sandwich pick. Solid lunch stop.", text:"poppyseed market club sandwich raleigh", maps:"Poppyseed Market, Raleigh, NC" },
+    { name:"Figulina", cat:"sandwich", meta:"Italian · Raleigh", note:"James Beard \"Best New Restaurant\" nominee — fresh pasta lunch. Not a sandwich, but a swap-in for one weekday.", text:"figulina james beard fresh pasta italian raleigh", maps:"Figulina, Raleigh, NC" },
+    { name:"Clyde Cooper's Barbecue", cat:"bbq", meta:"BBQ · Raleigh", note:"Open since 1938. Eastern NC vinegar style. 1326 E Millbrook Rd (moved from downtown). Tue–Sat to 8 PM.", text:"clyde coopers barbecue eastern nc vinegar 1938 millbrook raleigh", maps:"Clyde Cooper's Barbecue, 1326 E Millbrook Rd, Raleigh, NC" },
+    { name:"The Pit Authentic BBQ", cat:"bbq", meta:"BBQ · Raleigh", note:"Sit-down dinner option; Ed Mitchell legacy.", text:"the pit ed mitchell raleigh sit-down", maps:"The Pit Authentic Barbecue, Raleigh, NC" },
+    { name:"Sam Jones BBQ", cat:"bbq", meta:"BBQ · Raleigh", note:"Whole-hog smokehouse, hearty sandwiches.", text:"sam jones bbq whole hog raleigh", maps:"Sam Jones BBQ, Raleigh, NC" },
+    { name:"Allen & Son Bar-B-Que", cat:"bbq", meta:"BBQ · Pittsboro", note:"Wood-fired, locals' road-trip pick. 5650 US-15/501 N, Pittsboro — the Chapel Hill location closed.", text:"allen son barbecue pittsboro wood fired", maps:"Allen & Son Bar-B-Que, 5650 US-15/501 N, Pittsboro, NC" },
+    { name:"Hog Heaven", cat:"bbq", meta:"BBQ · Durham", note:"Vinegar-based chopped 'cue.", text:"hog heaven durham vinegar chopped", maps:"Hog Heaven, Durham, NC" },
+    { name:"Pam's Farmhouse", cat:"bbq", meta:"Southern · Raleigh", note:"Southern homestyle, plate-lunch energy. 5111 Western Blvd.", text:"pams farmhouse southern homestyle plate lunch raleigh", warn:"Tue–Sat 6 AM–2 PM · closed Sun & Mon", maps:"Pam's Farmhouse, 5111 Western Blvd, Raleigh, NC" },
+    { name:"Side Street Restaurant", cat:"bbq", meta:"Pub · Raleigh", note:"Classic pub fare, low-key local. Lunch M–Thu; dinner Tue/Wed only.", text:"side street restaurant pub fare raleigh", warn:"Confirm hours before going", maps:"Side Street Restaurant, Raleigh, NC" },
+    { name:"Lawrence Barbecue", cat:"bbq", meta:"BBQ · Raleigh", note:"Top of every 2025 Triangle list. Jake Wood — brisket birria, smoked-fried wings. Smoke + Tex-Mex/coastal fusion. <strong>Must-add.</strong>", text:"lawrence barbecue jake wood brisket birria tex mex raleigh", maps:"Lawrence Barbecue, Raleigh, NC" },
+    { name:"Lewis Barbecue", cat:"bbq", meta:"BBQ · Raleigh", note:"Michelin-recognized Texas BBQ expanding from Charleston.", text:"lewis barbecue texas charleston michelin raleigh", warn:"Opening 2026 — verify status before going", maps:"Lewis Barbecue, Raleigh, NC" },
+    { name:"Big Ed's City Market", cat:"breakfast", meta:"Breakfast · Raleigh", note:"Loaded breakfast bowl with biscuits, gravy, sausage, cheese, eggs. 220 Wolfe St.", text:"big eds city market breakfast bowl biscuits gravy raleigh", warn:"Tue–Sun 7 AM–2 PM · closed Mon", maps:"Big Ed's City Market, 220 Wolfe St, Raleigh, NC" },
+    { name:"Daily Planet Cafe", cat:"breakfast", meta:"Cafe · Raleigh", note:"Inside the NC Museum of Natural Sciences — pair with a museum visit.", text:"daily planet cafe museum natural sciences lunch raleigh", maps:"Daily Planet Cafe, Raleigh, NC" },
+    { name:"Two Roosters Ice Cream", cat:"dessert", meta:"Sweet · Raleigh", note:"Rotating unique local flavors.", text:"two roosters ice cream rotating flavors raleigh", maps:"Two Roosters Ice Cream, Raleigh, NC" },
+  ],
+  outdoor: [
+    { name:"Pullen Park", cat:"park", meta:"Park · 5 min", note:"Adjacent to NCSU campus; lunch-hour walk.", text:"pullen park ncsu campus lunch walk", maps:"Pullen Park, Raleigh, NC" },
+    { name:"Dorothea Dix Park", cat:"park", meta:"Park · in-town", note:"Skyline views, wide-open fields for reading.", text:"dorothea dix park skyline reading fields raleigh", maps:"Dorothea Dix Park, Raleigh, NC" },
+    { name:"JC Raulston Arboretum", cat:"park", meta:"Garden · 5 min", note:"Quiet botanical gardens, ~5 min from campus.", text:"jc raulston arboretum botanical gardens", maps:"JC Raulston Arboretum, Raleigh, NC" },
+    { name:"William B. Umstead State Park", cat:"hike", meta:"Hike · 15 min", note:"Company Mill Trail (5.8 mi loop) — Raleigh's marquee hike.", text:"umstead state park company mill trail raleigh marquee", maps:"William B. Umstead State Park, NC" },
+    { name:"Eno River State Park", cat:"hike", meta:"Hike · 45 min", note:"Cox Mountain or Bobbitt Hole — river swimming spot.", text:"eno river state park durham cox mountain bobbitt hole swimming", maps:"Eno River State Park, Durham, NC" },
+    { name:"Raven Rock State Park", cat:"hike", meta:"Hike · 1 hr", note:"Raven Rock Loop (~2.5 mi); cliff overlook + rapids.", text:"raven rock state park loop cliff overlook rapids", maps:"Raven Rock State Park, NC" },
+    { name:"Hanging Rock State Park", cat:"hike", meta:"Hike · ~2 hr 10", note:"Hidden Falls + Window Falls + Upper Cascades — three waterfalls in one day.", text:"hanging rock state park hidden falls window falls upper cascades waterfalls", maps:"Hanging Rock State Park, NC" },
+    { name:"Wrightsville Beach", cat:"beach", meta:"Beach · ~2 hr", note:"Closest real beach; clean sand, college-town energy in Wilmington. Paid parking $5/hr or $25/day (Mar 1–Oct 31). Lifeguards 10 AM–5 PM.", text:"wrightsville beach closest ocean wilmington", warn:"Download ParkMobile app before going", maps:"Wrightsville Beach, NC" },
+    { name:"Carolina Beach", cat:"beach", meta:"Beach · ~2 hr 20", note:"Boardwalk + Friday-night fireworks.", text:"carolina beach boardwalk fireworks", maps:"Carolina Beach, NC" },
+    { name:"Topsail Island", cat:"beach", meta:"Beach · ~2 hr 20", note:"Quieter, laid-back.", text:"topsail island laid back quiet", maps:"Topsail Island, NC" },
+    { name:"Outer Banks (Nags Head / Corolla)", cat:"beach", meta:"Beach · ~3.5 hr", note:"Wild, historic — save for an overnight if doing OBX.", text:"outer banks nags head corolla wild historic", maps:"Outer Banks, Nags Head, NC" },
+    { name:"NC Museum of Natural Sciences", cat:"museum", meta:"Museum · Free", note:"Pair with lunch at Daily Planet Cafe inside.", text:"nc museum natural sciences free downtown daily planet", maps:"NC Museum of Natural Sciences, Raleigh, NC" },
+    { name:"NC Museum of Art", cat:"museum", meta:"Museum · Free", note:"Massive outdoor sculpture park — golden-hour walk.", text:"nc museum art sculpture park outdoor grounds golden hour", maps:"NC Museum of Art, Raleigh, NC" },
+  ],
+};
+window.TRIP = TRIP;
+
+TRIP.calendar = {
+  weekNotes: ["Settle in", "Umstead hike", "Durham day", "Beach overnight", "Asheville", "Hanging Rock", "Raven Rock", "Wrap-up"],
+  events: [
+    { date:"2026-05-31", cls:"travel",   tag:"Drive",      title:"Drive: Rochester → Raleigh",     loc:"Raleigh, NC",                        note:"~652 mi single-day drive. Target arrival 4–5 PM." },
+    { date:"2026-06-01", cls:"travel",   tag:"Day 1",      title:"SCADS Residency — Day 1",        loc:"LAS, Centennial Campus, Raleigh, NC", note:"Business casual. Arrive early." },
+    { date:"2026-06-06", cls:"rest",     tag:"BBQ",        title:"BBQ night",                          loc:"Raleigh, NC",                        note:"" },
+    { date:"2026-06-07", cls:"rest",     tag:"Rest",       title:"Rest / catch-up",                    loc:"",                                   note:"" },
+    { date:"2026-06-13", cls:"hike",     tag:"Umstead",    title:"Hike: Umstead State Park",           loc:"William B. Umstead State Park, NC",  note:"Company Mill Trail (5.8 mi). Start before 10 AM." },
+    { date:"2026-06-14", cls:"rest",     tag:"Museum",     title:"Museum day",                         loc:"Raleigh, NC",                        note:"NCMA or Natural Sciences." },
+    { date:"2026-06-20", cls:"city",     tag:"Durham",     title:"Durham day-trip",                    loc:"Durham, NC",                         note:"" },
+    { date:"2026-06-21", cls:"rest",     tag:"Rest",       title:"Rest / catch-up",                    loc:"",                                   note:"" },
+    { date:"2026-06-27", cls:"beach",    tag:"Beach",      title:"Beach overnight — Wrightsville", loc:"Wrightsville Beach, NC",             note:"Download ParkMobile. Lifeguards 10–5." },
+    { date:"2026-06-28", cls:"beach",    tag:"Beach",      title:"Beach day — Wrightsville",       loc:"Wrightsville Beach, NC",             note:"" },
+    { date:"2026-07-03", cls:"mountain", tag:"Drive",      title:"Drive to Asheville",                 loc:"Asheville, NC",                      note:"" },
+    { date:"2026-07-04", cls:"mountain", tag:"Asheville",  title:"Asheville — Blue Ridge / Pisgah", loc:"Asheville, NC",                    note:"Re-confirm Parkway milepost + Mt. Pisgah status." },
+    { date:"2026-07-05", cls:"mountain", tag:"Drive back", title:"Drive back to Raleigh",              loc:"Raleigh, NC",                        note:"" },
+    { date:"2026-07-11", cls:"hike",     tag:"Hanging Rk", title:"Hike: Hanging Rock State Park",      loc:"Hanging Rock State Park, NC",        note:"Hidden, Window & Upper Cascades falls." },
+    { date:"2026-07-12", cls:"rest",     tag:"Rest",       title:"Rest / catch-up",                    loc:"",                                   note:"" },
+    { date:"2026-07-18", cls:"hike",     tag:"Raven Rk",   title:"Hike: Raven Rock State Park",        loc:"Raven Rock State Park, NC",          note:"Raven Rock Loop (~2.5 mi)." },
+    { date:"2026-07-19", cls:"rest",     tag:"Pack",       title:"Pack / wind down",                   loc:"",                                   note:"" },
+    { date:"2026-07-24", cls:"rest",     tag:"Farewell",   title:"Farewell + final presentations",     loc:"Raleigh, NC",                        note:"" },
+    { date:"2026-07-25", cls:"travel",   tag:"Check out",  title:"Check out — drive home",         loc:"Raleigh, NC",                        note:"" },
+  ],
+};
+
+const WK1_MON = new Date(2026, 5, 1); // Mon Jun 1, 2026
+const weeks = TRIP.calendar.weekNotes.map((sub, i) => ({
+  label: `Wk ${i + 1}`, sub,
+  mon: new Date(WK1_MON.getFullYear(), WK1_MON.getMonth(), WK1_MON.getDate() + i * 7),
+}));
 
 // activity map (yyyy-mm-dd -> {cls, tag})
 const A = (k,v)=>v;
-const activity = {
-  "2026-05-31": { cls: "travel",   tag: "Drive" },
-  "2026-06-01": { cls: "travel",   tag: "Day 1" },
-  "2026-06-06": { cls: "rest",     tag: "BBQ" },
-  "2026-06-07": { cls: "rest",     tag: "Rest" },
-  "2026-06-13": { cls: "hike",     tag: "Umstead" },
-  "2026-06-14": { cls: "rest",     tag: "Museum" },
-  "2026-06-20": { cls: "city",     tag: "Durham" },
-  "2026-06-21": { cls: "rest",     tag: "Rest" },
-  "2026-06-27": { cls: "beach",    tag: "Beach" },
-  "2026-06-28": { cls: "beach",    tag: "Beach" },
-  "2026-07-03": { cls: "mountain", tag: "Drive" },
-  "2026-07-04": { cls: "mountain", tag: "Asheville" },
-  "2026-07-05": { cls: "mountain", tag: "Drive back" },
-  "2026-07-11": { cls: "hike",     tag: "Hanging Rk" },
-  "2026-07-12": { cls: "rest",     tag: "Rest" },
-  "2026-07-18": { cls: "hike",     tag: "Raven Rk" },
-  "2026-07-19": { cls: "rest",     tag: "Pack" },
-  "2026-07-24": { cls: "rest",     tag: "Farewell" },
-  "2026-07-25": { cls: "travel",   tag: "Check out" },
-};
+const activity = {};
+TRIP.calendar.events.forEach(e => { activity[e.date] = e; });
 
 function ymd(d){ const z=n=>String(n).padStart(2,"0"); return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`; }
 function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
 function sameDate(a,b){ return ymd(a)===ymd(b); }
+
+// ---- Add-to-calendar: Google Calendar deep-link or Apple ICS (mirrors the Maps toggle) ----
+const CAL_KEY = "periplus:cal-provider";
+function getCalProvider(){ try { return localStorage.getItem(CAL_KEY) || "google"; } catch { return "google"; } }
+function setCalProvider(p){ try { localStorage.setItem(CAL_KEY, p); } catch {} }
+function calRange(dateStr){
+  const start = dateStr.replace(/-/g, "");
+  const end = ymd(addDays(new Date(dateStr + "T00:00:00"), 1)).replace(/-/g, "");
+  return { start, end };
+}
+function gcalUrl(e){
+  const { start, end } = calRange(e.date);
+  const p = new URLSearchParams({
+    action: "TEMPLATE", text: e.title || e.tag, dates: start + "/" + end,
+    details: (e.note ? e.note + "\n\n" : "") + "Periplus itinerary", location: e.loc || "",
+  });
+  return "https://calendar.google.com/calendar/render?" + p.toString();
+}
+function icsUri(e){
+  const { start, end } = calRange(e.date);
+  const esc = v => (v || "").replace(/([,;\\])/g, "\\$1").replace(/\n/g, "\\n");
+  const ics = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Periplus//EN","BEGIN:VEVENT",
+    "UID:" + e.date + "-" + (e.tag||"").replace(/\s+/g,"") + "@periplus",
+    "DTSTART;VALUE=DATE:" + start, "DTEND;VALUE=DATE:" + end,
+    "SUMMARY:" + esc(e.title||e.tag), "DESCRIPTION:" + esc(e.note), "LOCATION:" + esc(e.loc),
+    "END:VEVENT","END:VCALENDAR"].join("\r\n");
+  return "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+}
+function addToCalHref(e, provider = getCalProvider()){ return provider === "apple" ? icsUri(e) : gcalUrl(e); }
 
 const today = new Date();
 const tripActive = today >= TRIP_START && today <= TRIP_END;
@@ -1342,11 +1431,16 @@ weeks.forEach(w => {
   for (let i = 0; i < 7; i++) {
     const d = addDays(w.mon, i);
     const key = ymd(d);
-    const cell = document.createElement("div");
-    cell.className = "cal-cell";
     const a = activity[key];
+    const cell = document.createElement(a ? "a" : "div");
+    cell.className = "cal-cell";
     if (a) {
       cell.classList.add("activity", a.cls);
+      cell.href = addToCalHref(a);
+      cell.target = "_blank";
+      cell.rel = "noopener";
+      cell.title = "Add to calendar: " + (a.title || a.tag);
+      cell.dataset.calDate = key;
       cell.innerHTML = `<span class="d">${d.getDate()}</span><span class="tag">${a.tag}</span>`;
     } else {
       cell.innerHTML = `<span class="d">${d.getDate()}</span>`;
@@ -1533,50 +1627,7 @@ refreshCounts();
 // ===========================================================================
 // Directory data (single source) + tap-to-navigate
 // ===========================================================================
-const TRIP = {
-  food: [
-    { name:"Lunchbox Deli", cat:"sandwich", meta:"Sandwich · Raleigh", note:"Turkey Basil on Rosemary Focaccia.", text:"lunchbox deli turkey basil rosemary focaccia raleigh", maps:"Lunchbox Deli, Raleigh, NC" },
-    { name:"Eastcut Sandwich Bar", cat:"sandwich", meta:"Sandwich · Raleigh", note:"Rotating chalkboard specials; locals' top pick.", text:"eastcut sandwich bar chalkboard raleigh", maps:"Eastcut Sandwich Bar, Raleigh, NC" },
-    { name:"Oakwood Deli", cat:"sandwich", meta:"Sandwich · Raleigh (Oakwood)", note:"Neighborhood favorite, walkable from downtown.", text:"oakwood deli downtown raleigh neighborhood", maps:"Oakwood Deli, Raleigh, NC" },
-    { name:"Fratelli's Delicatessen", cat:"sandwich", meta:"Sandwich · Apex (~20 min)", note:"Old-school Italian deli, hot subs. 1481 Richardson Rd, Apex.", text:"fratellis delicatessen italian hot sub apex", maps:"Fratelli's Delicatessen, 1481 Richardson Rd, Apex, NC" },
-    { name:"Southern Craft Sandwiches", cat:"sandwich", meta:"Sandwich · Raleigh", note:"Scratch-made, Southern twist.", text:"southern craft sandwiches scratch raleigh", maps:"Southern Craft Sandwiches, Raleigh, NC" },
-    { name:"MoJoe's Burger Joint", cat:"sandwich", meta:"Burger · Raleigh", note:"Burgers + sandwiches. Add your Polaroid to the wall.", text:"mojoes burger joint polaroid raleigh", maps:"MoJoe's Burger Joint, Raleigh, NC" },
-    { name:"Union Special Bread", cat:"sandwich", meta:"Sandwich · Raleigh", note:"Sourdough-driven, locally sourced. 2409 Crabtree Blvd — downtown spot closed.", text:"union special bread sourdough crabtree raleigh", maps:"Union Special Bread, 2409 Crabtree Blvd, Raleigh, NC" },
-    { name:"Ideal Sandwich & Grocery", cat:"sandwich", meta:"Sandwich · Durham", note:"Scratch specials; pair with the Durham day-trip.", text:"ideal sandwich grocery durham specials", warn:"Thu–Mon 12–3 PM, sells out — go early", maps:"Ideal Sandwich & Grocery, Durham, NC" },
-    { name:"The Common Market", cat:"sandwich", meta:"Sandwich · Seaboard Station", note:"Opening 2026 — literally next door to the Hyatt. Sandwiches/grocer/bar. Visit week one if it opens during your stay.", text:"common market seaboard station hotel sandwich grocer", warn:"Watch for 2026 opening date", maps:"The Common Market, Seaboard Station, Raleigh, NC" },
-    { name:"Idle Hour Coffee", cat:"sandwich", meta:"Sandwich + Coffee · Five Points", note:"Globally-inspired sandwiches; hidden-gem pick on locals' lists.", text:"idle hour coffee five points sandwich globally", maps:"Idle Hour Coffee, Five Points, Raleigh, NC" },
-    { name:"Poppyseed Market", cat:"sandwich", meta:"Sandwich · Raleigh", note:"Locals' best-club-sandwich pick. Solid lunch stop.", text:"poppyseed market club sandwich raleigh", maps:"Poppyseed Market, Raleigh, NC" },
-    { name:"Figulina", cat:"sandwich", meta:"Italian · Raleigh", note:"James Beard \"Best New Restaurant\" nominee — fresh pasta lunch. Not a sandwich, but a swap-in for one weekday.", text:"figulina james beard fresh pasta italian raleigh", maps:"Figulina, Raleigh, NC" },
-    { name:"Clyde Cooper's Barbecue", cat:"bbq", meta:"BBQ · Raleigh", note:"Open since 1938. Eastern NC vinegar style. 1326 E Millbrook Rd (moved from downtown). Tue–Sat to 8 PM.", text:"clyde coopers barbecue eastern nc vinegar 1938 millbrook raleigh", maps:"Clyde Cooper's Barbecue, 1326 E Millbrook Rd, Raleigh, NC" },
-    { name:"The Pit Authentic BBQ", cat:"bbq", meta:"BBQ · Raleigh", note:"Sit-down dinner option; Ed Mitchell legacy.", text:"the pit ed mitchell raleigh sit-down", maps:"The Pit Authentic Barbecue, Raleigh, NC" },
-    { name:"Sam Jones BBQ", cat:"bbq", meta:"BBQ · Raleigh", note:"Whole-hog smokehouse, hearty sandwiches.", text:"sam jones bbq whole hog raleigh", maps:"Sam Jones BBQ, Raleigh, NC" },
-    { name:"Allen & Son Bar-B-Que", cat:"bbq", meta:"BBQ · Pittsboro", note:"Wood-fired, locals' road-trip pick. 5650 US-15/501 N, Pittsboro — the Chapel Hill location closed.", text:"allen son barbecue pittsboro wood fired", maps:"Allen & Son Bar-B-Que, 5650 US-15/501 N, Pittsboro, NC" },
-    { name:"Hog Heaven", cat:"bbq", meta:"BBQ · Durham", note:"Vinegar-based chopped 'cue.", text:"hog heaven durham vinegar chopped", maps:"Hog Heaven, Durham, NC" },
-    { name:"Pam's Farmhouse", cat:"bbq", meta:"Southern · Raleigh", note:"Southern homestyle, plate-lunch energy. 5111 Western Blvd.", text:"pams farmhouse southern homestyle plate lunch raleigh", warn:"Tue–Sat 6 AM–2 PM · closed Sun & Mon", maps:"Pam's Farmhouse, 5111 Western Blvd, Raleigh, NC" },
-    { name:"Side Street Restaurant", cat:"bbq", meta:"Pub · Raleigh", note:"Classic pub fare, low-key local. Lunch M–Thu; dinner Tue/Wed only.", text:"side street restaurant pub fare raleigh", warn:"Confirm hours before going", maps:"Side Street Restaurant, Raleigh, NC" },
-    { name:"Lawrence Barbecue", cat:"bbq", meta:"BBQ · Raleigh", note:"Top of every 2025 Triangle list. Jake Wood — brisket birria, smoked-fried wings. Smoke + Tex-Mex/coastal fusion. <strong>Must-add.</strong>", text:"lawrence barbecue jake wood brisket birria tex mex raleigh", maps:"Lawrence Barbecue, Raleigh, NC" },
-    { name:"Lewis Barbecue", cat:"bbq", meta:"BBQ · Raleigh", note:"Michelin-recognized Texas BBQ expanding from Charleston.", text:"lewis barbecue texas charleston michelin raleigh", warn:"Opening 2026 — verify status before going", maps:"Lewis Barbecue, Raleigh, NC" },
-    { name:"Big Ed's City Market", cat:"breakfast", meta:"Breakfast · Raleigh", note:"Loaded breakfast bowl with biscuits, gravy, sausage, cheese, eggs. 220 Wolfe St.", text:"big eds city market breakfast bowl biscuits gravy raleigh", warn:"Tue–Sun 7 AM–2 PM · closed Mon", maps:"Big Ed's City Market, 220 Wolfe St, Raleigh, NC" },
-    { name:"Daily Planet Cafe", cat:"breakfast", meta:"Cafe · Raleigh", note:"Inside the NC Museum of Natural Sciences — pair with a museum visit.", text:"daily planet cafe museum natural sciences lunch raleigh", maps:"Daily Planet Cafe, Raleigh, NC" },
-    { name:"Two Roosters Ice Cream", cat:"dessert", meta:"Sweet · Raleigh", note:"Rotating unique local flavors.", text:"two roosters ice cream rotating flavors raleigh", maps:"Two Roosters Ice Cream, Raleigh, NC" },
-  ],
-  outdoor: [
-    { name:"Pullen Park", cat:"park", meta:"Park · 5 min", note:"Adjacent to NCSU campus; lunch-hour walk.", text:"pullen park ncsu campus lunch walk", maps:"Pullen Park, Raleigh, NC" },
-    { name:"Dorothea Dix Park", cat:"park", meta:"Park · in-town", note:"Skyline views, wide-open fields for reading.", text:"dorothea dix park skyline reading fields raleigh", maps:"Dorothea Dix Park, Raleigh, NC" },
-    { name:"JC Raulston Arboretum", cat:"park", meta:"Garden · 5 min", note:"Quiet botanical gardens, ~5 min from campus.", text:"jc raulston arboretum botanical gardens", maps:"JC Raulston Arboretum, Raleigh, NC" },
-    { name:"William B. Umstead State Park", cat:"hike", meta:"Hike · 15 min", note:"Company Mill Trail (5.8 mi loop) — Raleigh's marquee hike.", text:"umstead state park company mill trail raleigh marquee", maps:"William B. Umstead State Park, NC" },
-    { name:"Eno River State Park", cat:"hike", meta:"Hike · 45 min", note:"Cox Mountain or Bobbitt Hole — river swimming spot.", text:"eno river state park durham cox mountain bobbitt hole swimming", maps:"Eno River State Park, Durham, NC" },
-    { name:"Raven Rock State Park", cat:"hike", meta:"Hike · 1 hr", note:"Raven Rock Loop (~2.5 mi); cliff overlook + rapids.", text:"raven rock state park loop cliff overlook rapids", maps:"Raven Rock State Park, NC" },
-    { name:"Hanging Rock State Park", cat:"hike", meta:"Hike · ~2 hr 10", note:"Hidden Falls + Window Falls + Upper Cascades — three waterfalls in one day.", text:"hanging rock state park hidden falls window falls upper cascades waterfalls", maps:"Hanging Rock State Park, NC" },
-    { name:"Wrightsville Beach", cat:"beach", meta:"Beach · ~2 hr", note:"Closest real beach; clean sand, college-town energy in Wilmington. Paid parking $5/hr or $25/day (Mar 1–Oct 31). Lifeguards 10 AM–5 PM.", text:"wrightsville beach closest ocean wilmington", warn:"Download ParkMobile app before going", maps:"Wrightsville Beach, NC" },
-    { name:"Carolina Beach", cat:"beach", meta:"Beach · ~2 hr 20", note:"Boardwalk + Friday-night fireworks.", text:"carolina beach boardwalk fireworks", maps:"Carolina Beach, NC" },
-    { name:"Topsail Island", cat:"beach", meta:"Beach · ~2 hr 20", note:"Quieter, laid-back.", text:"topsail island laid back quiet", maps:"Topsail Island, NC" },
-    { name:"Outer Banks (Nags Head / Corolla)", cat:"beach", meta:"Beach · ~3.5 hr", note:"Wild, historic — save for an overnight if doing OBX.", text:"outer banks nags head corolla wild historic", maps:"Outer Banks, Nags Head, NC" },
-    { name:"NC Museum of Natural Sciences", cat:"museum", meta:"Museum · Free", note:"Pair with lunch at Daily Planet Cafe inside.", text:"nc museum natural sciences free downtown daily planet", maps:"NC Museum of Natural Sciences, Raleigh, NC" },
-    { name:"NC Museum of Art", cat:"museum", meta:"Museum · Free", note:"Massive outdoor sculpture park — golden-hour walk.", text:"nc museum art sculpture park outdoor grounds golden hour", maps:"NC Museum of Art, Raleigh, NC" },
-  ],
-};
-window.TRIP = TRIP;
+
 
 // ---- More trip data (intel / anchors / contacts) ----
 TRIP.intel = [
@@ -1789,6 +1840,21 @@ renderDirectories();
     r.addEventListener("change", () => {
       if (r.checked) { setMapsProvider(r.value); renderDirectories(); }
     });
+  });
+})();
+
+function refreshCalLinks(){
+  document.querySelectorAll("[data-cal-date]").forEach(el => {
+    const e = activity[el.dataset.calDate];
+    if (e) el.href = addToCalHref(e);
+  });
+}
+(function wireCalToggle(){
+  const cur = getCalProvider();
+  const r0 = document.getElementById(cur === "apple" ? "cal-apple" : "cal-google");
+  if (r0) r0.checked = true;
+  document.querySelectorAll('input[name="cal"]').forEach((r) => {
+    r.addEventListener("change", () => { if (r.checked) { setCalProvider(r.value); refreshCalLinks(); } });
   });
 })();
 
