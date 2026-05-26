@@ -560,11 +560,15 @@ hr.div { border: none; border-top: 1px solid var(--border); margin: 2rem 0 0; }
 
 footer.foot {
   max-width: var(--max-w); margin: 2rem auto 0;
-  padding: 1.25rem var(--gutter) 2rem;
-  color: var(--muted); font-size: 0.82rem;
-  text-align: center;
+  padding: 1.5rem var(--gutter) 2rem;
+  color: var(--muted); font-size: 0.85rem;
   border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; gap: 0.9rem;
 }
+footer.foot .brand-mark { height: 1em; width: auto; vertical-align: -0.16em; margin: 0 0.15rem; opacity: 0.8; }
+footer.foot a { color: var(--muted); display: inline-flex; transition: color 0.2s; }
+footer.foot a:hover { color: var(--ink); }
+@media (prefers-color-scheme: dark) { footer.foot .brand-mark { filter: invert(1); } }
 
 /* ---------- Container queries: stack rows on narrow cards ---------- */
 @container (max-width: 480px) {
@@ -827,9 +831,38 @@ details.accordion[open] .acc-progress .fill { display: none; }
 a.cal-cell.activity { text-decoration: none; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease, filter .12s ease; }
 a.cal-cell.activity:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgb(0 0 0 / 22%); filter: brightness(1.06); z-index: 2; }
 a.cal-cell.activity:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; z-index: 2; }
-a.cal-cell.activity::after { content: "+"; position: absolute; top: 1px; right: 3px; font-size: .72rem; font-weight: 800; line-height: 1; color: rgb(255 255 255 / 0%); transition: color .12s ease; }
+a.cal-cell.activity::after { content: "+"; position: absolute; top: 0; right: 3px; font-size: .82rem; font-weight: 800; line-height: 1; color: rgb(255 255 255 / 62%); transition: color .12s ease; }
 a.cal-cell.activity:hover::after, a.cal-cell.activity:focus-visible::after { color: rgb(255 255 255 / 90%); }
 .cal-toggle { margin: .8rem 0 .2rem; }
+
+/* ---------- Google-Calendar-style month view + agenda ---------- */
+.cal-month { margin: 0 0 1.5rem; }
+.cal-mh { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.01em; margin: 0 0 0.5rem; }
+.cal-dow { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 4px; }
+.cal-dow span { text-align: center; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.cal-cells { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-day { min-height: 74px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--border); padding: 4px 5px; display: flex; flex-direction: column; gap: 3px; }
+.cal-day--pad { background: transparent; border: none; }
+.cal-dnum { font-size: 0.72rem; font-weight: 600; color: var(--muted); }
+.cal-day.is-today { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.cal-day.is-today .cal-dnum { color: var(--accent); font-weight: 800; }
+.cal-chip { display: block; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: #fff; text-decoration: none; padding: 2px 6px; border-radius: 5px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: filter 0.12s ease, transform 0.12s ease; }
+.cal-chip:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.cal-chip.hike{background:var(--hike)} .cal-chip.beach{background:var(--beach)} .cal-chip.mountain{background:var(--mountain)} .cal-chip.city{background:var(--city)} .cal-chip.travel{background:var(--brand)} .cal-chip.rest{background:var(--rest)}
+.cal-agenda { display: none; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+.cal-ag { display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 0.85rem; border-bottom: 1px solid var(--border); text-decoration: none; color: var(--ink); min-height: 48px; }
+.cal-ag:last-child { border-bottom: none; }
+.cal-ag:active { background: var(--surface-2); }
+.cal-ag-dot { width: 11px; height: 11px; border-radius: 50%; flex: 0 0 11px; }
+.cal-ag.hike .cal-ag-dot{background:var(--hike)} .cal-ag.beach .cal-ag-dot{background:var(--beach)} .cal-ag.mountain .cal-ag-dot{background:var(--mountain)} .cal-ag.city .cal-ag-dot{background:var(--city)} .cal-ag.travel .cal-ag-dot{background:var(--brand)} .cal-ag.rest .cal-ag-dot{background:var(--rest)}
+.cal-ag-date { font-size: 0.78rem; font-weight: 700; color: var(--muted); flex: 0 0 5.2rem; }
+.cal-ag-title { font-size: 0.92rem; font-weight: 600; flex: 1; }
+.cal-ag-add { font-size: 1.2rem; font-weight: 800; color: var(--accent); flex: 0 0 auto; }
+@media (max-width: 640px) {
+  .cal-months { display: none; }
+  .cal-agenda { display: block; }
+  .cal-legend { display: none; }
+}
 </style>
 </head>
 <body>
@@ -904,7 +937,7 @@ a.cal-cell.activity:hover::after, a.cal-cell.activity:focus-visible::after { col
 <!-- 8-week calendar -->
 <section id="calendar">
   <h2>The 8 Weeks at a Glance <span class="badge">Calendar</span></h2>
-  <p class="lede">Weekday cells are work; weekend cells are color-coded by what's happening. Today's cell is outlined.</p>
+  <p class="lede">Color-coded by what's happening, with today highlighted. <strong>Tap any event to add it to Google or Apple Calendar.</strong></p>
 
   <div class="cal-legend">
     <span class="swatch"><i style="background:var(--brand)"></i> Travel day</span>
@@ -921,16 +954,8 @@ a.cal-cell.activity:hover::after, a.cal-cell.activity:focus-visible::after { col
     <label><input type="radio" name="cal" id="cal-apple" value="apple"> Apple</label>
   </fieldset>
 
-  <div class="cal">
-    <div class="cal-header">
-      <div class="week-label"></div>
-      <div class="dow">Mon</div><div class="dow">Tue</div><div class="dow">Wed</div>
-      <div class="dow">Thu</div><div class="dow">Fri</div>
-      <div class="dow">Sat</div><div class="dow">Sun</div>
-    </div>
-    <!-- Calendar rows are generated by JS so dates + today highlight stay correct -->
-    <div id="cal-body"></div>
-  </div>
+  <div id="cal-months" class="cal-months"></div>
+  <div id="cal-agenda" class="cal-agenda"></div>
 </section>
 
 <hr class="div">
@@ -1062,7 +1087,8 @@ a.cal-cell.activity:hover::after, a.cal-cell.activity:focus-visible::after { col
 </main>
 
 <footer class="foot">
-  Built for AJ Barea &middot; SCADS Summer Residency, June &amp; July 2026 &middot; offline-friendly, prints clean
+  <span>2026 <img src="assets/brand.png" alt="" aria-hidden="true" class="brand-mark"> AJ Barea</span>
+  <a href="https://github.com/ajbarea/periplus" aria-label="Periplus on GitHub" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
 </footer>
 
 <script>
@@ -1192,40 +1218,51 @@ const tripActive = today >= TRIP_START && today <= TRIP_END;
 const tripPre = today < TRIP_START;
 const tripPost = today > TRIP_END;
 
-// Render calendar rows
-const calBody = document.getElementById("cal-body");
-weeks.forEach(w => {
-  const row = document.createElement("div");
-  row.className = "cal-row";
-  const lab = document.createElement("div");
-  lab.className = "week-label";
-  lab.innerHTML = `${w.label}<small>${w.sub}</small>`;
-  row.appendChild(lab);
+// Render calendar — Google-Calendar-style month grids (desktop) + agenda list (mobile)
+(function renderCalendar(){
+  const monthHost = document.getElementById("cal-months");
+  const agendaHost = document.getElementById("cal-agenda");
+  if (!monthHost || !agendaHost) return;
+  const events = (TRIP.calendar && TRIP.calendar.events) || [];
+  const byDate = {};
+  events.forEach(e => { byDate[e.date] = e; });
+  const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const monthName = (y, m) => new Date(y, m, 1).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  const chip = (ev, key) => `<a class="cal-chip ${ev.cls}" href="${addToCalHref(ev)}" target="_blank" rel="noopener" data-cal-date="${key}" title="Add to calendar: ${ev.title || ev.tag}">${ev.tag}</a>`;
 
-  let containsToday = false;
-  for (let i = 0; i < 7; i++) {
-    const d = addDays(w.mon, i);
-    const key = ymd(d);
-    const a = activity[key];
-    const cell = document.createElement(a ? "a" : "div");
-    cell.className = "cal-cell";
-    if (a) {
-      cell.classList.add("activity", a.cls);
-      cell.href = addToCalHref(a);
-      cell.target = "_blank";
-      cell.rel = "noopener";
-      cell.title = "Add to calendar: " + (a.title || a.tag);
-      cell.dataset.calDate = key;
-      cell.innerHTML = `<span class="d">${d.getDate()}</span><span class="tag">${a.tag}</span>`;
-    } else {
-      cell.innerHTML = `<span class="d">${d.getDate()}</span>`;
+  const months = [];
+  let sy = TRIP_START.getFullYear(), sm = TRIP_START.getMonth();
+  const lastDay = new Date(sy, sm + 1, 0).getDate();
+  if (TRIP_START.getDate() > lastDay - 3) { sm++; if (sm > 11) { sm = 0; sy++; } } // skip a near-empty travel-in month
+  const cur = new Date(sy, sm, 1);
+  const stop = new Date(TRIP_END.getFullYear(), TRIP_END.getMonth(), 1);
+  while (cur <= stop) { months.push([cur.getFullYear(), cur.getMonth()]); cur.setMonth(cur.getMonth() + 1); }
+
+  monthHost.innerHTML = months.map(([y, m]) => {
+    const lead = new Date(y, m, 1).getDay();
+    const days = new Date(y, m + 1, 0).getDate();
+    let cells = "";
+    for (let i = 0; i < lead; i++) cells += `<div class="cal-day cal-day--pad"></div>`;
+    for (let d = 1; d <= days; d++) {
+      const key = ymd(new Date(y, m, d));
+      const ev = byDate[key];
+      const today_ = key === ymd(today);
+      cells += `<div class="cal-day${today_ ? " is-today" : ""}${ev ? " has-ev" : ""}"><span class="cal-dnum">${d}</span>${ev ? chip(ev, key) : ""}</div>`;
     }
-    if (sameDate(d, today)) { cell.classList.add("today"); containsToday = true; }
-    row.appendChild(cell);
-  }
-  if (containsToday) row.classList.add("is-current");
-  calBody.appendChild(row);
-});
+    return `<div class="cal-month"><h3 class="cal-mh">${monthName(y, m)}</h3>`
+      + `<div class="cal-dow">${DOW.map(x => `<span>${x}</span>`).join("")}</div>`
+      + `<div class="cal-cells">${cells}</div></div>`;
+  }).join("");
+
+  const sorted = events.slice().sort((a, b) => a.date.localeCompare(b.date));
+  agendaHost.innerHTML = sorted.map(ev => {
+    const dt = new Date(ev.date + "T00:00:00");
+    const dl = dt.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+    return `<a class="cal-ag ${ev.cls}" href="${addToCalHref(ev)}" target="_blank" rel="noopener" data-cal-date="${ev.date}">`
+      + `<span class="cal-ag-dot"></span><span class="cal-ag-date">${dl}</span>`
+      + `<span class="cal-ag-title">${ev.title || ev.tag}</span><span class="cal-ag-add" aria-hidden="true">+</span></a>`;
+  }).join("");
+})();
 
 // ===========================================================================
 // Status chip in topbar
