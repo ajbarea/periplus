@@ -21,6 +21,10 @@ hide:
 
 </div>
 
+<div class="scroll-hint" aria-hidden="true">
+  <div class="scroll-chevron"></div>
+</div>
+
 <section class="landing-section" markdown>
 <div class="section-inner" markdown>
 

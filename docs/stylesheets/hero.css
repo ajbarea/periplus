@@ -1,7 +1,7 @@
 /* Periplus landing hero */
 .hero {
   position: relative;
-  min-height: 62vh;
+  min-height: 58vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -9,11 +9,13 @@
   margin-bottom: 1.5rem;
   border-radius: 16px;
   overflow: hidden;
+  background-color: #0f172a;
   background-image:
-    linear-gradient(90deg, rgba(15,23,42,0.96) 0%, rgba(15,23,42,0.86) 42%, rgba(15,23,42,0.45) 68%, rgba(15,23,42,0.10) 100%),
+    linear-gradient(90deg, #0f172a 0%, #0f172a 40%, rgba(15,23,42,0.45) 60%, rgba(15,23,42,0) 82%),
     var(--hero-image);
   background-size: cover;
   background-position: center right;
+  background-repeat: no-repeat;
 }
 .hero h1 {
   font-size: clamp(2.6rem, 6.5vw, 4.6rem);
@@ -23,8 +25,8 @@
   color: var(--periplus-ink);
 }
 .hero .hero-subtitle {
-  max-width: 32ch;
-  font-size: clamp(1rem, 2.2vw, 1.22rem);
+  max-width: 30ch;
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
   line-height: 1.5;
   color: #e2e8f0;
   margin: 0;
@@ -34,6 +36,7 @@
   display: flex;
   gap: .75rem;
   flex-wrap: wrap;
+  max-width: 30ch;
 }
 
 /* Primary CTA in the Periplus sky accent */
@@ -48,10 +51,16 @@
   color: var(--periplus-navy);
 }
 
-/* CTA section at the foot of the landing */
 .landing-cta { text-align: center; }
 
+/* Mobile: vertical scrim over a centered image, full-width text */
 @media (max-width: 50rem) {
-  .hero { min-height: 68vh; background-position: center; }
-  .hero .hero-subtitle { max-width: none; }
+  .hero {
+    min-height: 66vh;
+    background-image:
+      linear-gradient(180deg, rgba(15,23,42,0.88) 0%, rgba(15,23,42,0.66) 60%, rgba(15,23,42,0.82) 100%),
+      var(--hero-image);
+    background-position: center;
+  }
+  .hero .hero-subtitle, .hero-buttons { max-width: none; }
 }

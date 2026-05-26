@@ -14,6 +14,7 @@
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
   margin-top: 1.5rem;
+  text-align: left;
 }
 .feature-card {
   padding: 1.25rem 1.35rem;
@@ -24,5 +25,47 @@
 .feature-card h3 { margin: 0 0 .4rem; font-size: 1.05rem; }
 .feature-card p { margin: 0; color: var(--periplus-muted); font-size: .95rem; }
 
-.landing-section { padding: 2.5rem 0; }
+/* Landing sections — centered prose with gentle alternating rhythm */
+.landing-section {
+  padding: 3.25rem 1.5rem;
+  text-align: center;
+  border-radius: 18px;
+  margin-bottom: 0.5rem;
+}
+.landing-section:nth-of-type(even) {
+  background: color-mix(in oklab, var(--periplus-navy-2) 50%, transparent);
+}
 .section-inner { max-width: 58rem; margin: 0 auto; }
+
+/* Scroll hint chevron under the hero */
+.scroll-hint {
+  text-align: center;
+  margin-top: -0.5rem;
+  padding-bottom: 0.5rem;
+}
+.scroll-chevron {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-right: 2px solid var(--periplus-sky);
+  border-bottom: 2px solid var(--periplus-sky);
+  transform: rotate(45deg);
+  opacity: 0.5;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-hint { animation: hint-bounce 2s ease-in-out infinite; }
+  @keyframes hint-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+}
+
+/* Brand mark in the footer copyright (inverted to white on the dark footer) */
+.md-copyright .brand-mark {
+  height: 1em;
+  width: auto;
+  vertical-align: -0.18em;
+  margin-left: 0.2rem;
+  opacity: 0.75;
+  filter: invert(1);
+}
