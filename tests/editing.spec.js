@@ -260,6 +260,48 @@ test('whole checklist groups can be added and deleted, and persist', async ({ pa
   await expect(page.locator('#packing-list details.accordion')).toHaveCount(start);
 });
 
+// --- Stage 5: JSON import (the export ↔ import round-trip) ---
+
+test('a pasted trip loads, persists, and reset restores the original', async ({ page }) => {
+  page.on('dialog', (d) => d.accept());
+  await page.goto('/');
+  const original = (await page.locator('#hero-title').innerText()).trim();
+  await page.locator('#edit-toggle').click();
+  await page.locator('#edit-export').click(); // opens the modal seeded with the current TRIP JSON
+
+  await page.evaluate(() => {
+    const ta = document.getElementById('edit-json');
+    const t = JSON.parse(ta.value);
+    t.title = 'Imported Trip';
+    t.food = [{ name: 'Imported Spot', cat: 'sandwich', meta: 'x', note: 'y', text: 'imported', maps: '' }];
+    ta.value = JSON.stringify(t);
+  });
+  await page.locator('#edit-import').click();
+
+  await expect(page.locator('#hero-title')).toHaveText('Imported Trip');
+  await expect(page.locator('#food-grid .dir-item')).toHaveCount(1);
+  expect(await page.evaluate(() => localStorage.getItem('periplus.trip.v1'))).toContain('Imported Trip');
+
+  await page.reload();
+  await expect(page.locator('#hero-title')).toHaveText('Imported Trip');
+
+  await page.locator('#edit-toggle').click();
+  await page.locator('#edit-reset').click();
+  await expect(page.locator('#hero-title')).toHaveText(original);
+  expect(await page.evaluate(() => localStorage.getItem('periplus.trip.v1'))).toBeNull();
+});
+
+test('invalid import JSON shows an error and leaves the trip unchanged', async ({ page }) => {
+  await page.goto('/');
+  const original = (await page.locator('#hero-title').innerText()).trim();
+  await page.locator('#edit-toggle').click();
+  await page.locator('#edit-export').click();
+  await page.evaluate(() => { document.getElementById('edit-json').value = '{ not valid json'; });
+  await page.locator('#edit-import').click();
+  await expect(page.locator('#edit-import-err')).toBeVisible();
+  await expect(page.locator('#hero-title')).toHaveText(original);
+});
+
 // The editing feature must be reachable on a phone — periplus is a mobile-first PWA.
 // The topbar Edit toggle previously overflowed off the right edge at phone widths.
 test.describe('mobile (iPhone-13 width)', () => {
