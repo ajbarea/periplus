@@ -246,68 +246,6 @@ section > p.lede { color: var(--ink-2); margin: 0 0 1rem; max-width: 70ch; }
 .cal-legend i {
   width: 12px; height: 12px; border-radius: 3px; display: inline-block;
 }
-.cal {
-  display: grid; gap: 4px;
-  background: var(--surface);
-  border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 0.8rem; box-shadow: var(--shadow-sm);
-  overflow-x: auto;
-}
-.cal-row {
-  display: grid;
-  grid-template-columns: 80px repeat(7, minmax(40px, 1fr));
-  gap: 4px; align-items: stretch;
-}
-.cal-row .week-label {
-  font-size: 0.78rem; font-weight: 700; color: var(--ink-2);
-  display: flex; flex-direction: column; justify-content: center;
-  padding-right: 0.5rem;
-}
-.cal-row .week-label small {
-  font-weight: 500; color: var(--muted); font-size: 0.7rem;
-}
-.cal-cell {
-  position: relative;
-  border-radius: 6px;
-  background: var(--surface-2);
-  min-height: 42px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  font-size: 0.7rem; font-weight: 600; color: var(--ink-2);
-  border: 1px solid transparent;
-  padding: 2px;
-  text-align: center;
-}
-.cal-cell .d { font-size: 0.7rem; line-height: 1; opacity: 0.65; }
-.cal-cell .tag { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
-.cal-cell.activity { color: white; border-color: rgb(0 0 0 / 8%); }
-.cal-cell.activity .d { opacity: 0.85; color: rgb(255 255 255 / 92%); }
-.cal-cell.hike     { background: var(--hike); }
-.cal-cell.beach    { background: var(--beach); }
-.cal-cell.mountain { background: var(--mountain); }
-.cal-cell.city     { background: var(--city); }
-.cal-cell.travel   { background: var(--brand); }
-.cal-cell.rest     { background: var(--rest); }
-.cal-cell.today {
-  outline: 3px solid var(--accent);
-  outline-offset: 1px;
-  z-index: 1;
-}
-.cal-row.is-current .week-label { color: var(--accent); }
-
-/* Calendar header */
-.cal-header {
-  display: grid;
-  grid-template-columns: 80px repeat(7, minmax(40px, 1fr));
-  gap: 4px; padding-bottom: 4px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 4px;
-}
-.cal-header .week-label { font-size: 0.7rem; color: var(--muted); }
-.cal-header .dow {
-  text-align: center; font-size: 0.7rem; color: var(--muted); font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.04em;
-}
 
 /* ---------- Hour table ---------- */
 .timeline {
@@ -667,16 +605,7 @@ footer.foot a:hover { color: var(--ink); }
   }
 }
 
-/* ---------- Today calendar cell: animated pulse ---------- */
-@keyframes todayPulse {
-  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--accent) 55%, transparent); }
-  50%      { box-shadow: 0 0 0 6px color-mix(in oklch, var(--accent) 0%,  transparent); }
-}
-.cal-cell.today {
-  animation: todayPulse 2.2s ease-in-out infinite;
-}
 @media (prefers-reduced-motion: reduce) {
-  .cal-cell.today { animation: none; }
   .trip-progress .fill { transition: none; }
 }
 
@@ -783,12 +712,11 @@ details.accordion[open] .acc-progress .fill { display: none; }
   body { background: white; }
   .topbar, .toc, .dir-toolbar, .trip-progress, .acc-progress { display: none; }
   section { break-inside: avoid; }
-  .week-card, .card, .timeline, .accordion, .contact, .kv, .cal, .intel-card, .savings-callout { box-shadow: none; }
+  .week-card, .card, .timeline, .accordion, .contact, .kv, .intel-card, .savings-callout { box-shadow: none; }
   .intel-card { background: white; border-left-width: 3px; }
   details.accordion, .week-card { break-inside: avoid; }
   details:not([open]) > summary + * { display: revert; } /* expand everything for print */
   details > summary .chev { display: none; }
-  .cal-cell.today { animation: none; outline-width: 2px; }
   a { color: black; text-decoration: none; }
 }
   /* Maps provider toggle + Directions links (Periplus) */
@@ -805,34 +733,20 @@ details.accordion[open] .acc-progress .fill { display: none; }
   section h2 .badge { color: var(--ink-2); }
   ul.checklist input[type="checkbox"] { width: 28px; height: 28px; flex: 0 0 28px; }
   ul.checklist li { padding-block: 6px; }
-  #cal-body { min-height: 330px; }
+  #cal-months { min-height: 900px; }  /* CLS reservation: desktop month grid (~905px rendered) */
+  #cal-agenda { min-height: 1160px; } /* CLS reservation: mobile agenda list (~1169px rendered) */
   #food-grid { min-height: 600px; }
   #outdoor-grid { min-height: 360px; }
 
-  /* a11y: darken color-coded calendar cells so white text clears AA 4.5:1 */
-  .cal-cell.hike     { background: color-mix(in oklab, var(--hike) 58%, #000); }
-  .cal-cell.beach    { background: color-mix(in oklab, var(--beach) 44%, #000); }
-  .cal-cell.mountain { background: color-mix(in oklab, var(--mountain) 80%, #000); }
-  .cal-cell.city     { background: color-mix(in oklab, var(--city) 58%, #000); }
-  .cal-cell.travel   { background: color-mix(in oklab, var(--brand) 60%, #000); }
-  .cal-cell.rest     { background: color-mix(in oklab, var(--rest) 64%, #000); }
-  .cal-cell.activity .d { color: #fff; opacity: 1; }
-  .cal-cell.activity .tag { color: #fff; }
+  /* week-card / anchor tag text, darkened for AA contrast on light surfaces */
   .tag.hike { color: color-mix(in oklab, var(--hike) 48%, #000); }
   .tag.beach { color: color-mix(in oklab, var(--beach) 48%, #000); }
   .tag.mountain { color: color-mix(in oklab, var(--mountain) 72%, #000); }
   .tag.city { color: color-mix(in oklab, var(--city) 54%, #000); }
   .tag.travel { color: color-mix(in oklab, var(--brand-2) 80%, #000); }
-  .cal-cell .d { color: var(--ink-2); opacity: 1; }
   details.accordion > summary .count { color: var(--ink-2); }
   details.accordion[open]:has(.checklist li.checked) > summary .count { color: color-mix(in oklab, var(--hike) 50%, #000); }
 
-/* Calendar events are clickable add-to-calendar links (Google Calendar / Apple ICS) */
-a.cal-cell.activity { text-decoration: none; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease, filter .12s ease; }
-a.cal-cell.activity:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgb(0 0 0 / 22%); filter: brightness(1.06); z-index: 2; }
-a.cal-cell.activity:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; z-index: 2; }
-a.cal-cell.activity::after { content: "+"; position: absolute; top: 0; right: 3px; font-size: .82rem; font-weight: 800; line-height: 1; color: rgb(255 255 255 / 62%); transition: color .12s ease; }
-a.cal-cell.activity:hover::after, a.cal-cell.activity:focus-visible::after { color: rgb(255 255 255 / 90%); }
 .cal-toggle { margin: .8rem 0 .2rem; }
 
 /* ---------- Google-Calendar-style month view + agenda ---------- */
@@ -848,7 +762,8 @@ a.cal-cell.activity:hover::after, a.cal-cell.activity:focus-visible::after { col
 .cal-day.is-today .cal-dnum { color: var(--accent); font-weight: 800; }
 .cal-chip { display: block; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: #fff; text-decoration: none; padding: 2px 6px; border-radius: 5px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: filter 0.12s ease, transform 0.12s ease; }
 .cal-chip:hover { filter: brightness(1.08); transform: translateY(-1px); }
-.cal-chip.hike{background:var(--hike)} .cal-chip.beach{background:var(--beach)} .cal-chip.mountain{background:var(--mountain)} .cal-chip.city{background:var(--city)} .cal-chip.travel{background:var(--brand)} .cal-chip.rest{background:var(--rest)}
+/* research(2026-05): chip text is #fff, so backgrounds need AA 4.5:1. --hike (3.30:1) and --beach (3.68:1) fail undarkened; darken ~80% in oklab -> 5.6:1 / 6.2:1. mountain/city/travel/rest pass at base. https://webaim.org/articles/contrast/ */
+.cal-chip.hike{background:color-mix(in oklab,var(--hike) 80%,#000)} .cal-chip.beach{background:color-mix(in oklab,var(--beach) 80%,#000)} .cal-chip.mountain{background:var(--mountain)} .cal-chip.city{background:var(--city)} .cal-chip.travel{background:var(--brand)} .cal-chip.rest{background:var(--rest)}
 .cal-agenda { display: none; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
 .cal-ag { display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 0.85rem; border-bottom: 1px solid var(--border); text-decoration: none; color: var(--ink); min-height: 48px; }
 .cal-ag:last-child { border-bottom: none; }
