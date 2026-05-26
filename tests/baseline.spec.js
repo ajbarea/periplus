@@ -27,6 +27,8 @@ test('config-driven sections render from TRIP', async ({ page }) => {
   expect(await page.locator('#anchors-grid .card').count()).toBe(2);
   expect(await page.locator('#weeks-list .week-card').count()).toBe(8);
   expect(await page.locator('#contacts-grid .contact').count()).toBe(7);
+  expect(await page.locator('#arrival-timeline .row').count()).toBe(6);
+  expect(await page.locator('#dayone-timeline .row').count()).toBe(14);
   await expect(page.locator('#intel-grid').getByText('July heat')).toBeVisible();
   await expect(page.locator('#weeks-list').getByText('Settle in')).toBeVisible();
   await expect(page.locator('#contacts-grid').getByText('Emily Keller (LAS host)')).toBeVisible();

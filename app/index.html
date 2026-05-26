@@ -926,13 +926,7 @@ details.accordion[open] .acc-progress .fill { display: none; }
   <h2>Arrival Day <span class="badge">Sun May 31</span></h2>
   <p class="lede">~652 mi / ~10 hr 11 min of pure driving — ~11.5 hr door-to-door. Single-day drive. Target arrival 4:00–5:00 PM.</p>
 
-  <div class="timeline">
-    <div class="row"><span class="t">5:30 AM</span><span class="a">Leave Rochester</span></div>
-    <div class="row"><span class="t">9:00 AM</span><span class="a">Stop 1 — Scranton / Wilkes-Barre area (~3.5 hr in), gas + breakfast</span></div>
-    <div class="row"><span class="t">12:30 PM</span><span class="a">Stop 2 — Hagerstown MD or Winchester VA (~7 hr in), lunch + leg stretch</span></div>
-    <div class="row"><span class="t">4:30–5 PM</span><span class="a">Arrive Hyatt House Downtown / Seaboard Station, check in</span></div>
-    <div class="row"><span class="t">6:00 PM</span><span class="a">Grocery run (Harris Teeter / Whole Foods) + easy dinner — save BBQ joints for when you're rested</span></div>
-    <div class="row"><span class="t">9:30 PM</span><span class="a">Lights out — sharp for Monday</span></div>
+  <div class="timeline" id="arrival-timeline">
   </div>
 </section>
 
@@ -941,21 +935,7 @@ details.accordion[open] .acc-progress .fill { display: none; }
   <h2>Day 1 — Monday, June 1 <span class="badge">Hour-by-hour</span></h2>
   <p class="lede">The single highest-stakes day of the residency. You like arriving early; drive yourself so you get the prime pre-kickoff hour.</p>
 
-  <div class="timeline">
-    <div class="row"><span class="t">6:00 AM</span><span class="a">Wake</span></div>
-    <div class="row"><span class="t">6:15 AM</span><span class="a">Free hot breakfast at Hyatt House</span></div>
-    <div class="row"><span class="t">6:45 AM</span><span class="a">Shower, business-casual (chinos + button-down or polo; closed-toe shoes; belt)</span></div>
-    <div class="row"><span class="t">7:30 AM</span><span class="a">Drive to Centennial Campus (~10 min)</span></div>
-    <div class="row"><span class="t">7:45 AM</span><span class="a">Arrive. Park, walk in.</span></div>
-    <div class="row"><span class="t">7:55 AM</span><span class="a">Find SCADS check-in / orientation room. Sign in, name tag.</span></div>
-    <div class="row highlight"><span class="t">8:00 AM</span><span class="a"><strong>Coffee + low-pressure cohort chats</strong> — fewer people, longer conversations. Prime early-arrival networking.</span></div>
-    <div class="row"><span class="t">9:00 AM</span><span class="a">SCADS Day 1 kickoff — welcomes, intros, problem-book overview</span></div>
-    <div class="row highlight"><span class="t">12:00 PM</span><span class="a"><strong>Lunch with the cohort</strong> — the second prime networking window of Day 1</span></div>
-    <div class="row"><span class="t">1:00 PM</span><span class="a">Project team formation / problem assignment</span></div>
-    <div class="row"><span class="t">5:00 PM</span><span class="a">Day wraps — drive back to the Hyatt</span></div>
-    <div class="row"><span class="t">6:00 PM</span><span class="a">Light dinner (in-suite kitchen) or grocery</span></div>
-    <div class="row"><span class="t">7:00 PM</span><span class="a">Decompress; review project assignment; first-day notes</span></div>
-    <div class="row"><span class="t">9:30 PM</span><span class="a">Lights out — sustainable pace from Day 1</span></div>
+  <div class="timeline" id="dayone-timeline">
   </div>
 
   <div class="card" style="margin-top: 0.85rem;">
@@ -1738,6 +1718,38 @@ function renderWeeks(){
 }
 renderWeeks();
 expandCurrentWeek();
+
+// ---- Arrival + Day 1 timelines ----
+TRIP.arrival = [
+  { t:"5:30 AM", a:"Leave Rochester" },
+  { t:"9:00 AM", a:"Stop 1 — Scranton / Wilkes-Barre area (~3.5 hr in), gas + breakfast" },
+  { t:"12:30 PM", a:"Stop 2 — Hagerstown MD or Winchester VA (~7 hr in), lunch + leg stretch" },
+  { t:"4:30–5 PM", a:"Arrive Hyatt House Downtown / Seaboard Station, check in" },
+  { t:"6:00 PM", a:"Grocery run (Harris Teeter / Whole Foods) + easy dinner — save BBQ joints for when you're rested" },
+  { t:"9:30 PM", a:"Lights out — sharp for Monday" },
+];
+TRIP.dayOne = [
+  { t:"6:00 AM", a:"Wake" },
+  { t:"6:15 AM", a:"Free hot breakfast at Hyatt House" },
+  { t:"6:45 AM", a:"Shower, business-casual (chinos + button-down or polo; closed-toe shoes; belt)" },
+  { t:"7:30 AM", a:"Drive to Centennial Campus (~10 min)" },
+  { t:"7:45 AM", a:"Arrive. Park, walk in." },
+  { t:"7:55 AM", a:"Find SCADS check-in / orientation room. Sign in, name tag." },
+  { t:"8:00 AM", a:"<strong>Coffee + low-pressure cohort chats</strong> — fewer people, longer conversations. Prime early-arrival networking.", hl:true },
+  { t:"9:00 AM", a:"SCADS Day 1 kickoff — welcomes, intros, problem-book overview" },
+  { t:"12:00 PM", a:"<strong>Lunch with the cohort</strong> — the second prime networking window of Day 1", hl:true },
+  { t:"1:00 PM", a:"Project team formation / problem assignment" },
+  { t:"5:00 PM", a:"Day wraps — drive back to the Hyatt" },
+  { t:"6:00 PM", a:"Light dinner (in-suite kitchen) or grocery" },
+  { t:"7:00 PM", a:"Decompress; review project assignment; first-day notes" },
+  { t:"9:30 PM", a:"Lights out — sustainable pace from Day 1" },
+];
+function renderTimeline(id, rows){
+  const g = document.getElementById(id); if (!g) return;
+  g.innerHTML = (rows || []).map((r) => `<div class="row${r.hl ? " highlight" : ""}"><span class="t">${r.t}</span><span class="a">${r.a}</span></div>`).join("");
+}
+renderTimeline("arrival-timeline", TRIP.arrival);
+renderTimeline("dayone-timeline", TRIP.dayOne);
 
 const MAPS_KEY = "periplus:maps-provider";
 function getMapsProvider(){ try { return localStorage.getItem(MAPS_KEY) || "google"; } catch { return "google"; } }
