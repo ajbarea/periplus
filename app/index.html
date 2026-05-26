@@ -796,6 +796,14 @@ details.accordion[open] .acc-progress .fill { display: none; }
   .dir-go:hover { text-decoration:underline; }
   .dir-go::before { content:"\2192\00a0"; }
   .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+  /* Accessibility + CLS fixes (Lighthouse) */
+  section h2 .badge { color: var(--ink-2); }
+  ul.checklist input[type="checkbox"] { width: 28px; height: 28px; flex: 0 0 28px; }
+  ul.checklist li { padding-block: 6px; }
+  #cal-body { min-height: 330px; }
+  #food-grid { min-height: 600px; }
+  #outdoor-grid { min-height: 360px; }
 </style>
 </head>
 <body>
@@ -974,7 +982,7 @@ details.accordion[open] .acc-progress .fill { display: none; }
     <span class="swatch"><i style="background:var(--rest)"></i> Rest / catch-up</span>
   </div>
 
-  <div class="cal" role="table" aria-label="Eight week summer calendar">
+  <div class="cal">
     <div class="cal-header">
       <div class="week-label"></div>
       <div class="dow">Mon</div><div class="dow">Tue</div><div class="dow">Wed</div>
@@ -993,7 +1001,7 @@ details.accordion[open] .acc-progress .fill { display: none; }
   <h2>Arrival Day <span class="badge">Sun May 31</span></h2>
   <p class="lede">~652 mi / ~10 hr 11 min of pure driving — ~11.5 hr door-to-door. Single-day drive. Target arrival 4:00–5:00 PM.</p>
 
-  <div class="timeline" role="list">
+  <div class="timeline">
     <div class="row"><span class="t">5:30 AM</span><span class="a">Leave Rochester</span></div>
     <div class="row"><span class="t">9:00 AM</span><span class="a">Stop 1 — Scranton / Wilkes-Barre area (~3.5 hr in), gas + breakfast</span></div>
     <div class="row"><span class="t">12:30 PM</span><span class="a">Stop 2 — Hagerstown MD or Winchester VA (~7 hr in), lunch + leg stretch</span></div>
