@@ -13,17 +13,18 @@ A *periplus* was the ancient mariner's itinerary, a written log of ports and lan
 - **Installs like an app.** Add to Home Screen on iOS or Android: full-screen, its own icon.
 - **Tap to navigate.** Every food spot, hike, beach, and your lodging opens in Google or Apple Maps (your choice, remembered).
 - **Searchable directories**, a live "today" widget, and persistent checklists.
-- **No build, no backend, no framework.** One `index.html` you hand-edit.
+- **Edit in the browser.** Tap **Edit** to change any text and add, reorder, or remove anything; export the trip as JSON to back up, share, or fork.
+- **No build, no backend, no framework.** The whole app is one `index.html`.
 
 ## Make it yours
-The trip's content lives in a `TRIP` config block in [`app/index.html`](app/index.html): overview, the food and outdoor directories, intel, trip anchors, the week-by-week plan, and contacts. Edit it, commit, and the site and app redeploy. See [Customize](https://ajbarea.github.io/periplus/customize/).
+The trip's content lives in a `TRIP` config block in [`app/index.html`](app/index.html): overview, the food and outdoor directories, intel, trip anchors, the week-by-week plan, and contacts. Edit it in source and redeploy, or edit it live (tap **Edit**) and export the JSON. See [Customize](https://ajbarea.github.io/periplus/customize/).
 
 ## Develop
 ```bash
 # The app (static, no build) — serve and test
 npm install
 npx playwright install chromium
-npm test                                      # Playwright e2e: offline, directions, render
+npm test                                      # Playwright e2e: offline, directions, editing, render
 python3 -m http.server 5173 --directory app   # preview at http://localhost:5173
 
 # The docs site (Zensical)

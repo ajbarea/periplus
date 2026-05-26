@@ -13,4 +13,4 @@ Periplus is deliberately a no-build, single-file app: the value is that it opens
 - The **app** is served at [`/app/`](app/); its service worker is scoped to `/app/`, so it never interferes with these docs.
 
 ## Tests
-End-to-end tests run in [Playwright](https://playwright.dev/): they verify the app renders from `TRIP`, the maps-provider toggle persists, search filters the cards, and (by actually switching the browser offline and reloading) confirm the service worker serves the app with no network.
+End-to-end tests run in [Playwright](https://playwright.dev/): they verify the app renders from `TRIP`, the maps-provider toggle persists, search filters the cards, the in-browser editor adds / edits / reorders content and exports and imports a trip, and (by actually switching the browser offline and reloading) confirm the service worker serves the app with no network.

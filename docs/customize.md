@@ -1,6 +1,10 @@
 # Customize
 
-Periplus is built to fork. The trip's content lives in a `TRIP` config block near the top of the app's `<script>` in `app/index.html`. Edit it, commit, and the site and app redeploy.
+Periplus is built to fork. The trip's content lives in a `TRIP` config block near the top of the app's `<script>` in `app/index.html`.
+
+## Two ways to edit
+- **In the browser.** Tap **Edit** on the live app: change any text in place and add, remove, or reorder entries, whole weeks, and checklist groups. It saves to your device. **Export** copies the whole trip as JSON; **Reset** restores the original.
+- **In source, to fork.** Edit the `TRIP` block below, commit, and the site and app redeploy. Easiest path: edit visually in the browser first, then **Export** and paste the JSON over `TRIP` — no hand-writing required.
 
 ## What's in TRIP
 One config object drives the structured content:
@@ -13,11 +17,11 @@ One config object drives the structured content:
 - `TRIP.arrival` / `TRIP.dayOne`: the arrival-drive and Day-1 hour-by-hour timelines
 - `TRIP.anchors`: the multi-night trip anchors
 - `TRIP.venue`: venue logistics (commute, host, dress code)
-- `TRIP.pretrip` / `TRIP.packing`: the collapsible setup and packing checklists (each section is an array of `{ id, label }` items)
+- `TRIP.pretrip` / `TRIP.packing`: the collapsible setup and packing checklists (an array of sections `{ id, title, items }`, where items are `{ id, label }`)
 - `TRIP.food` / `TRIP.outdoor`: the searchable directories (each entry has a `maps` field for its Directions link)
 - `TRIP.contacts`: the key-contacts grid
 
-Each is an array of plain objects. Add, remove, or edit entries and the page re-renders. No build, no framework, no backend.
+Most are arrays of plain objects (`title` / `subtitle` are strings; `venue` and `calendar` are objects). Add, remove, or edit entries and the page re-renders. No build, no framework, no backend.
 
 ## Example
 ```js

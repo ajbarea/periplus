@@ -58,8 +58,8 @@ Every spot has a Directions link that opens your maps app: Google or Apple, your
 </div>
 
 <div class="feature-card" markdown>
-### :material-pencil: Fork & customize
-All the trip data lives in one `TRIP` config block. Edit it, redeploy, and it's your trip.
+### :material-pencil: Edit in the browser
+Tap **Edit** to change any text and add, reorder, or remove anything. Save on-device, or export your trip as JSON to share or drop into your own fork.
 </div>
 
 </div>

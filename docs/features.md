@@ -22,3 +22,9 @@ A status chip counts down to your trip, then tracks which day you're on and what
 
 ## Persistent checklists
 Pre-trip prep and packing checklists remember what you've ticked off, saved locally on your device.
+
+## Edit in the browser
+Tap **Edit** and the whole page becomes editable — no code, no redeploy. Change any text in place, and add, remove, or reorder entries: food and outdoor spots, intel, contacts, trip anchors, the plans inside each week, checklist items, timeline steps, and whole weeks or checklist groups. Changes save to your device and survive a reload; **Reset** restores the built-in itinerary.
+
+## Export and import
+**Export** copies your whole trip as JSON to back up or share; **Import** pastes one back in. That exported JSON is also the `TRIP` block a fork uses, so you can plan a trip visually, export it, and drop it into your own fork to make it permanent. It all happens on-device, with no upload.
