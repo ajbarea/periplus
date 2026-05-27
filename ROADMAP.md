@@ -19,6 +19,7 @@ Stages 1 (field editing), 2 (card sections), 3 (list & thin sections), 4 (whole 
 - Share a trip via URL or a single JSON file.
 - BYOK AI helper (bring-your-own Claude key) for "plan my week" / suggestions — deferred until there's a clean offline-friendly story.
 - Theme/accent customization inside the editor.
+- **Embedded offline maps.** Navigation today is tap-to-open Google/Apple Maps, which needs signal — exactly what fails in the dead zones the app targets. A true in-app offline map (single-file **PMTiles** vector tiles + **MapLibre GL**, no API key, OPFS-stored) would close that gap. **Tradeoff: it breaks the zero-dependency / single-file ethos** (adds `maplibre-gl` + a multi-MB regional tile extract), so it's a deliberate call, not a default. research(2026-05): docs.protomaps.com/pmtiles/maplibre, github.com/makinacorpus/maplibre-offline-pmtiles.
 
 ## Done
 - [x] Consolidate **all** content into the `TRIP` block (directories, calendar, timelines, intel, venue, checklists, contacts).
