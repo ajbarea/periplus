@@ -10,8 +10,9 @@ Nothing open.
 
 ## Next pickup
 
-- **Offline-maps spike (optional).** See ROADMAP → Later. Weigh hard against the
-  zero-dependency / single-file invariant before committing — it's a deliberate call.
+- **Offline maps (PMTiles + MapLibre)** — **accepted by AJ 2026-05-27, scheduled for
+  after the NC trip (post-May 31).** A knowingly-accepted exception to the zero-dep /
+  single-file invariant. See ROADMAP → Later for the approach + research links.
 
 ## Notes
 
