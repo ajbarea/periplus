@@ -156,8 +156,8 @@ a:hover { color: var(--brand); }
 }
 .theme-toggle:hover { border-color: var(--brand); color: var(--brand-2); }
 .theme-toggle svg { width: 17px; height: 17px; }
-@container (max-width: 360px) {
-  .share-btn span { display: none; }
+@media (max-width: 360px) {
+  .share-btn span { display: none; } /* topbar btn, no container-type ancestor — @media, not @container */
 }
 
 /* ---------- Hero ---------- */
@@ -674,7 +674,9 @@ footer.foot a:hover { color: var(--ink); }
 .now-card.is-post .now-label { color: var(--rest); }
 .now-card.is-post .now-jump { display: none; }
 
-@container (max-width: 480px) {
+/* @media, not @container: the now-card is a full-width hero element with no
+   container-type ancestor, so a container query here never fired (dead rule). */
+@media (max-width: 480px) {
   .now-card { grid-template-columns: auto 1fr; }
   .now-card .now-jump { grid-column: 1 / -1; justify-content: center; }
 }
