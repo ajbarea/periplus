@@ -43,7 +43,7 @@ Configs a CI failure can trace to:
 - `.github/workflows/*.yml`
 
 Tool error markers (extend default grep set): `playwright` (e2e), `zensical` (docs build).
-Expected external PR checks: none wired (no codecov, no GitGuardian).
+Expected external PR checks: GitGuardian Security Checks (account-level GitHub App; non-blocking, not a required gate — required checks are `e2e` + `pin-check`). No Codecov.
 
 ## slop_ground_truth
 
