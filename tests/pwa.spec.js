@@ -38,3 +38,21 @@ test('manifest is complete to current PWA guidance', async ({ request }) => {
   expect(m.icons.some((i) => i.sizes === '512x512')).toBe(true);
   expect(m.icons.some((i) => (i.purpose || '').includes('maskable'))).toBe(true);
 });
+
+test('theme toggle cycles auto/light/dark and persists', async ({ page }) => {
+  await page.goto('/');
+  const html = page.locator('html');
+  const btn = page.locator('#theme-toggle');
+  await expect(btn).toBeVisible();
+  // default choice is "auto" → data-theme resolves to a concrete light|dark
+  expect(['light', 'dark']).toContain(await html.getAttribute('data-theme'));
+  await btn.click(); // auto -> light
+  await expect(html).toHaveAttribute('data-theme', 'light');
+  expect(await page.evaluate(() => localStorage.getItem('periplus:theme'))).toBe('light');
+  await btn.click(); // light -> dark
+  await expect(html).toHaveAttribute('data-theme', 'dark');
+  await page.reload();
+  await expect(html).toHaveAttribute('data-theme', 'dark'); // persists
+  await btn.click(); // dark -> auto
+  expect(await page.evaluate(() => localStorage.getItem('periplus:theme'))).toBe('auto');
+});

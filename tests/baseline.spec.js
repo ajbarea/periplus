@@ -35,5 +35,7 @@ test('config-driven sections render from TRIP', async ({ page }) => {
   await expect(page.locator('#intel-grid .intel-card').filter({ hasText: 'July heat' })).toHaveCount(1);
   expect(await page.locator('#intel > details').evaluate((d) => d.open)).toBe(false);
   await expect(page.locator('#weeks-list').getByText('Settle in')).toBeVisible();
-  await expect(page.locator('#contacts-grid').getByText('Emily Keller (LAS host)')).toBeVisible();
+  // contacts is a closed accordion by default — renders from TRIP (DOM present) but stays collapsed
+  await expect(page.locator('#contacts-grid .contact').filter({ hasText: 'Emily Keller (LAS host)' })).toHaveCount(1);
+  expect(await page.locator('#contacts > details').evaluate((d) => d.open)).toBe(false);
 });

@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0f172a">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafaf9">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d1117">
 <title>AJ's NC Summer Residency — June &amp; July 2026</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -25,6 +26,7 @@
 <meta name="twitter:image" content="https://ajbarea.github.io/periplus/assets/og.jpg">
 <style>
 :root {
+  color-scheme: light dark;
   --bg: #fafaf9;
   --surface: #ffffff;
   --surface-2: #f1f5f9;
@@ -56,13 +58,11 @@
   --tap: 44px;
 }
 
-@media (prefers-color-scheme: dark) {
-  /* light mode locked for now; printer-friendly */
-}
+/* Dark theme lives in the screen + prefers-color-scheme block at the end of this stylesheet. */
 
 * { box-sizing: border-box; }
 html {
-  scroll-behavior: smooth; scroll-padding-top: 84px;
+  scroll-behavior: smooth; scroll-padding-top: calc(var(--topbar-h, 50px) + var(--toc-h, 40px) + 8px);
   /* Allow animating to/from intrinsic sizes (height: auto, etc.) — Baseline-coming */
   interpolate-size: allow-keywords;
 }
@@ -148,6 +148,14 @@ a:hover { color: var(--brand); }
 }
 .share-btn:hover { border-color: var(--brand); color: var(--brand-2); }
 .share-btn svg { width: 14px; height: 14px; flex: 0 0 14px; }
+.theme-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; padding: 0;
+  border: 1px solid var(--border-strong); border-radius: 999px;
+  background: var(--surface); color: var(--ink-2); cursor: pointer;
+}
+.theme-toggle:hover { border-color: var(--brand); color: var(--brand-2); }
+.theme-toggle svg { width: 17px; height: 17px; }
 @container (max-width: 360px) {
   .share-btn span { display: none; }
 }
@@ -185,7 +193,7 @@ a:hover { color: var(--brand); }
 
 /* ---------- Nav (table of contents) ---------- */
 .toc {
-  position: sticky; top: 50px; z-index: 40;
+  position: sticky; top: var(--topbar-h, 50px); z-index: 40;
   background: var(--bg);
   border-bottom: 1px solid var(--border);
   margin-top: 1.25rem;
@@ -212,7 +220,7 @@ a:hover { color: var(--brand); }
 
 /* ---------- Sections ---------- */
 main { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--gutter) 4rem; }
-section { scroll-margin-top: 96px; padding-top: 1.75rem; }
+section { scroll-margin-top: calc(var(--topbar-h, 50px) + var(--toc-h, 40px) + 12px); padding-top: 1.75rem; }
 section h2 {
   font-size: clamp(1.2rem, 2.6vw, 1.55rem);
   margin: 0 0 0.5rem; letter-spacing: -0.01em;
@@ -226,7 +234,7 @@ section h2 .badge {
 }
 section p.lede { color: var(--ink-2); margin: 0 0 1rem; max-width: 70ch; }
 /* Critical Intel is a closed accordion: keep its <h2> in the heading outline but size it like a summary title. */
-.intel-acc > summary h2 { margin: 0; font-size: 1rem; }
+details.accordion > summary h2 { margin: 0; font-size: 1rem; }
 
 /* ---------- Card primitive ---------- */
 .card {
@@ -275,7 +283,7 @@ section p.lede { color: var(--ink-2); margin: 0 0 1rem; max-width: 70ch; }
 }
 .timeline .row .a { color: var(--ink-2); font-size: 0.95rem; }
 .timeline .row.highlight {
-  background: linear-gradient(90deg, color-mix(in oklch, var(--accent) 12%, white), white);
+  background: linear-gradient(90deg, color-mix(in oklch, var(--accent) 12%, var(--surface)), var(--surface));
   border-left: 4px solid var(--accent);
 }
 .timeline .row.highlight .t,
@@ -324,11 +332,11 @@ section p.lede { color: var(--ink-2); margin: 0 0 1rem; max-width: 70ch; }
 .week-card .body li { margin: 0.25rem 0; }
 .week-card .body li b { color: var(--ink); }
 
-.tag.hike     { background: color-mix(in oklch, var(--hike) 12%, white); color: var(--hike); border-color: color-mix(in oklch, var(--hike) 35%, transparent); }
-.tag.beach    { background: color-mix(in oklch, var(--beach) 12%, white); color: var(--beach); border-color: color-mix(in oklch, var(--beach) 35%, transparent); }
-.tag.mountain { background: color-mix(in oklch, var(--mountain) 12%, white); color: var(--mountain); border-color: color-mix(in oklch, var(--mountain) 40%, transparent); }
-.tag.city     { background: color-mix(in oklch, var(--city) 12%, white); color: var(--city); border-color: color-mix(in oklch, var(--city) 35%, transparent); }
-.tag.travel   { background: color-mix(in oklch, var(--brand) 12%, white); color: var(--brand-2); border-color: color-mix(in oklch, var(--brand) 35%, transparent); }
+.tag.hike     { background: color-mix(in oklch, var(--hike) 12%, var(--surface)); color: var(--hike); border-color: color-mix(in oklch, var(--hike) 35%, transparent); }
+.tag.beach    { background: color-mix(in oklch, var(--beach) 12%, var(--surface)); color: var(--beach); border-color: color-mix(in oklch, var(--beach) 35%, transparent); }
+.tag.mountain { background: color-mix(in oklch, var(--mountain) 12%, var(--surface)); color: var(--mountain); border-color: color-mix(in oklch, var(--mountain) 40%, transparent); }
+.tag.city     { background: color-mix(in oklch, var(--city) 12%, var(--surface)); color: var(--city); border-color: color-mix(in oklch, var(--city) 35%, transparent); }
+.tag.travel   { background: color-mix(in oklch, var(--brand) 12%, var(--surface)); color: var(--brand-2); border-color: color-mix(in oklch, var(--brand) 35%, transparent); }
 .tag.rest     { background: var(--surface-2); color: var(--ink-2); }
 
 /* ---------- Directory (food/outdoor) ---------- */
@@ -357,7 +365,7 @@ section p.lede { color: var(--ink-2); margin: 0 0 1rem; max-width: 70ch; }
   display: inline-flex; align-items: center;
 }
 .dir-chip[aria-pressed="true"] {
-  background: var(--ink); color: white; border-color: var(--ink);
+  background: var(--ink); color: var(--surface); border-color: var(--ink);
 }
 
 .dir-grid {
@@ -381,7 +389,7 @@ section p.lede { color: var(--ink-2); margin: 0 0 1rem; max-width: 70ch; }
 .dir-item .note { color: var(--ink-2); font-size: 0.9rem; line-height: 1.45; }
 .dir-item .warn {
   display: inline-block; font-size: 0.72rem; font-weight: 700;
-  background: color-mix(in oklch, var(--warn) 12%, white);
+  background: color-mix(in oklch, var(--warn) 12%, var(--surface));
   color: var(--warn);
   padding: 0.15rem 0.5rem; border-radius: 999px;
   border: 1px solid color-mix(in oklch, var(--warn) 35%, transparent);
@@ -423,7 +431,7 @@ details.accordion > summary .count {
 details.accordion[open]:has(.checklist li.checked) > summary .count {
   /* :has demo: highlight count when there are checked items inside */
   color: var(--hike); border-color: color-mix(in oklch, var(--hike) 35%, transparent);
-  background: color-mix(in oklch, var(--hike) 10%, white);
+  background: color-mix(in oklch, var(--hike) 10%, var(--surface));
 }
 details.accordion .body { padding: 0 1rem 0.9rem; }
 
@@ -489,7 +497,7 @@ ul.checklist label {
 
 /* ---------- Misc ---------- */
 .note-box {
-  background: color-mix(in oklch, var(--brand) 6%, white);
+  background: color-mix(in oklch, var(--brand) 6%, var(--surface));
   border: 1px solid color-mix(in oklch, var(--brand) 25%, transparent);
   color: var(--ink-2);
   padding: 0.7rem 0.95rem;
@@ -497,7 +505,7 @@ ul.checklist label {
   font-size: 0.92rem;
 }
 .note-box.warn {
-  background: color-mix(in oklch, var(--warn) 8%, white);
+  background: color-mix(in oklch, var(--warn) 8%, var(--surface));
   border-color: color-mix(in oklch, var(--warn) 30%, transparent);
 }
 
@@ -513,7 +521,7 @@ footer.foot {
 footer.foot .brand-mark { height: 1em; width: auto; vertical-align: -0.16em; margin: 0 0.15rem; opacity: 0.8; }
 footer.foot a { color: var(--muted); display: inline-flex; transition: color 0.2s; }
 footer.foot a:hover { color: var(--ink); }
-@media (prefers-color-scheme: dark) { footer.foot .brand-mark { filter: invert(1); } }
+/* footer brand mark inverts under data-theme="dark" — see the theming block below. */
 
 /* ---------- Container queries: stack rows on narrow cards ---------- */
 @container (max-width: 480px) {
@@ -571,19 +579,19 @@ footer.foot a:hover { color: var(--ink); }
 .intel-card .value { font-weight: 700; color: var(--ink); font-size: 0.98rem; }
 .intel-card .small { color: var(--ink-2); font-weight: 500; font-size: 0.86rem; line-height: 1.45; }
 
-.intel-card[data-type="budget"]      { border-left-color: var(--warn);  background: color-mix(in oklch, var(--warn) 4%, white); }
+.intel-card[data-type="budget"]      { border-left-color: var(--warn);  background: color-mix(in oklch, var(--warn) 4%, var(--surface)); }
 .intel-card[data-type="budget"] .label   { color: var(--warn); }
-.intel-card[data-type="risk"]        { border-left-color: var(--hot);   background: color-mix(in oklch, var(--hot) 4%, white); }
+.intel-card[data-type="risk"]        { border-left-color: var(--hot);   background: color-mix(in oklch, var(--hot) 4%, var(--surface)); }
 .intel-card[data-type="risk"] .label     { color: var(--hot); }
-.intel-card[data-type="opportunity"] { border-left-color: var(--hike);  background: color-mix(in oklch, var(--hike) 4%, white); }
+.intel-card[data-type="opportunity"] { border-left-color: var(--hike);  background: color-mix(in oklch, var(--hike) 4%, var(--surface)); }
 .intel-card[data-type="opportunity"] .label { color: var(--hike); }
-.intel-card[data-type="info"]        { border-left-color: var(--info);  background: color-mix(in oklch, var(--info) 4%, white); }
+.intel-card[data-type="info"]        { border-left-color: var(--info);  background: color-mix(in oklch, var(--info) 4%, var(--surface)); }
 .intel-card[data-type="info"] .label     { color: var(--info); }
 
 /* ---------- Savings callout (special note-box variant) ---------- */
 .savings-callout {
   margin-top: 1rem;
-  background: linear-gradient(135deg, color-mix(in oklch, var(--money) 10%, white), color-mix(in oklch, var(--hike) 6%, white));
+  background: linear-gradient(135deg, color-mix(in oklch, var(--money) 10%, var(--surface)), color-mix(in oklch, var(--hike) 6%, var(--surface)));
   border: 1px solid color-mix(in oklch, var(--money) 30%, transparent);
   border-left: 4px solid var(--money);
   border-radius: var(--radius-sm);
@@ -624,7 +632,7 @@ footer.foot a:hover { color: var(--ink); }
   gap: 0.85rem;
   margin: 1rem 0 0.25rem;
   padding: 0.9rem 1.05rem;
-  background: linear-gradient(135deg, color-mix(in oklch, var(--brand) 8%, white), color-mix(in oklch, var(--accent) 6%, white));
+  background: linear-gradient(135deg, color-mix(in oklch, var(--brand) 8%, var(--surface)), color-mix(in oklch, var(--accent) 6%, var(--surface)));
   border: 1px solid color-mix(in oklch, var(--brand) 25%, transparent);
   border-left: 4px solid var(--brand);
   border-radius: var(--radius);
@@ -790,9 +798,66 @@ details.accordion[open] .acc-progress .fill { display: none; }
 @media (max-width: 640px) {
   .dir-go { min-height: 44px; padding: 0 14px; display: inline-flex; align-items: center; border: 1px solid color-mix(in oklch, var(--brand) 35%, transparent); border-radius: 10px; font-size: 0.9rem; }
   .share-btn { min-height: 40px; }
+  .theme-toggle { width: 44px; height: 44px; }
   .maps-toggle label { min-height: 40px; padding: 4px 6px; }
 }
+/* ============================================================================
+   Dark theme — activated by data-theme="dark" (the toggle, or OS-resolved on
+   load). One source of dark values, no media duplication; print stays light.
+   research(2026-05): switch design tokens via prefers-color-scheme, off-white
+   ink (no pure white) on elevated dark surfaces (no pure black), lighter
+   accents, deeper shadows — web.dev / MDN dark-mode guidance. Light path is
+   untouched (the `, var(--surface)` swap is identity in light: surface = #fff).
+   ============================================================================ */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface-2: #20262e;
+  --border: #2a313c;
+  --border-strong: #3d444d;
+  --ink: #e6edf3;
+  --ink-2: #b3bdc9;
+  --muted: #8b949e;
+  --brand: #1f6feb;      /* solid-button fill; #fff text passes AA */
+  --brand-2: #79c0ff;    /* brand-as-text on dark (links, accents) */
+  --accent: #f0883e;
+  --hike: #56d364;
+  --beach: #56cfe1;
+  --mountain: #c4a3ff;
+  --city: #ff8dc7;
+  --warn: #e3b341;
+  --hot: #ff7b72;
+  --money: #56d364;
+  --info: #79c0ff;
+  --rest: #9aa6b2;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 45%);
+  --shadow: 0 6px 16px -4px rgb(0 0 0 / 55%), 0 2px 6px -2px rgb(0 0 0 / 45%);
+  --shadow-lg: 0 14px 34px -10px rgb(0 0 0 / 65%);
+}
+/* light-surface-baked rules re-pointed for dark (tokens above cover the rest) */
+:root[data-theme="dark"] .topbar { background: rgb(13 17 23 / 85%); }
+:root[data-theme="dark"] .status-chip.live { background:#072a30; color:#67e8f9; border-color:#155e75; }
+:root[data-theme="dark"] .status-chip.pre  { background:#0c1f3d; color:#93c5fd; border-color:#1e40af; }
+:root[data-theme="dark"] .status-chip.post { background:#1c1a17; color:#d6d3d1; border-color:#44403c; }
+:root[data-theme="dark"] .tag.hike{color:var(--hike)} :root[data-theme="dark"] .tag.beach{color:var(--beach)} :root[data-theme="dark"] .tag.mountain{color:var(--mountain)} :root[data-theme="dark"] .tag.city{color:var(--city)} :root[data-theme="dark"] .tag.travel{color:var(--brand-2)}
+:root[data-theme="dark"] .now-card .now-jump:hover { background: var(--brand-2); color: var(--bg); }
+:root[data-theme="dark"] .dir-go { color: var(--brand-2); }
+:root[data-theme="dark"] .cal-chip.hike{background:#1f7a34} :root[data-theme="dark"] .cal-chip.beach{background:#0c7489} :root[data-theme="dark"] .cal-chip.mountain{background:#7048e8} :root[data-theme="dark"] .cal-chip.city{background:#be2a63} :root[data-theme="dark"] .cal-chip.travel{background:#1c64c4} :root[data-theme="dark"] .cal-chip.rest{background:#566372}
+:root[data-theme="dark"] footer.foot .brand-mark { filter: invert(1); }
 </style>
+<script>
+/* Resolve theme before first paint (no flash). Choice ("auto"|"light"|"dark") persists in
+   localStorage; <html data-theme> always carries the resolved light|dark for the CSS above. */
+(function () {
+  try {
+    var c = localStorage.getItem("periplus:theme") || "auto";
+    var dark = c === "dark" || (c === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+  } catch (e) {}
+})();
+</script>
 </head>
 <body>
 
@@ -804,6 +869,9 @@ details.accordion[open] .acc-progress .fill { display: none; }
     <button id="share-btn" class="share-btn" type="button" aria-label="Share this itinerary" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.6 13.5l6.8 3M15.4 7.5l-6.8 3"/></svg>
       <span>Share</span>
+    </button>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Theme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"></svg>
     </button>
   </div>
   <div class="trip-progress" role="progressbar" aria-label="Trip progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
@@ -1006,12 +1074,17 @@ details.accordion[open] .acc-progress .fill { display: none; }
   <div id="packing-list"></div>
 </section>
 
-<!-- Contacts -->
+<!-- Contacts — closed accordion (reference info; a tap away) -->
 <section id="contacts">
-  <h2>Key Contacts</h2>
-
-  <div class="contacts-grid" id="contacts-grid">
-  </div>
+  <details class="accordion">
+    <summary>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+      <h2>Key Contacts</h2>
+    </summary>
+    <div class="body">
+      <div class="contacts-grid" id="contacts-grid"></div>
+    </div>
+  </details>
 </section>
 
 </main>
@@ -1824,6 +1897,61 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   });
 }
+
+// ===========================================================================
+// Theme — Auto (follow OS) / Light / Dark, persisted on-device. The head script
+// set the initial resolved theme; here we wire the toggle and live OS changes.
+// ===========================================================================
+(function themeToggle(){
+  const KEY = "periplus:theme";
+  const order = ["auto", "light", "dark"];
+  const ICONS = {
+    auto:  '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/>',
+    light: '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.2v2M12 19.8v2M4.5 4.5l1.4 1.4M18.1 18.1l1.4 1.4M2.2 12h2M19.8 12h2M4.5 19.5l1.4-1.4M18.1 5.9l1.4-1.4"/>',
+    dark:  '<path d="M20 14.4A8 8 0 1 1 9.6 4 6.4 6.4 0 0 0 20 14.4z"/>',
+  };
+  const btn = document.getElementById("theme-toggle");
+  if (!btn) return;
+  const svg = btn.querySelector("svg");
+  const mq = matchMedia("(prefers-color-scheme: dark)");
+  const get = () => { try { return localStorage.getItem(KEY) || "auto"; } catch { return "auto"; } };
+  const resolved = (c) => c === "auto" ? (mq.matches ? "dark" : "light") : c;
+  function apply(c){
+    document.documentElement.setAttribute("data-theme", resolved(c));
+    svg.innerHTML = ICONS[c];
+    const label = c[0].toUpperCase() + c.slice(1);
+    btn.setAttribute("aria-label", "Theme: " + label + " — tap to change");
+    btn.title = "Theme: " + label;
+  }
+  apply(get());
+  btn.addEventListener("click", () => {
+    const next = order[(order.indexOf(get()) + 1) % order.length];
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+    apply(next);
+  });
+  mq.addEventListener("change", () => { if (get() === "auto") apply("auto"); });
+})();
+
+// ===========================================================================
+// Keep the sticky TOC docked below the topbar even when it wraps to a second
+// row on phones — topbar height is dynamic, so feed it (and TOC height) to CSS.
+// ===========================================================================
+(function stickyOffsets(){
+  const header = document.querySelector(".topbar");
+  const toc = document.querySelector(".toc");
+  if (!header) return;
+  const root = document.documentElement.style;
+  const update = () => {
+    root.setProperty("--topbar-h", header.offsetHeight + "px");
+    if (toc) root.setProperty("--toc-h", toc.offsetHeight + "px");
+  };
+  update();
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(update);
+    ro.observe(header); if (toc) ro.observe(toc);
+  }
+  window.addEventListener("resize", update);
+})();
 
 // ===========================================================================
 // No-code editing — edit any [data-edit] field inline, saved as a sparse
