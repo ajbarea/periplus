@@ -21,6 +21,12 @@ Nothing open.
   by the `TRIP` block: directories with orders/addresses/moved-closed + hours warnings,
   the drive-day and Day-1 hour-by-hour timelines, the 9-category packing checklist, the
   Helene backup hikes, and the intel cards. The original is superseded history.
+- **Pre-trip iOS standalone hardening (2026-05-29).** Fixed the installed-app status bar
+  (`black-translucent` → `default`: white-on-light glyphs were unreadable) and added
+  `env(safe-area-inset-*)` padding so the topbar / edit-bar clear the notch & home indicator
+  under `viewport-fit=cover`; rounded the manifest to 2026 PWA guidance (`lang`/`dir`/`launch_handler`);
+  SW cache v8 → v9. See ROADMAP → Done. Verified: 27 e2e green + a live iPhone-width render of the
+  now-card (reads "In 2 days / Trip begins Sun, May 31").
 - **Pre-trip freshness pass (2026-05-27).** Web-verified the time-sensitive itinerary facts
   before the residency. Real corrections: I-95 itself isn't closed (only the NC-50 bridge at
   Benson Exit 79 is, May 28-~Jul 12), so the avoid-I-95 note was reframed; Wrightsville Beach

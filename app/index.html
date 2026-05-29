@@ -8,7 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- "default" = readable dark glyphs on a light bar with content below it; "black-translucent" forces
+     white status text that stays white over our light topbar (unreadable) and renders under the notch. -->
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Periplus">
 <meta name="description" content="An offline-first, installable travel-itinerary planner. The live demo is an 8-week North Carolina summer residency: food, hikes, beaches, week by week, all offline-ready.">
 <meta property="og:type" content="website">
@@ -107,7 +109,9 @@ a:hover { color: var(--brand); }
 }
 .topbar-inner {
   max-width: var(--max-w); margin: 0 auto;
-  padding: 0.55rem var(--gutter);
+  /* viewport-fit=cover: keep the bar clear of the notch / Dynamic Island and the landscape side-insets.
+     max() is a no-op in portrait (insets ~0) and only adds room where the safe area actually intrudes. */
+  padding: max(0.55rem, env(safe-area-inset-top)) max(var(--gutter), env(safe-area-inset-right)) 0.55rem max(var(--gutter), env(safe-area-inset-left));
   display: flex; align-items: center; gap: 0.5rem 0.75rem;
   flex-wrap: wrap; /* narrow screens: actions wrap to a second row instead of overflowing off-edge */
 }
@@ -1249,9 +1253,7 @@ setStatus();
     const days = Math.ceil((TRIP_START - today) / 86400000);
     card.classList.add("is-pre");
     lab.textContent = days <= 1 ? "Tomorrow" : `In ${days} days`;
-    head.textContent = days === 0
-      ? "Today: leave Rochester at 5:30 AM."
-      : `Trip begins ${fmt(TRIP_START)} — drive day.`;
+    head.textContent = `Trip begins ${fmt(TRIP_START)} — drive day.`;
     sub.textContent = days > 14
       ? "Focus on the pre-trip checklist; hotel & parking asks first."
       : "Pre-trip checklist + packing. Confirm Hyatt parking rate with Emily.";
@@ -2033,7 +2035,8 @@ if ('serviceWorker' in navigator) {
     body.editing [data-edit]:hover{ background:color-mix(in oklab,var(--brand,#2563eb) 8%,transparent); }
     body.editing [data-edit]:focus{ outline:2px solid var(--brand,#2563eb); background:var(--surface,#fff); }
     .edit-bar{ position:fixed; left:0; right:0; bottom:0; z-index:50; display:flex; gap:.5rem; align-items:center;
-      padding:.6rem .9rem; background:var(--surface,#fff); border-top:1px solid var(--border,#e5e7eb);
+      padding:.6rem max(.9rem,env(safe-area-inset-right)) max(.6rem,env(safe-area-inset-bottom)) max(.9rem,env(safe-area-inset-left));
+      background:var(--surface,#fff); border-top:1px solid var(--border,#e5e7eb);
       box-shadow:0 -4px 16px rgb(0 0 0 / 12%); flex-wrap:wrap; }
     .edit-bar[hidden]{ display:none; }
     .edit-bar-label{ flex:1; min-width:12rem; font-size:.82rem; color:var(--ink-2,#374151); }

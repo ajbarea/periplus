@@ -1,5 +1,7 @@
 {
   "id": "/periplus/app/",
+  "lang": "en-US",
+  "dir": "ltr",
   "name": "Periplus · NC Summer Residency",
   "short_name": "Periplus",
   "description": "An offline-first, installable travel-itinerary planner. Fork it for your own multi-week trip.",
@@ -7,6 +9,7 @@
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "launch_handler": { "client_mode": "navigate-existing" },
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
   "icons": [
