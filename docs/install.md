@@ -14,3 +14,6 @@ Chrome shows an **Install app** prompt, or use the ⋮ menu → **Add to Home sc
 
 ## Use it offline
 Once cached, the entire itinerary (food, outdoor, the week-by-week plan, and your checklists) works with no connection. Directions links hand off to your maps app, which manages its own offline maps.
+
+## Pick a theme
+The top-bar toggle cycles **Auto** (match your phone), **Light**, and **Dark**. Your choice is saved on the device.

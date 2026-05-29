@@ -11,8 +11,9 @@ A *periplus* was the ancient mariner's itinerary, a written log of ports and lan
 ## What it does
 - **Works offline.** Open it once on signal and a service worker caches everything; after that it runs in airplane mode.
 - **Installs like an app.** Add to Home Screen on iOS or Android: full-screen, its own icon.
+- **Light & dark.** Follows your phone's appearance, with an in-app Auto / Light / Dark toggle.
 - **Tap to navigate.** Every food spot, hike, beach, and your lodging opens in Google or Apple Maps (your choice, remembered).
-- **Searchable directories**, a live "today" widget, and persistent checklists.
+- **Searchable directories** with a live match count, a live "today" widget, and persistent checklists.
 - **Edit in the browser.** Tap **Edit** to change any text and add, reorder, or remove anything; export the trip as JSON to back up, share, or fork.
 - **No build, no backend, no framework.** The whole app is one `index.html`.
 

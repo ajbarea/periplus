@@ -6,6 +6,7 @@ Periplus is deliberately a no-build, single-file app: the value is that it opens
 - **One `index.html`**: content, the `TRIP` config, and render logic in a single file. No framework, no bundler.
 - **Service worker**: stale-while-revalidate for the shell (instant offline loads), cache-first for static assets; the app shell is precached on install.
 - **Modern CSS**: OKLCH `color-mix()`, container queries, scroll-driven reveals, and View Transitions, each behind `@supports` and `prefers-reduced-motion` guards.
+- **Theming**: light by default; a `data-theme="dark"` token set, resolved from `prefers-color-scheme` or the in-app toggle before first paint, switches the whole UI. Print always renders light.
 - **System fonts**: no web fonts, so it renders instantly, even offline.
 
 ## Hosting

@@ -802,14 +802,9 @@ details.accordion[open] .acc-progress .fill { display: none; }
   .theme-toggle { width: 44px; height: 44px; }
   .maps-toggle label { min-height: 40px; padding: 4px 6px; }
 }
-/* ============================================================================
-   Dark theme — activated by data-theme="dark" (the toggle, or OS-resolved on
-   load). One source of dark values, no media duplication; print stays light.
-   research(2026-05): switch design tokens via prefers-color-scheme, off-white
-   ink (no pure white) on elevated dark surfaces (no pure black), lighter
-   accents, deeper shadows — web.dev / MDN dark-mode guidance. Light path is
-   untouched (the `, var(--surface)` swap is identity in light: surface = #fff).
-   ============================================================================ */
+/* Dark theme — applied via data-theme="dark" (toggle or OS-resolved before first paint); one set of
+   dark values, no media duplication, print stays light, light path byte-identical (surface is #fff).
+   research(2026-05): prefers-color-scheme token flip, off-white ink, no pure black/white (web.dev/MDN). */
 :root[data-theme="light"] { color-scheme: light; }
 :root[data-theme="dark"] {
   color-scheme: dark;
@@ -1971,12 +1966,10 @@ if ('serviceWorker' in navigator) {
 })();
 
 // ===========================================================================
-// No-code editing — edit any [data-edit] field inline, saved as a sparse
+// No-code editing — inline-edit any [data-edit] field, saved as a sparse
 // path->value diff in localStorage. research(2026-05): in-place contenteditable
-// (Atlassian inline-edit pattern) with no re-render, so the existing search /
-// maps / calendar listeners survive untouched. TRIP is mutated on edit so it
-// stays the source of truth for export. Reset restores the built-in itinerary.
-// Structural add/reorder + JSON import are a later pass.
+// (Atlassian inline-edit), no re-render, so search / maps / calendar listeners
+// survive. TRIP is the export source of truth; reset restores the original.
 // ===========================================================================
 (function noCodeEditing(){
   const EDITS_KEY = "periplus.edits.v1";
