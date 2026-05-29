@@ -1,4 +1,4 @@
-const CACHE = 'periplus-v11';
+const CACHE = 'periplus-v12';
 const SHELL = [
   './', 'index.html', 'manifest.webmanifest',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png',

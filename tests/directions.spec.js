@@ -31,3 +31,15 @@ test('search still filters rendered cards', async ({ page }) => {
   await expect(page.locator('#food-grid').getByText('Lawrence Barbecue')).toBeVisible();
   await expect(page.locator('#food-grid').getByText('Lunchbox Deli')).toBeHidden();
 });
+
+test('result count tracks filtering, and outdoor has a maps toggle synced to food', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#food-count')).toHaveText(/^\d+ spots$/);     // full set on load
+  await page.locator('.dir-chip[data-filter-target="food"][data-filter="bbq"]').click();
+  await expect(page.locator('#food-count')).toHaveText(/of \d+ shown$/);   // filtered subset
+  // outdoor's own toggle reflects the global provider and syncs when food changes it
+  await page.locator('#maps-apple').check();
+  await expect(page.locator('#outdoor .maps-toggle input[value="apple"]')).toBeChecked();
+  await expect(page.locator('#outdoor-grid .dir-item a.dir-go').first())
+    .toHaveAttribute('href', /^https:\/\/maps\.apple\.com\//);
+});

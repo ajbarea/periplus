@@ -355,6 +355,7 @@ details.accordion > summary h2 { margin: 0; font-size: 1rem; }
 }
 .dir-search:focus { outline: 2px solid var(--brand); outline-offset: 1px; border-color: var(--brand); }
 .dir-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.dir-count { margin: 0 0 0.55rem; font-size: 0.82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 .dir-chip {
   font-size: 0.8rem; font-weight: 600; color: var(--ink-2);
   padding: 0.45rem 0.75rem;
@@ -1031,6 +1032,7 @@ details.accordion[open] .acc-progress .fill { display: none; }
     </fieldset>
   </search>
 
+  <p class="dir-count" id="food-count" aria-live="polite"></p>
   <div class="dir-grid" id="food-grid">
   </div>
 </section>
@@ -1053,8 +1055,15 @@ details.accordion[open] .acc-progress .fill { display: none; }
       <button class="dir-chip" data-filter-target="outdoor" aria-pressed="false" data-filter="beach">Beaches</button>
       <button class="dir-chip" data-filter-target="outdoor" aria-pressed="false" data-filter="museum">Museums</button>
     </div>
+    <fieldset class="maps-toggle" aria-label="Directions provider">
+      <legend class="sr-only">Maps app for directions</legend>
+      <span class="maps-toggle-label">Directions via</span>
+      <label><input type="radio" name="maps-o" value="google"> Google</label>
+      <label><input type="radio" name="maps-o" value="apple"> Apple</label>
+    </fieldset>
   </search>
 
+  <p class="dir-count" id="outdoor-count" aria-live="polite"></p>
   <div class="dir-grid" id="outdoor-grid">
   </div>
 </section>
@@ -1805,14 +1814,14 @@ function renderDirectories(){
 renderDirectories();
 
 (function wireMapsToggle(){
-  const current = getMapsProvider();
-  const radio = document.getElementById(current === "apple" ? "maps-apple" : "maps-google");
-  if (radio) radio.checked = true;
-  document.querySelectorAll('input[name="maps"]').forEach((r) => {
-    r.addEventListener("change", () => {
-      if (r.checked) { setMapsProvider(r.value); renderDirectories(); }
-    });
-  });
+  // Food + outdoor each carry a Directions toggle but share one global provider —
+  // reflect the stored choice on both, and keep them in sync when either changes.
+  const radios = document.querySelectorAll('.maps-toggle:not(.cal-toggle) input[type="radio"]');
+  const sync = () => { const p = getMapsProvider(); radios.forEach((r) => { r.checked = r.value === p; }); };
+  sync();
+  radios.forEach((r) => r.addEventListener("change", () => {
+    if (r.checked) { setMapsProvider(r.value); renderDirectories(); sync(); }
+  }));
 })();
 
 function refreshCalLinks(){
@@ -1835,6 +1844,7 @@ function wireDir(searchId, gridId) {
   const grid = document.getElementById(gridId);
   const target = grid.id.replace("-grid","");
   const chips = document.querySelectorAll(`.dir-chip[data-filter-target="${target}"]`);
+  const countEl = document.getElementById(target + "-count");
   let activeFilter = "all";
 
   function apply() {
@@ -1859,6 +1869,12 @@ function wireDir(searchId, gridId) {
     } else if (empty) {
       empty.remove();
     }
+    if (countEl) {
+      const total = grid.querySelectorAll(".dir-item").length;
+      countEl.textContent = visible === total
+        ? `${total} ${total === 1 ? "spot" : "spots"}`
+        : `${visible} of ${total} shown`;
+    }
   }
 
   search.addEventListener("input", apply);
@@ -1870,6 +1886,7 @@ function wireDir(searchId, gridId) {
       apply();
     });
   });
+  apply();   // initialize the count + filter state on load
 }
 wireDir("food-search", "food-grid");
 wireDir("outdoor-search", "outdoor-grid");
