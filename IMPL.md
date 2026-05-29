@@ -27,6 +27,12 @@ Nothing open.
   under `viewport-fit=cover`; rounded the manifest to 2026 PWA guidance (`lang`/`dir`/`launch_handler`);
   SW cache v8 → v9. See ROADMAP → Done. Verified: 27 e2e green + a live iPhone-width render of the
   now-card (reads "In 2 days / Trip begins Sun, May 31").
+- **Now-card trip-day hardening (2026-05-29).** Found + fixed an off-by-one in the trip
+  active-window: the status chip / now-card flipped to "Trip complete" at midnight of the
+  checkout day instead of staying live through it, and "Day 56 of 56" was unreachable.
+  Clamped the end bound to end-of-day, derived the 56-day length from the trip dates (was
+  hardcoded in two spots), and added `tests/now-card.spec.js` — clock-mocked pre/live/post
+  coverage the now-card never had. 35 e2e green, SW v13. See ROADMAP → Done.
 - **Pre-trip freshness pass (2026-05-27).** Web-verified the time-sensitive itinerary facts
   before the residency. Real corrections: I-95 itself isn't closed (only the NC-50 bridge at
   Benson Exit 79 is, May 28-~Jul 12), so the avoid-I-95 note was reframed; Wrightsville Beach
