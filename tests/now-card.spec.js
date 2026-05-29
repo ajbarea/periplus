@@ -19,6 +19,7 @@ test('pre-trip: counts down the days to departure', async ({ page }) => {
   await expect(page.locator('#now-label')).toHaveText('In 2 days');
   await expect(page.locator('#now-headline')).toContainText('Trip begins');
   await expect(page.locator('#now-card')).not.toHaveClass(/is-live|is-post/);
+  await expect(page.locator('#status-chip')).toHaveText('T-2 days to Raleigh');
 });
 
 test('pre-trip: says "Tomorrow" the day before arrival', async ({ page }) => {
@@ -45,10 +46,24 @@ test('checkout day still counts as in-trip (Day 56 of 56)', async ({ page }) => 
   await gotoAt(page, '2026-07-25T12:00:00-04:00');
   await expect(page.locator('#now-label')).toContainText('Day 56 of 56');
   await expect(page.locator('#now-card')).toHaveClass(/is-live/);
+  await expect(page.locator('#status-chip')).toHaveText('Day 56 of 56'); // chip shares the boundary
 });
 
 test('post-trip: shows the trip is complete the day after checkout', async ({ page }) => {
   await gotoAt(page, '2026-07-26T12:00:00-04:00'); // day after checkout
   await expect(page.locator('#now-card')).toHaveClass(/is-post/);
   await expect(page.locator('#now-label')).toHaveText('Trip complete');
+  await expect(page.locator('#status-chip')).toHaveText('Trip complete');
+});
+
+test('now-jump wraps to a full-width row on a narrow (phone) screen', async ({ page }) => {
+  // The now-card's responsive rule must actually fire on phones: the jump button
+  // wraps below the text (grid-column 1 / -1) instead of being squeezed beside it.
+  await page.setViewportSize({ width: 390, height: 900 });
+  await page.clock.setFixedTime(new Date('2026-05-29T12:00:00-04:00')); // pre-trip → jump button is shown
+  await page.goto('/');
+  const card = await page.locator('#now-card').boundingBox();
+  const jump = await page.locator('#now-jump').boundingBox();
+  // wrapped → spans most of the card width; beside the text (the dead-@container bug) → only label-wide.
+  expect(jump.width).toBeGreaterThan(card.width * 0.6);
 });

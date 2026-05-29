@@ -33,6 +33,12 @@ Nothing open.
   Clamped the end bound to end-of-day, derived the 56-day length from the trip dates (was
   hardcoded in two spots), and added `tests/now-card.spec.js` — clock-mocked pre/live/post
   coverage the now-card never had. 35 e2e green, SW v13. See ROADMAP → Done.
+- **Mobile now-card wrap fix (2026-05-29).** Found two dead `@container` rules (now-card
+  jump button + topbar Share label): no `container-type` ancestor, so they never fired and
+  the jump button was clipped beside the text on phones. Switched both to `@media` (these
+  are full-width, page-level elements). Added a 390px wrap e2e (RED on the dead rule) and
+  locked the status-chip trip-day states. 36 e2e, SW v14. Confirmed with a true-viewport
+  Playwright screenshot. See ROADMAP → Done.
 - **Pre-trip freshness pass (2026-05-27).** Web-verified the time-sensitive itinerary facts
   before the residency. Real corrections: I-95 itself isn't closed (only the NC-50 bridge at
   Benson Exit 79 is, May 28-~Jul 12), so the avoid-I-95 note was reframed; Wrightsville Beach
