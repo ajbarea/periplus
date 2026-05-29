@@ -12,19 +12,20 @@ invocation. Update on toolchain / path / tooling changes.
 - languages: JavaScript (the app + Playwright specs + `scripts/*.mjs` asset gen),
   Python (docs toolchain only — Zensical, via uv).
 - package_root: none — there is no importable package; the app *is* `app/index.html`.
-- no Makefile / dev-runner harness — validate with npm + uv directly (see `## audit`).
+- thin `Makefile` (setup / build / test / icons / clean) wrapping npm + uv; no
+  `logs/dev-*.log` archive — see `## audit`.
 - hosting: one GitHub Pages deploy (`docs.yml`); docs at site root, app copied to
   `/app/` with its service worker scoped there so it never caches the docs.
 - has: PWA service worker, Playwright e2e, Zensical docs. No backend, no runtime deps.
 
 ## audit
 
-periplus has no `make` targets and no `logs/dev-*.log` archive, so `/techne:audit`'s
-make-target + log-reconciliation model does not apply. Validate directly:
+periplus has a thin `Makefile` but no `logs/dev-*.log` archive, so `/techne:audit`'s
+log-reconciliation model does not apply. Validate via the make targets or directly:
 
 - `npm ci` then `npx playwright install --with-deps chromium` — test deps.
 - `npm test` (= `playwright test`) — the gate. e2e specs in `tests/*.spec.js`
-  (baseline, directions, editing, offline, pwa).
+  (baseline, directions, editing, now-card, offline, pwa).
 - `uv sync --group dev --frozen` then `uv run zensical build --clean` — docs build smoke.
 - `npm run icons` (`scripts/gen-icons.mjs`, sharp) regenerates PWA icons; `scripts/gen-og.mjs` the OG image.
 
@@ -50,8 +51,8 @@ Expected external PR checks: GitGuardian Security Checks (account-level GitHub A
 Sources of truth for quantitative claims:
 - e2e count: the specs in `tests/*.spec.js` (the "N e2e" figure in README/ROADMAP must
   match the actual test count — count tests, do not trust a hard-coded number).
-- service-worker cache version: the cache-name/version string in the service worker
-  inside `app/index.html` (ROADMAP's "SW cache vN" claims trace here).
+- service-worker cache version: the `CACHE` constant in `app/sw.js` (ROADMAP's
+  "SW cache vN" claims trace here).
 
 Any perf / scale / count claim not traceable to the app source or the spec files is slop.
 
