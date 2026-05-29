@@ -1104,6 +1104,7 @@ details.accordion[open] .acc-progress .fill { display: none; }
 // ===========================================================================
 const TRIP_START = new Date(2026, 4, 31);   // May 31, 2026 (Sun = arrival)
 const TRIP_END   = new Date(2026, 6, 25);   // Jul 25, 2026 (Sat = checkout)
+const TRIP_DAYS  = Math.round((TRIP_END - TRIP_START) / 86400000) + 1; // 56 — inclusive of checkout day
 
 // week markers: each row is the Mon-Sun span containing a trip week's main activity
 const TRIP = {
@@ -1221,9 +1222,10 @@ function icsUri(e){
 function addToCalHref(e, provider = getCalProvider()){ return provider === "apple" ? icsUri(e) : gcalUrl(e); }
 
 const today = new Date();
-const tripActive = today >= TRIP_START && today <= TRIP_END;
+const tripEnd = new Date(TRIP_END); tripEnd.setHours(23, 59, 59, 999); // checkout day counts as in-trip
+const tripActive = today >= TRIP_START && today <= tripEnd;
 const tripPre = today < TRIP_START;
-const tripPost = today > TRIP_END;
+const tripPost = today > tripEnd;
 
 // Render calendar — Google-Calendar-style month grids (desktop) + agenda list (mobile)
 function renderCalendar(){
@@ -1288,7 +1290,7 @@ function setStatus() {
     pct = 0;
   } else if (tripActive) {
     const day = Math.floor((today - TRIP_START) / 86400000) + 1;
-    chip.textContent = `Day ${day} of 56`;
+    chip.textContent = `Day ${day} of ${TRIP_DAYS}`;
     chip.className = "status-chip live";
     pct = Math.max(0, Math.min(100, ((today - TRIP_START) / TRIP_TOTAL_MS) * 100));
   } else {
@@ -1342,7 +1344,7 @@ setStatus();
   } else if (tripActive) {
     card.classList.add("is-live");
     const dayNum = Math.floor((today - TRIP_START) / 86400000) + 1;
-    lab.textContent = `Day ${dayNum} of 56 · ${today.toLocaleDateString("en-US",{weekday:"long"})}`;
+    lab.textContent = `Day ${dayNum} of ${TRIP_DAYS} · ${today.toLocaleDateString("en-US",{weekday:"long"})}`;
     if (todayAct) {
       head.textContent = `Today: ${todayAct.tag}`;
       sub.textContent = "See your week card below for the full plan.";
