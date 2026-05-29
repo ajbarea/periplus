@@ -224,7 +224,9 @@ section h2 .badge {
   background: var(--surface-2); padding: 0.2rem 0.55rem; border-radius: 999px;
   border: 1px solid var(--border);
 }
-section > p.lede { color: var(--ink-2); margin: 0 0 1rem; max-width: 70ch; }
+section p.lede { color: var(--ink-2); margin: 0 0 1rem; max-width: 70ch; }
+/* Critical Intel is a closed accordion: keep its <h2> in the heading outline but size it like a summary title. */
+.intel-acc > summary h2 { margin: 0; font-size: 1rem; }
 
 /* ---------- Card primitive ---------- */
 .card {
@@ -850,13 +852,18 @@ details.accordion[open] .acc-progress .fill { display: none; }
 
 <main>
 
-<!-- Critical pre-trip intel -->
+<!-- Critical intel — closed accordion (verified pre-trip; kept a tap away, expands for print) -->
 <section id="intel">
-  <h2>Critical Intel <span class="badge">Read first</span></h2>
-  <p class="lede">Late-May 2026 research turned up items that change the math on this trip. Color-coded by type: red = risk, green = opportunity, blue = info.</p>
-
-  <div class="intel-grid" id="intel-grid">
-  </div>
+  <details class="accordion intel-acc">
+    <summary>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+      <h2>Critical Intel</h2>
+    </summary>
+    <div class="body">
+      <p class="lede">Late-May 2026 research turned up items that change the math on this trip. Color-coded by type: red = risk, green = opportunity, blue = info.</p>
+      <div class="intel-grid" id="intel-grid"></div>
+    </div>
+  </details>
 </section>
 
 <hr class="div">
@@ -981,10 +988,6 @@ details.accordion[open] .acc-progress .fill { display: none; }
   </search>
 
   <div class="dir-grid" id="outdoor-grid">
-  </div>
-
-  <div class="note-box" style="margin-top: 0.85rem;">
-    <strong>Coastal packing.</strong> Bring water shoes. NC sand is less powdery than the Gulf and shell beds are tough on bare feet.
   </div>
 </section>
 

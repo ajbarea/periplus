@@ -31,7 +31,9 @@ test('config-driven sections render from TRIP', async ({ page }) => {
   expect(await page.locator('#contacts-grid .contact').count()).toBe(7);
   expect(await page.locator('#arrival-timeline .row').count()).toBe(6);
   expect(await page.locator('#dayone-timeline .row').count()).toBe(14);
-  await expect(page.locator('#intel-grid').getByText('July heat')).toBeVisible();
+  // intel is a closed accordion by default — it renders from TRIP (DOM present) but stays collapsed
+  await expect(page.locator('#intel-grid .intel-card').filter({ hasText: 'July heat' })).toHaveCount(1);
+  expect(await page.locator('#intel > details').evaluate((d) => d.open)).toBe(false);
   await expect(page.locator('#weeks-list').getByText('Settle in')).toBeVisible();
   await expect(page.locator('#contacts-grid').getByText('Emily Keller (LAS host)')).toBeVisible();
 });

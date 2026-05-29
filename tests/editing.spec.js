@@ -110,6 +110,7 @@ test('card CRUD generalizes beyond directories (intel) and persists', async ({ p
   await page.locator('#edit-toggle').click();
   await expect(page.locator('.dir-add')).toHaveCount(10); // 5 card grids + 2 timelines + weeks + pretrip + packing
 
+  await page.locator('#intel summary').click(); // intel is a closed accordion — open it to reach its edit controls
   await page.locator('.dir-add[data-arr="intel"]').click();
   await expect(cards).toHaveCount(start + 1);
   await page.reload();
