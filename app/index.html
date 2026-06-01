@@ -1102,13 +1102,17 @@ details.accordion[open] .acc-progress .fill { display: none; }
 
 <script>
 // ===========================================================================
-// Calendar generation — 8 weeks Mon–Sun starting May 25, 2026 (Mon of week 0)
+// Trip dates + live-status state — derived from TRIP.meta (set below)
 // ===========================================================================
-const TRIP_START = new Date(2026, 4, 31);   // May 31, 2026 (Sun = arrival)
-const TRIP_END   = new Date(2026, 6, 25);   // Jul 25, 2026 (Sat = checkout)
-const TRIP_DAYS  = Math.round((TRIP_END - TRIP_START) / 86400000) + 1; // 56 — inclusive of checkout day
+// research(2026-06): parse YYYY-MM-DD via the local Date constructor, NOT new Date(str)
+// (parses as UTC midnight → off-by-one west of GMT) and NOT Temporal.PlainDate — Temporal
+// is unshipped in Safari/WebKit through ~late 2026, so on an installed iOS PWA it would
+// need a 20–56 KB polyfill that breaks the zero-dependency invariant (caniuse.com/temporal).
+const DEFAULT_META = { start: "2026-05-31", end: "2026-07-25", destination: "Raleigh" };
+const parseDate = (s) => { const [y, m, d] = String(s).split("-").map(Number); return new Date(y, m - 1, d); };
+// computeTripState() (re)derives these on load and on every import.
+let TRIP_START, TRIP_END, TRIP_DAYS, TRIP_TOTAL_MS, today, tripEnd, tripActive, tripPre, tripPost;
 
-// week markers: each row is the Mon-Sun span containing a trip week's main activity
 const TRIP = {
   food: [
     { name:"Lunchbox Deli", cat:"sandwich", meta:"Sandwich · Raleigh", note:"Turkey Basil on Rosemary Focaccia.", text:"lunchbox deli turkey basil rosemary focaccia raleigh", maps:"Lunchbox Deli, Raleigh, NC" },
@@ -1154,6 +1158,10 @@ const TRIP = {
 };
 window.TRIP = TRIP;
 
+// Portable trip facts — dates + destination travel with an export so import authors an
+// arbitrary trip (its calendar range + live status), not just restores this one's content.
+TRIP.meta = { ...DEFAULT_META };
+
 TRIP.calendar = {
   weekNotes: ["Settle in", "Umstead hike", "Durham day", "Beach overnight", "Asheville", "Hanging Rock", "Raven Rock", "Wrap-up"],
   events: [
@@ -1179,16 +1187,24 @@ TRIP.calendar = {
   ],
 };
 
-const WK1_MON = new Date(2026, 5, 1); // Mon Jun 1, 2026
-const weeks = TRIP.calendar.weekNotes.map((sub, i) => ({
-  label: `Wk ${i + 1}`, sub,
-  mon: new Date(WK1_MON.getFullYear(), WK1_MON.getMonth(), WK1_MON.getDate() + i * 7),
-}));
-
 // activity map (yyyy-mm-dd -> {cls, tag})
 const A = (k,v)=>v;
 const activity = {};
-TRIP.calendar.events.forEach(e => { activity[e.date] = e; });
+function computeTripState() {
+  const m = (TRIP && TRIP.meta) || DEFAULT_META;
+  TRIP_START = parseDate(m.start || DEFAULT_META.start);
+  TRIP_END   = parseDate(m.end   || DEFAULT_META.end);
+  TRIP_DAYS  = Math.round((TRIP_END - TRIP_START) / 86400000) + 1; // inclusive of checkout day
+  TRIP_TOTAL_MS = TRIP_END - TRIP_START;
+  today = new Date();
+  tripEnd = new Date(TRIP_END); tripEnd.setHours(23, 59, 59, 999); // checkout day still counts as in-trip
+  tripActive = today >= TRIP_START && today <= tripEnd;
+  tripPre = today < TRIP_START;
+  tripPost = today > tripEnd;
+  for (const k in activity) delete activity[k];          // import can swap the whole calendar
+  ((TRIP.calendar && TRIP.calendar.events) || []).forEach(e => { activity[e.date] = e; });
+}
+computeTripState();
 
 function ymd(d){ const z=n=>String(n).padStart(2,"0"); return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`; }
 function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
@@ -1222,12 +1238,6 @@ function icsUri(e){
   return "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
 }
 function addToCalHref(e, provider = getCalProvider()){ return provider === "apple" ? icsUri(e) : gcalUrl(e); }
-
-const today = new Date();
-const tripEnd = new Date(TRIP_END); tripEnd.setHours(23, 59, 59, 999); // checkout day counts as in-trip
-const tripActive = today >= TRIP_START && today <= tripEnd;
-const tripPre = today < TRIP_START;
-const tripPost = today > tripEnd;
 
 // Render calendar — Google-Calendar-style month grids (desktop) + agenda list (mobile)
 function renderCalendar(){
@@ -1282,12 +1292,12 @@ renderCalendar();
 const chip = document.getElementById("status-chip");
 const progressFill = document.getElementById("trip-progress-fill");
 const progressBar = progressFill?.parentElement;
-const TRIP_TOTAL_MS = TRIP_END - TRIP_START;
 function setStatus() {
+  const dest = (TRIP.meta && TRIP.meta.destination) || DEFAULT_META.destination;
   let pct = 0;
   if (tripPre) {
     const days = Math.ceil((TRIP_START - today) / 86400000);
-    chip.textContent = `T-${days} days to Raleigh`;
+    chip.textContent = `T-${days} days to ${dest}`;
     chip.className = "status-chip pre";
     pct = 0;
   } else if (tripActive) {
@@ -1309,15 +1319,16 @@ function setStatus() {
 setStatus();
 
 // ===========================================================================
-// "Today / Up next" widget — populates from activity[] + weeks[]
+// "Today / Up next" widget — populates from activity[]
 // ===========================================================================
-(function setNowCard() {
+function setNowCard() {
   const card = document.getElementById("now-card");
   const lab  = document.getElementById("now-label");
   const head = document.getElementById("now-headline");
   const sub  = document.getElementById("now-sub");
   const jump = document.getElementById("now-jump");
   if (!card) return;
+  card.classList.remove("is-pre", "is-live", "is-post"); // re-callable: reset before re-deriving
 
   const fmt = (d) => d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
   const todayKey = ymd(today);
@@ -1370,11 +1381,13 @@ setStatus();
     jump.href = "#" + (wkSection.id || "weeks");
   } else {
     card.classList.add("is-post");
+    const wks = Math.max(1, Math.round(TRIP_DAYS / 7));
     lab.textContent = "Trip complete";
-    head.textContent = "Eight weeks done.";
+    head.textContent = `${wks} week${wks === 1 ? "" : "s"} done.`;
     sub.textContent = "Calendar + checklists below stay as a record.";
   }
-})();
+}
+setNowCard();
 
 // ===========================================================================
 // Web Share API — share-from-laptop, native sheet on phone
@@ -2056,6 +2069,7 @@ if ('serviceWorker' in navigator) {
 
   // Re-render every content section from the current TRIP (used by import).
   function renderAll(){
+    computeTripState();   // re-derive dates/activity from TRIP.meta (import may change them)
     renderHero(); renderIntel(); renderAnchors(); renderContacts(); renderVenue();
     renderDirectories();
     renderWeeks(); expandCurrentWeek();
@@ -2065,12 +2079,13 @@ if ('serviceWorker' in navigator) {
     renderChecklist("packing-list", TRIP.packing, "packing");
     applyCheckState();
     renderCalendar();
+    setStatus(); setNowCard();   // live status follows the (re-derived) dates
     refreshEditable(document);
   }
 
   // Replace the whole trip from pasted JSON. Returns an error string, or null on success.
-  // Scope: the editable TRIP content (what export serializes) — dates and the bespoke
-  // "live status" widget are deploy-side, not part of the portable trip object.
+  // The whole TRIP serializes/round-trips, including TRIP.meta (dates + destination), so
+  // renderAll() → computeTripState() re-derives the calendar range + live status from it.
   function importTrip(text){
     let data;
     try { data = JSON.parse(text); }
@@ -2259,7 +2274,7 @@ if ('serviceWorker' in navigator) {
   modal.id = "edit-modal"; modal.className = "edit-modal"; modal.hidden = true;
   modal.innerHTML = '<div class="edit-modal-card" role="dialog" aria-modal="true" aria-label="Export or import trip">'
     + '<h3>Export or import your trip</h3>'
-    + '<p>Copy this JSON to back up or share your trip. Or paste a trip you exported earlier and load it — it replaces the content on this device (your dates and the live status widget stay as set in the source).</p>'
+    + '<p>Copy this JSON to back up or share your trip. Or paste a trip you exported earlier and load it — it replaces the content on this device, including the trip dates that drive the calendar and live status.</p>'
     + '<textarea id="edit-json" spellcheck="false"></textarea>'
     + '<p id="edit-import-err" class="edit-err" hidden role="alert"></p>'
     + '<div class="edit-modal-actions"><button type="button" id="edit-copy">Copy</button>'

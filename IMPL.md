@@ -10,12 +10,28 @@ Nothing open.
 
 ## Next pickup
 
-- **Offline maps (PMTiles + MapLibre)** — **accepted by AJ 2026-05-27, scheduled for
-  after the NC trip (post-May 31).** A knowingly-accepted exception to the zero-dep /
-  single-file invariant. See ROADMAP → Later for the approach + research links.
+- **Sections (no-code, remaining structure)** — add / delete / reorder / rename the top-level
+  page sections; the scaffold is static HTML, so each becomes a data-driven block. The biggest
+  blast radius of the vanilla no-code items — fine on the rig, but worth a ▶ from AJ first since
+  he's using the app in the field this trip.
+- **Offline maps (PMTiles + MapLibre)** — accepted by AJ 2026-05-27 for *after* the trip. The
+  one knowingly-accepted break of the zero-dep / single-file invariant (adds maplibre-gl + a
+  regional tile extract); needs an explicit "break zero-dep now" from AJ before starting,
+  especially mid-trip. See ROADMAP → Later for the approach + research links.
 
 ## Notes
 
+- **Full-trip portability — Stage 6 (2026-06-01).** Trip dates + destination moved out of
+  module constants into `TRIP.meta`, so export/import now round-trips the calendar range and
+  live status, not just content. `computeTripState()` re-derives the date envelope, active-window
+  flags, and the date→event index from `TRIP.meta`, and `renderAll()` re-runs it alongside
+  `setStatus()` / `setNowCard()` so an import moves the whole now-card + calendar with no reload.
+  Status chip reads `TRIP.meta.destination`; the post-trip headline derives weeks from the range
+  (no more hardcoded "Eight weeks"). Old exports without `meta` fall back to the built-in dates.
+  Removed the dead `WK1_MON` / `weeks` week-marker constants (a third hardcoded date, orphaned).
+  5 clock-mocked e2e in `tests/portability.spec.js`, 41 total. SW v14 → v15. See ROADMAP → Done.
+  research(2026-06): stayed on the local-`Date` parse idiom, NOT Temporal — Temporal is unshipped
+  in WebKit/iOS through ~late 2026 and would need a polyfill that breaks the zero-dep invariant.
 - **Content port complete + verified (2026-05-27).** The original single-file itinerary
   (`AJ_NC_Summer_Residency_2026.html/.md`, the pre-periplus source) is faithfully carried
   by the `TRIP` block: directories with orders/addresses/moved-closed + hours warnings,
