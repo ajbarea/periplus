@@ -1,0 +1,21 @@
+:root {
+  /* Periplus palette — matches the app + icon */
+  --periplus-navy: #0f172a;
+  --periplus-navy-2: #1e293b;
+  --periplus-sky: #38bdf8;
+  --periplus-sky-bright: #7dd3fc;
+  --periplus-ink: #f8fafc;
+  --periplus-amber: #f59e0b;
+  --periplus-muted: #94a3b8;
+
+  --hero-image: url('../assets/hero.jpeg');
+}
+
+/* Drive Material's slate scheme from the Periplus palette */
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: var(--periplus-navy);
+  --md-primary-fg-color--light: var(--periplus-navy-2);
+  --md-accent-fg-color: var(--periplus-sky);
+  --md-default-bg-color: var(--periplus-navy);
+  --md-typeset-a-color: var(--periplus-sky);
+}

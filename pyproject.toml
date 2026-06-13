@@ -1,0 +1,14 @@
+[project]
+name = "periplus"
+version = "0.1.0"
+description = "An offline-first, installable travel-itinerary PWA — fork it for your own multi-week trip."
+requires-python = ">=3.12,<3.14"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "zensical>=0.0.24",
+]
+
+[tool.uv]
+package = false

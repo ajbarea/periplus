@@ -1,0 +1,92 @@
+/* Periplus landing hero */
+.hero {
+  position: relative;
+  min-height: 58vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(2rem, 6vw, 5rem);
+  margin-bottom: 1.5rem;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: #0f172a;
+  background-image:
+    linear-gradient(90deg, #0f172a 0%, #0f172a 40%, rgba(15,23,42,0.45) 60%, rgba(15,23,42,0) 82%),
+    var(--hero-image);
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+}
+.hero h1 {
+  font-size: clamp(2.6rem, 6.5vw, 4.6rem);
+  line-height: 1.02;
+  margin: 0 0 .6rem;
+  letter-spacing: -0.03em;
+  color: var(--periplus-ink);
+}
+.hero .hero-subtitle {
+  max-width: 30ch;
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
+  line-height: 1.5;
+  color: #e2e8f0;
+  margin: 0;
+}
+.hero-buttons {
+  margin-top: 1.6rem;
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+  max-width: 30ch;
+}
+
+/* Primary CTA in the Periplus sky accent */
+.md-typeset .md-button--primary {
+  background: var(--periplus-sky);
+  border-color: var(--periplus-sky);
+  color: var(--periplus-navy);
+}
+.md-typeset .md-button--primary:hover {
+  background: var(--periplus-sky-bright);
+  border-color: var(--periplus-sky-bright);
+  color: var(--periplus-navy);
+}
+
+/* research(2026-05): primary CTA larger + heavier than the secondary — color
+   alone is an insufficient hierarchy signal; equal-sized buttons are an
+   anti-pattern. Mirrors phalanx-fl / kourai. Plus a hover lift on the main CTA. */
+.hero-buttons .md-button { transition: transform .2s ease, box-shadow .2s ease; }
+.hero-buttons .md-button--primary {
+  font-weight: 700;
+}
+.hero-buttons .md-button--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px color-mix(in oklab, var(--periplus-sky) 35%, transparent);
+}
+
+.landing-cta { text-align: center; }
+
+/* Hero entrance — title, subtitle, and buttons rise + fade in on load.
+   CSS-only and reduced-motion safe (skipped entirely when motion is reduced). */
+@media (prefers-reduced-motion: no-preference) {
+  .hero h1 { animation: hero-rise .6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .hero .hero-subtitle { animation: hero-rise .6s cubic-bezier(0.16, 1, 0.3, 1) .1s both; }
+  .hero-buttons { animation: hero-rise .6s cubic-bezier(0.16, 1, 0.3, 1) .2s both; }
+  @keyframes hero-rise {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* Mobile: vertical scrim over a centered image, full-width text */
+@media (max-width: 50rem) {
+  .hero {
+    min-height: 62vh;
+    background-image:
+      linear-gradient(180deg, rgba(15,23,42,0.30) 0%, rgba(15,23,42,0.58) 48%, rgba(15,23,42,0.36) 100%),
+      var(--hero-image);
+    background-position: center;
+  }
+  .hero h1,
+  .hero .hero-subtitle { text-shadow: 0 1px 16px rgba(15,23,42,0.9); }
+  .hero .hero-subtitle, .hero-buttons { max-width: none; }
+}

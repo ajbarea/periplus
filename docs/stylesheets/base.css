@@ -1,0 +1,104 @@
+/* Periplus — base tweaks over Material slate */
+.md-typeset h1,
+.md-typeset h2 { letter-spacing: -0.01em; }
+
+.md-typeset .lead {
+  font-size: 1.12rem;
+  line-height: 1.6;
+  color: var(--periplus-muted);
+}
+
+/* Feature cards (landing) */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+  text-align: left;
+}
+.feature-card {
+  padding: 1.25rem 1.35rem;
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--periplus-navy-2) 85%, transparent);
+  border: 1px solid color-mix(in oklab, var(--periplus-sky) 18%, transparent);
+}
+.feature-card h3 { margin: 0 0 .4rem; font-size: 1.05rem; }
+.feature-card p { margin: 0; color: var(--periplus-muted); font-size: .95rem; }
+
+/* Landing sections — centered prose with gentle alternating rhythm */
+.landing-section {
+  padding: 3.25rem 1.5rem;
+  text-align: center;
+  border-radius: 18px;
+  margin-bottom: 0.5rem;
+}
+.landing-section:nth-of-type(even) {
+  background: color-mix(in oklab, var(--periplus-navy-2) 50%, transparent);
+}
+.section-inner { max-width: 58rem; margin: 0 auto; }
+
+/* Scroll hint chevron under the hero */
+.scroll-hint {
+  text-align: center;
+  margin-top: -0.5rem;
+  padding-bottom: 0.5rem;
+}
+.scroll-chevron {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-right: 2px solid var(--periplus-sky);
+  border-bottom: 2px solid var(--periplus-sky);
+  transform: rotate(45deg);
+  opacity: 0.5;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-hint { animation: hint-bounce 2s ease-in-out infinite; }
+  @keyframes hint-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+}
+
+/* Brand mark in the footer copyright (inverted to white on the dark footer) */
+.md-copyright .brand-mark {
+  height: 1em;
+  width: auto;
+  vertical-align: -0.18em;
+  margin-left: 0.2rem;
+  opacity: 0.75;
+  filter: invert(1);
+}
+
+/* ==========================================================================
+   Interactivity — scroll-reveal + card hover, matching the sister docs
+   (reveal.js adds .js-ready on <html> and .visible per section as it enters
+   view). Easing is a touch smoother than the sisters' plain `ease`.
+   ========================================================================== */
+
+.feature-card {
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in oklab, var(--periplus-sky) 45%, transparent);
+  box-shadow: 0 8px 24px color-mix(in oklab, var(--periplus-sky) 18%, transparent);
+}
+
+/* research(2026-05): kept the IntersectionObserver reveal (reveal.js) over pure
+   CSS animation-timeline: view() — scroll-driven CSS is compositor-cheap but
+   Firefox support is still partial in 2026, and the IO version matches every
+   sister. Easing is ease-out (easeOutQuint), duration <700ms per current
+   guidance. Sources: MDN scroll-driven-animations; joshwcomeau.com. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js-ready .landing-section {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform .6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  html.js-ready .landing-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

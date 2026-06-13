@@ -1,0 +1,2341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafaf9">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d1117">
+<title>AJ's NC Summer Residency — June &amp; July 2026</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<!-- "default" = readable dark glyphs on a light bar with content below it; "black-translucent" forces
+     white status text that stays white over our light topbar (unreadable) and renders under the notch. -->
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Periplus">
+<meta name="description" content="An offline-first, installable travel-itinerary planner. The live demo is an 8-week North Carolina summer residency: food, hikes, beaches, week by week, all offline-ready.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Periplus">
+<meta property="og:title" content="Periplus: the live planner">
+<meta property="og:description" content="An installable travel itinerary that works offline. Tap any spot for directions; fork it for your own trip.">
+<meta property="og:image" content="https://ajbarea.github.io/periplus/assets/og.jpg">
+<meta property="og:url" content="https://ajbarea.github.io/periplus/app/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Periplus: the live planner">
+<meta name="twitter:description" content="An installable travel itinerary that works offline. Tap any spot for directions; fork it for your own trip.">
+<meta name="twitter:image" content="https://ajbarea.github.io/periplus/assets/og.jpg">
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #fafaf9;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --ink: #0f172a;
+  --ink-2: #334155;
+  --muted: #64748b;
+  --brand: #2563eb;
+  --brand-2: #1d4ed8;
+  --brand-ink: #ffffff;
+  --accent: #ea580c;
+  --hike: #16a34a;
+  --beach: #0891b2;
+  --mountain: #7c3aed;
+  --city: #db2777;
+  --warn: #b45309;
+  --hot: #dc2626;
+  --money: #15803d;
+  --info: #0369a1;
+  --rest: #64748b;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 5%);
+  --shadow: 0 4px 12px -2px rgb(15 23 42 / 8%), 0 2px 4px -2px rgb(15 23 42 / 4%);
+  --shadow-lg: 0 12px 30px -8px rgb(15 23 42 / 14%);
+  --max-w: 1180px;
+  --gutter: clamp(1rem, 2.5vw, 1.75rem);
+  --tap: 44px;
+}
+
+/* Dark theme lives in the screen + prefers-color-scheme block at the end of this stylesheet. */
+
+* { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth; scroll-padding-top: calc(var(--topbar-h, 50px) + var(--toc-h, 40px) + 8px);
+  /* Allow animating to/from intrinsic sizes (height: auto, etc.) — Baseline-coming */
+  interpolate-size: allow-keywords;
+}
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-size: 16px; line-height: 1.55;
+  /* Tap variable axes when system-ui resolves to a variable font (Segoe UI Variable on Win 11, SF Pro on macOS) */
+  font-variation-settings: "wght" 380;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+h1, h2, h3 { font-variation-settings: "wght" 680; }
+
+/* Consistent focus ring for keyboard users only */
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+input:focus-visible, button:focus-visible, summary:focus-visible, a:focus-visible {
+  outline-offset: 2px;
+}
+
+/* Animated custom property for progress fills (compositor-friendly) */
+@property --progress {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+a { color: var(--brand-2); text-underline-offset: 2px; }
+a:hover { color: var(--brand); }
+
+/* ---------- Top bar (sticky) ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgb(255 255 255 / 88%);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-inner {
+  max-width: var(--max-w); margin: 0 auto;
+  /* viewport-fit=cover: keep the bar clear of the notch / Dynamic Island and the landscape side-insets.
+     max() is a no-op in portrait (insets ~0) and only adds room where the safe area actually intrudes. */
+  padding: max(0.55rem, env(safe-area-inset-top)) max(var(--gutter), env(safe-area-inset-right)) 0.55rem max(var(--gutter), env(safe-area-inset-left));
+  display: flex; align-items: center; gap: 0.5rem 0.75rem;
+  flex-wrap: wrap; /* narrow screens: actions wrap to a second row instead of overflowing off-edge */
+}
+.brand-pill {
+  font-weight: 700; font-size: 0.95rem; color: var(--ink);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.brand-pill .dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--brand);
+  box-shadow: 0 0 0 3px rgb(37 99 235 / 18%);
+}
+.status-chip {
+  margin-left: auto;
+  font-size: 0.78rem; font-weight: 600;
+  padding: 0.3rem 0.7rem; border-radius: 999px;
+  background: var(--surface-2); color: var(--ink-2);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.status-chip.live { background: #ecfeff; color: #155e75; border-color: #a5f3fc; }
+.status-chip.pre  { background: #eff6ff; color: #1e3a8a; border-color: #bfdbfe; }
+.status-chip.post { background: #f5f5f4; color: #44403c; border-color: #e7e5e4; }
+
+.share-btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: var(--surface); color: var(--ink-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem 0.3rem 0.6rem;
+  min-height: 32px; cursor: pointer;
+  font-size: 0.82rem; font-weight: 700;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.share-btn:hover { border-color: var(--brand); color: var(--brand-2); }
+.share-btn svg { width: 14px; height: 14px; flex: 0 0 14px; }
+.theme-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; padding: 0;
+  border: 1px solid var(--border-strong); border-radius: 999px;
+  background: var(--surface); color: var(--ink-2); cursor: pointer;
+}
+.theme-toggle:hover { border-color: var(--brand); color: var(--brand-2); }
+.theme-toggle svg { width: 17px; height: 17px; }
+@media (max-width: 360px) {
+  .share-btn span { display: none; } /* topbar btn, no container-type ancestor — @media, not @container */
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  max-width: var(--max-w); margin: 0 auto;
+  padding: clamp(1.25rem, 3vw, 2.5rem) var(--gutter) 0.75rem;
+}
+.hero h1 {
+  font-size: clamp(1.6rem, 4.5vw, 2.6rem);
+  line-height: 1.1; margin: 0 0 0.4rem; letter-spacing: -0.02em;
+}
+.hero .sub {
+  color: var(--muted); font-size: clamp(0.95rem, 2vw, 1.05rem);
+  margin: 0 0 1rem;
+}
+.kv-grid {
+  display: grid; gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  margin-top: 1.25rem;
+}
+.kv {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 0.85rem 1rem;
+  display: flex; flex-direction: column; gap: 0.15rem;
+  box-shadow: var(--shadow-sm);
+}
+.kv .label {
+  font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--muted); font-weight: 700;
+}
+.kv .value { font-weight: 600; color: var(--ink); font-size: 0.95rem; }
+.kv .small { color: var(--muted); font-weight: 500; font-size: 0.85rem; }
+
+/* ---------- Nav (table of contents) ---------- */
+.toc {
+  position: sticky; top: var(--topbar-h, 50px); z-index: 40;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  margin-top: 1.25rem;
+}
+.toc-inner {
+  max-width: var(--max-w); margin: 0 auto;
+  padding: 0.4rem var(--gutter);
+  display: flex; gap: 0.4rem; overflow-x: auto;
+  scrollbar-width: thin;
+}
+.toc a {
+  flex: 0 0 auto;
+  font-size: 0.85rem; font-weight: 600; text-decoration: none;
+  color: var(--ink-2);
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  min-height: var(--tap);
+  display: inline-flex; align-items: center;
+}
+.toc a:hover { border-color: var(--brand); color: var(--brand-2); }
+.toc a.active { background: var(--brand); color: var(--brand-ink); border-color: var(--brand); }
+
+/* ---------- Sections ---------- */
+main { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--gutter) 4rem; }
+section { scroll-margin-top: calc(var(--topbar-h, 50px) + var(--toc-h, 40px) + 12px); padding-top: 1.75rem; }
+section h2 {
+  font-size: clamp(1.2rem, 2.6vw, 1.55rem);
+  margin: 0 0 0.5rem; letter-spacing: -0.01em;
+  display: flex; align-items: center; gap: 0.55rem;
+}
+section h2 .badge {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--muted);
+  background: var(--surface-2); padding: 0.2rem 0.55rem; border-radius: 999px;
+  border: 1px solid var(--border);
+}
+section p.lede { color: var(--ink-2); margin: 0 0 1rem; max-width: 70ch; }
+/* Critical Intel is a closed accordion: keep its <h2> in the heading outline but size it like a summary title. */
+details.accordion > summary h2 { margin: 0; font-size: 1rem; }
+
+/* ---------- Card primitive ---------- */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1rem 1.1rem;
+  box-shadow: var(--shadow-sm);
+  container-type: inline-size;
+}
+.card + .card { margin-top: 0.75rem; }
+.card h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
+.card .row { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; color: var(--ink-2); font-size: 0.92rem; }
+.card .row > div { display: flex; gap: 0.35rem; align-items: baseline; }
+.card .row .k { color: var(--muted); font-weight: 600; font-size: 0.78rem;
+  text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ---------- Calendar ---------- */
+.cal-legend {
+  display: flex; flex-wrap: wrap; gap: 0.4rem 0.75rem;
+  margin: 0.5rem 0 1rem; font-size: 0.78rem; color: var(--ink-2);
+}
+.cal-legend .swatch {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+}
+.cal-legend i {
+  width: 12px; height: 12px; border-radius: 3px; display: inline-block;
+}
+
+/* ---------- Hour table ---------- */
+.timeline {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.timeline .row {
+  display: grid;
+  grid-template-columns: minmax(86px, 110px) 1fr;
+  border-top: 1px solid var(--border);
+  padding: 0.55rem 0.85rem;
+  gap: 0.75rem;
+  align-items: baseline;
+}
+.timeline .row:first-child { border-top: none; }
+.timeline .row .t {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700; color: var(--ink); font-size: 0.92rem;
+}
+.timeline .row .a { color: var(--ink-2); font-size: 0.95rem; }
+.timeline .row.highlight {
+  background: linear-gradient(90deg, color-mix(in oklch, var(--accent) 12%, var(--surface)), var(--surface));
+  border-left: 4px solid var(--accent);
+}
+.timeline .row.highlight .t,
+.timeline .row.highlight .a { color: var(--ink); }
+
+/* ---------- Week-by-week ---------- */
+.week-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 0; margin-bottom: 0.75rem;
+  box-shadow: var(--shadow-sm); overflow: clip;
+  container-type: inline-size;
+}
+.week-card.is-current {
+  border-color: color-mix(in oklch, var(--accent) 55%, var(--border));
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 15%, transparent), var(--shadow);
+}
+.week-card > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.85rem 1rem;
+  display: flex; align-items: center; gap: 0.75rem;
+  min-height: var(--tap);
+}
+.week-card > summary::-webkit-details-marker { display: none; }
+.week-card > summary .wk {
+  font-weight: 700; font-size: 0.95rem;
+  display: flex; flex-direction: column;
+}
+.week-card > summary .wk small {
+  font-weight: 500; color: var(--muted); font-size: 0.78rem;
+}
+.week-card > summary .tag {
+  margin-left: auto;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em;
+  padding: 0.25rem 0.55rem; border-radius: 999px;
+  background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--border);
+  text-transform: uppercase;
+}
+.week-card > summary .chev {
+  width: 18px; height: 18px; transition: transform 0.2s ease;
+  color: var(--muted); flex: 0 0 auto;
+}
+.week-card[open] > summary .chev { transform: rotate(90deg); }
+.week-card .body { padding: 0 1rem 1rem; }
+.week-card .body ul { margin: 0; padding-left: 1.1rem; color: var(--ink-2); }
+.week-card .body li { margin: 0.25rem 0; }
+.week-card .body li b { color: var(--ink); }
+
+.tag.hike     { background: color-mix(in oklch, var(--hike) 12%, var(--surface)); color: var(--hike); border-color: color-mix(in oklch, var(--hike) 35%, transparent); }
+.tag.beach    { background: color-mix(in oklch, var(--beach) 12%, var(--surface)); color: var(--beach); border-color: color-mix(in oklch, var(--beach) 35%, transparent); }
+.tag.mountain { background: color-mix(in oklch, var(--mountain) 12%, var(--surface)); color: var(--mountain); border-color: color-mix(in oklch, var(--mountain) 40%, transparent); }
+.tag.city     { background: color-mix(in oklch, var(--city) 12%, var(--surface)); color: var(--city); border-color: color-mix(in oklch, var(--city) 35%, transparent); }
+.tag.travel   { background: color-mix(in oklch, var(--brand) 12%, var(--surface)); color: var(--brand-2); border-color: color-mix(in oklch, var(--brand) 35%, transparent); }
+.tag.rest     { background: var(--surface-2); color: var(--ink-2); }
+
+/* ---------- Directory (food/outdoor) ---------- */
+.dir-toolbar {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+  margin-bottom: 0.75rem;
+}
+.dir-search {
+  flex: 1 1 220px;
+  min-height: var(--tap);
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface); color: var(--ink);
+  font-size: 0.95rem;
+}
+.dir-search:focus { outline: 2px solid var(--brand); outline-offset: 1px; border-color: var(--brand); }
+.dir-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.dir-count { margin: 0 0 0.55rem; font-size: 0.82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.dir-chip {
+  font-size: 0.8rem; font-weight: 600; color: var(--ink-2);
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer; min-height: var(--tap);
+  display: inline-flex; align-items: center;
+}
+.dir-chip[aria-pressed="true"] {
+  background: var(--ink); color: var(--surface); border-color: var(--ink);
+}
+
+.dir-grid {
+  display: grid; gap: 0.65rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+}
+.dir-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 0.8rem 0.95rem;
+  display: flex; flex-direction: column; gap: 0.3rem;
+  box-shadow: var(--shadow-sm);
+}
+.dir-item .name {
+  display: flex; gap: 0.5rem; align-items: baseline;
+  font-weight: 700; color: var(--ink); font-size: 0.97rem;
+}
+.dir-item .meta {
+  color: var(--muted); font-size: 0.78rem;
+  text-transform: uppercase; letter-spacing: 0.04em; font-weight: 700;
+}
+.dir-item .note { color: var(--ink-2); font-size: 0.9rem; line-height: 1.45; }
+.dir-item .warn {
+  display: inline-block; font-size: 0.72rem; font-weight: 700;
+  background: color-mix(in oklch, var(--warn) 12%, var(--surface));
+  color: var(--warn);
+  padding: 0.15rem 0.5rem; border-radius: 999px;
+  border: 1px solid color-mix(in oklch, var(--warn) 35%, transparent);
+  margin-top: 0.2rem; align-self: flex-start;
+}
+.dir-item[hidden] { display: none; }
+.dir-empty {
+  padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.9rem;
+  background: var(--surface-2); border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+
+/* ---------- Checklist ---------- */
+details.accordion {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 0.65rem;
+  overflow: clip; box-shadow: var(--shadow-sm);
+}
+details.accordion > summary {
+  list-style: none;
+  cursor: pointer; min-height: var(--tap);
+  padding: 0.75rem 1rem;
+  display: flex; align-items: center; gap: 0.75rem;
+  font-weight: 700; color: var(--ink);
+}
+details.accordion > summary::-webkit-details-marker { display: none; }
+details.accordion > summary .chev {
+  width: 16px; height: 16px; transition: transform 0.2s ease;
+  color: var(--muted);
+}
+details.accordion[open] > summary .chev { transform: rotate(90deg); }
+details.accordion > summary .count {
+  margin-left: auto;
+  font-size: 0.78rem; font-weight: 600; color: var(--muted);
+  background: var(--surface-2); padding: 0.2rem 0.6rem; border-radius: 999px;
+  border: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+}
+details.accordion[open]:has(.checklist li.checked) > summary .count {
+  /* :has demo: highlight count when there are checked items inside */
+  color: var(--hike); border-color: color-mix(in oklch, var(--hike) 35%, transparent);
+  background: color-mix(in oklch, var(--hike) 10%, var(--surface));
+}
+details.accordion .body { padding: 0 1rem 0.9rem; }
+
+ul.checklist {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; gap: 0.2rem;
+}
+ul.checklist li {
+  display: flex; align-items: flex-start; gap: 0.65rem;
+  padding: 0.5rem 0.55rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  min-height: var(--tap);
+}
+ul.checklist li:hover { background: var(--surface-2); }
+ul.checklist input[type="checkbox"] {
+  appearance: none;
+  width: 22px; height: 22px; flex: 0 0 22px;
+  border-radius: 6px; border: 2px solid var(--border-strong);
+  background: var(--surface);
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-top: 0.05rem;
+  transition: background 0.15s, border-color 0.15s;
+}
+ul.checklist input[type="checkbox"]:checked {
+  background: var(--hike); border-color: var(--hike);
+}
+ul.checklist input[type="checkbox"]:checked::after {
+  content: ""; display: block;
+  width: 6px; height: 11px;
+  border: solid white; border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+ul.checklist input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--brand); outline-offset: 2px;
+}
+ul.checklist li.checked label {
+  color: var(--muted); text-decoration: line-through;
+}
+ul.checklist label {
+  cursor: pointer; color: var(--ink-2);
+  font-size: 0.94rem; flex: 1;
+  user-select: none;
+}
+
+/* ---------- Contacts ---------- */
+.contacts-grid {
+  display: grid; gap: 0.65rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+}
+.contact {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 0.85rem 1rem;
+  box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column; gap: 0.25rem;
+}
+.contact .who { font-weight: 700; color: var(--ink); font-size: 0.95rem; }
+.contact .info { color: var(--ink-2); font-size: 0.88rem; word-break: break-word; }
+.contact .info a { color: var(--brand-2); text-decoration: none; }
+.contact .info a:hover { text-decoration: underline; }
+.contact .use { color: var(--muted); font-size: 0.82rem; }
+
+/* ---------- Misc ---------- */
+.note-box {
+  background: color-mix(in oklch, var(--brand) 6%, var(--surface));
+  border: 1px solid color-mix(in oklch, var(--brand) 25%, transparent);
+  color: var(--ink-2);
+  padding: 0.7rem 0.95rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+}
+.note-box.warn {
+  background: color-mix(in oklch, var(--warn) 8%, var(--surface));
+  border-color: color-mix(in oklch, var(--warn) 30%, transparent);
+}
+
+hr.div { border: none; border-top: 1px solid var(--border); margin: 2rem 0 0; }
+
+footer.foot {
+  max-width: var(--max-w); margin: 2rem auto 0;
+  padding: 1.5rem var(--gutter) 2rem;
+  color: var(--muted); font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; gap: 0.9rem;
+}
+footer.foot .brand-mark { height: 1em; width: auto; vertical-align: -0.16em; margin: 0 0.15rem; opacity: 0.8; }
+footer.foot a { color: var(--muted); display: inline-flex; transition: color 0.2s; }
+footer.foot a:hover { color: var(--ink); }
+/* footer brand mark inverts under data-theme="dark" — see the theming block below. */
+
+/* ---------- Container queries: stack rows on narrow cards ---------- */
+@container (max-width: 480px) {
+  .card .row { gap: 0.25rem; }
+}
+
+/* ---------- View transitions: smooth accordion open/close ---------- */
+@supports (view-transition-name: a) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation-duration: 0.2s; }
+}
+
+/* ---------- Topbar progress bar ---------- */
+.topbar { padding-bottom: 0; }
+.trip-progress {
+  height: 3px; width: 100%;
+  background: var(--surface-2);
+  position: relative; overflow: hidden;
+}
+.trip-progress .fill {
+  position: absolute; inset: 0 auto 0 0;
+  width: 0%;
+  background: linear-gradient(90deg, var(--brand), var(--accent));
+  transition: width 0.6s ease;
+}
+
+/* ---------- Intel cards (color-coded by type) ---------- */
+.intel-grid {
+  display: grid; gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  margin-top: 0.5rem;
+}
+.intel-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--brand);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem 0.85rem 0.9rem;
+  display: flex; flex-direction: column; gap: 0.2rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+@media (hover: hover) {
+  .intel-card:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+}
+.intel-card .label {
+  font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase;
+  font-weight: 700; display: inline-flex; align-items: center; gap: 0.4rem;
+  color: var(--muted);
+}
+.intel-card .label .ico {
+  width: 14px; height: 14px; flex: 0 0 14px;
+}
+.intel-card .value { font-weight: 700; color: var(--ink); font-size: 0.98rem; }
+.intel-card .small { color: var(--ink-2); font-weight: 500; font-size: 0.86rem; line-height: 1.45; }
+
+.intel-card[data-type="budget"]      { border-left-color: var(--warn);  background: color-mix(in oklch, var(--warn) 4%, var(--surface)); }
+.intel-card[data-type="budget"] .label   { color: var(--warn); }
+.intel-card[data-type="risk"]        { border-left-color: var(--hot);   background: color-mix(in oklch, var(--hot) 4%, var(--surface)); }
+.intel-card[data-type="risk"] .label     { color: var(--hot); }
+.intel-card[data-type="opportunity"] { border-left-color: var(--hike);  background: color-mix(in oklch, var(--hike) 4%, var(--surface)); }
+.intel-card[data-type="opportunity"] .label { color: var(--hike); }
+.intel-card[data-type="info"]        { border-left-color: var(--info);  background: color-mix(in oklch, var(--info) 4%, var(--surface)); }
+.intel-card[data-type="info"] .label     { color: var(--info); }
+
+/* ---------- Savings callout (special note-box variant) ---------- */
+.savings-callout {
+  margin-top: 1rem;
+  background: linear-gradient(135deg, color-mix(in oklch, var(--money) 10%, var(--surface)), color-mix(in oklch, var(--hike) 6%, var(--surface)));
+  border: 1px solid color-mix(in oklch, var(--money) 30%, transparent);
+  border-left: 4px solid var(--money);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  display: grid; grid-template-columns: 38px 1fr; gap: 0.8rem;
+  align-items: center;
+}
+.savings-callout .badge-ico {
+  width: 38px; height: 38px; border-radius: 999px;
+  background: var(--money); color: white;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: 0 0 38px;
+}
+.savings-callout .badge-ico svg { width: 20px; height: 20px; }
+.savings-callout strong { color: var(--money); }
+
+/* ---------- Directory item hover lift (desktop only) ---------- */
+.dir-item {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+@media (hover: hover) {
+  .dir-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+    border-color: color-mix(in oklch, var(--brand) 30%, var(--border));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trip-progress .fill { transition: none; }
+}
+
+/* ---------- "Today / Up next" widget in hero ---------- */
+.now-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 1rem 0 0.25rem;
+  padding: 0.9rem 1.05rem;
+  background: linear-gradient(135deg, color-mix(in oklch, var(--brand) 8%, var(--surface)), color-mix(in oklch, var(--accent) 6%, var(--surface)));
+  border: 1px solid color-mix(in oklch, var(--brand) 25%, transparent);
+  border-left: 4px solid var(--brand);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+.now-card .now-ico {
+  width: 42px; height: 42px; border-radius: 12px;
+  background: var(--brand); color: white;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.now-card .now-ico svg { width: 22px; height: 22px; }
+.now-card .now-body { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+.now-card .now-label {
+  font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+  font-weight: 700; color: var(--brand-2);
+}
+.now-card .now-headline {
+  font-weight: 700; color: var(--ink); font-size: 1.02rem; line-height: 1.35;
+}
+.now-card .now-sub {
+  color: var(--ink-2); font-size: 0.88rem; line-height: 1.4;
+}
+.now-card .now-jump {
+  text-decoration: none; font-weight: 700; font-size: 0.82rem;
+  padding: 0.55rem 0.85rem; border-radius: 999px;
+  background: var(--brand); color: white;
+  min-height: var(--tap); display: inline-flex; align-items: center;
+  white-space: nowrap;
+}
+.now-card .now-jump:hover { background: var(--brand-2); color: white; }
+.now-card.is-live { border-left-color: var(--hike); }
+.now-card.is-live .now-ico { background: var(--hike); }
+.now-card.is-live .now-label { color: var(--hike); }
+.now-card.is-live .now-jump { background: var(--hike); }
+.now-card.is-live .now-jump:hover { background: color-mix(in oklch, var(--hike) 80%, black); }
+.now-card.is-post { border-left-color: var(--rest); opacity: 0.85; }
+.now-card.is-post .now-ico { background: var(--rest); }
+.now-card.is-post .now-label { color: var(--rest); }
+.now-card.is-post .now-jump { display: none; }
+
+/* @media, not @container: the now-card is a full-width hero element with no
+   container-type ancestor, so a container query here never fired (dead rule). */
+@media (max-width: 480px) {
+  .now-card { grid-template-columns: auto 1fr; }
+  .now-card .now-jump { grid-column: 1 / -1; justify-content: center; }
+}
+
+/* ---------- Scroll-driven reveal for week cards & directory items ---------- */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes revealIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .week-card, .intel-card, .dir-item, .contact, .savings-callout {
+      animation: revealIn linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 25%;
+    }
+  }
+}
+
+/* ---------- content-visibility for scroll perf ---------- */
+.week-card { content-visibility: auto; contain-intrinsic-size: 0 220px; }
+details.accordion { content-visibility: auto; contain-intrinsic-size: 0 80px; }
+
+/* ---------- Smooth accordion height (interpolate-size makes height:auto animatable) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  details.accordion .body,
+  .week-card .body {
+    overflow: clip;
+    transition: height 0.3s ease, opacity 0.3s ease;
+  }
+}
+
+/* ---------- Checklist accordion progress bar ---------- */
+details.accordion .acc-progress {
+  height: 3px; width: 100%;
+  background: var(--surface-2);
+  position: relative; overflow: hidden;
+}
+details.accordion .acc-progress .fill {
+  position: absolute; inset: 0 auto 0 0;
+  width: 0%;
+  background: var(--hike);
+  transition: width 0.25s ease;
+}
+details.accordion[open] .acc-progress { background: transparent; }
+details.accordion[open] .acc-progress .fill { display: none; }
+
+/* ---------- Print ---------- */
+@media print {
+  :root { --shadow-sm: none; --shadow: none; --shadow-lg: none; }
+  body { background: white; }
+  .topbar, .toc, .dir-toolbar, .trip-progress, .acc-progress { display: none; }
+  section { break-inside: avoid; }
+  .week-card, .card, .timeline, .accordion, .contact, .kv, .intel-card, .savings-callout { box-shadow: none; }
+  .intel-card { background: white; border-left-width: 3px; }
+  details.accordion, .week-card { break-inside: avoid; }
+  details:not([open]) > summary + * { display: revert; } /* expand everything for print */
+  details > summary .chev { display: none; }
+  a { color: black; text-decoration: none; }
+}
+  /* Maps provider toggle + Directions links (Periplus) */
+  .maps-toggle { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; flex-basis:100%; margin:.15rem 0 0; padding:0; border:0; font-size:.82rem; color:var(--muted); }
+  .maps-toggle-label { font-weight:600; color:var(--ink-2); }
+  .maps-toggle label { display:inline-flex; align-items:center; gap:.25rem; cursor:pointer; white-space:nowrap; }
+  .maps-toggle input { accent-color:var(--brand); }
+  .dir-go { display:inline-block; margin-top:.6rem; font-weight:600; font-size:.85rem; text-decoration:none; color:var(--brand); }
+  .dir-go:hover { text-decoration:underline; }
+  .dir-go::before { content:"\2192\00a0"; }
+  .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+  /* Accessibility + CLS fixes (Lighthouse) */
+  section h2 .badge { color: var(--ink-2); }
+  ul.checklist input[type="checkbox"] { width: 28px; height: 28px; flex: 0 0 28px; }
+  ul.checklist li { padding-block: 6px; }
+  #cal-months { min-height: 900px; }  /* CLS reservation: desktop month grid (~905px rendered) */
+  #cal-agenda { min-height: 1160px; } /* CLS reservation: mobile agenda list (~1169px rendered) */
+  #food-grid { min-height: 600px; }
+  #outdoor-grid { min-height: 360px; }
+
+  /* week-card / anchor tag text, darkened for AA contrast on light surfaces */
+  .tag.hike { color: color-mix(in oklab, var(--hike) 48%, #000); }
+  .tag.beach { color: color-mix(in oklab, var(--beach) 48%, #000); }
+  .tag.mountain { color: color-mix(in oklab, var(--mountain) 72%, #000); }
+  .tag.city { color: color-mix(in oklab, var(--city) 54%, #000); }
+  .tag.travel { color: color-mix(in oklab, var(--brand-2) 80%, #000); }
+  details.accordion > summary .count { color: var(--ink-2); }
+  details.accordion[open]:has(.checklist li.checked) > summary .count { color: color-mix(in oklab, var(--hike) 50%, #000); }
+
+.cal-toggle { margin: .8rem 0 .2rem; }
+
+/* ---------- Google-Calendar-style month view + agenda ---------- */
+.cal-month { margin: 0 0 1.5rem; }
+.cal-mh { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.01em; margin: 0 0 0.5rem; }
+.cal-dow { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 4px; }
+.cal-dow span { text-align: center; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.cal-cells { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-day { min-height: 74px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--border); padding: 4px 5px; display: flex; flex-direction: column; gap: 3px; }
+.cal-day--pad { background: transparent; border: none; }
+.cal-dnum { font-size: 0.72rem; font-weight: 600; color: var(--muted); }
+.cal-day.is-today { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.cal-day.is-today .cal-dnum { color: var(--accent); font-weight: 800; }
+.cal-chip { display: block; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: #fff; text-decoration: none; padding: 2px 6px; border-radius: 5px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: filter 0.12s ease, transform 0.12s ease; }
+.cal-chip:hover { filter: brightness(1.08); transform: translateY(-1px); }
+/* research(2026-05): chip text is #fff, so backgrounds need AA 4.5:1. --hike (3.30:1) and --beach (3.68:1) fail undarkened; darken ~80% in oklab -> 5.6:1 / 6.2:1. mountain/city/travel/rest pass at base. https://webaim.org/articles/contrast/ */
+.cal-chip.hike{background:color-mix(in oklab,var(--hike) 80%,#000)} .cal-chip.beach{background:color-mix(in oklab,var(--beach) 80%,#000)} .cal-chip.mountain{background:var(--mountain)} .cal-chip.city{background:var(--city)} .cal-chip.travel{background:var(--brand)} .cal-chip.rest{background:var(--rest)}
+.cal-agenda { display: none; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+.cal-ag { display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 0.85rem; border-bottom: 1px solid var(--border); text-decoration: none; color: var(--ink); min-height: 48px; }
+.cal-ag:last-child { border-bottom: none; }
+.cal-ag:active { background: var(--surface-2); }
+.cal-ag-dot { width: 11px; height: 11px; border-radius: 50%; flex: 0 0 11px; }
+.cal-ag.hike .cal-ag-dot{background:var(--hike)} .cal-ag.beach .cal-ag-dot{background:var(--beach)} .cal-ag.mountain .cal-ag-dot{background:var(--mountain)} .cal-ag.city .cal-ag-dot{background:var(--city)} .cal-ag.travel .cal-ag-dot{background:var(--brand)} .cal-ag.rest .cal-ag-dot{background:var(--rest)}
+.cal-ag-date { font-size: 0.78rem; font-weight: 700; color: var(--muted); flex: 0 0 5.2rem; }
+.cal-ag-title { font-size: 0.92rem; font-weight: 600; flex: 1; }
+.cal-ag-add { font-size: 1.2rem; font-weight: 800; color: var(--accent); flex: 0 0 auto; }
+@media (max-width: 640px) {
+  .cal-months { display: none; }
+  .cal-agenda { display: block; }
+  .cal-legend { display: none; }
+}
+
+/* Mobile tap targets (>=44px touch guideline) */
+@media (max-width: 640px) {
+  .dir-go { min-height: 44px; padding: 0 14px; display: inline-flex; align-items: center; border: 1px solid color-mix(in oklch, var(--brand) 35%, transparent); border-radius: 10px; font-size: 0.9rem; }
+  .share-btn { min-height: 40px; }
+  .theme-toggle { width: 44px; height: 44px; }
+  .maps-toggle label { min-height: 40px; padding: 4px 6px; }
+}
+/* Dark theme — applied via data-theme="dark" (toggle or OS-resolved before first paint); one set of
+   dark values, no media duplication, print stays light, light path byte-identical (surface is #fff).
+   research(2026-05): prefers-color-scheme token flip, off-white ink, no pure black/white (web.dev/MDN). */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface-2: #20262e;
+  --border: #2a313c;
+  --border-strong: #3d444d;
+  --ink: #e6edf3;
+  --ink-2: #b3bdc9;
+  --muted: #8b949e;
+  --brand: #1f6feb;      /* solid-button fill; #fff text passes AA */
+  --brand-2: #79c0ff;    /* brand-as-text on dark (links, accents) */
+  --accent: #f0883e;
+  --hike: #56d364;
+  --beach: #56cfe1;
+  --mountain: #c4a3ff;
+  --city: #ff8dc7;
+  --warn: #e3b341;
+  --hot: #ff7b72;
+  --money: #56d364;
+  --info: #79c0ff;
+  --rest: #9aa6b2;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 45%);
+  --shadow: 0 6px 16px -4px rgb(0 0 0 / 55%), 0 2px 6px -2px rgb(0 0 0 / 45%);
+  --shadow-lg: 0 14px 34px -10px rgb(0 0 0 / 65%);
+}
+/* light-surface-baked rules re-pointed for dark (tokens above cover the rest) */
+:root[data-theme="dark"] .topbar { background: rgb(13 17 23 / 85%); }
+:root[data-theme="dark"] .status-chip.live { background:#072a30; color:#67e8f9; border-color:#155e75; }
+:root[data-theme="dark"] .status-chip.pre  { background:#0c1f3d; color:#93c5fd; border-color:#1e40af; }
+:root[data-theme="dark"] .status-chip.post { background:#1c1a17; color:#d6d3d1; border-color:#44403c; }
+:root[data-theme="dark"] .tag.hike{color:var(--hike)} :root[data-theme="dark"] .tag.beach{color:var(--beach)} :root[data-theme="dark"] .tag.mountain{color:var(--mountain)} :root[data-theme="dark"] .tag.city{color:var(--city)} :root[data-theme="dark"] .tag.travel{color:var(--brand-2)}
+:root[data-theme="dark"] .now-card .now-jump:hover { background: var(--brand-2); color: var(--bg); }
+:root[data-theme="dark"] .dir-go { color: var(--brand-2); }
+:root[data-theme="dark"] .cal-chip.hike{background:#1f7a34} :root[data-theme="dark"] .cal-chip.beach{background:#0c7489} :root[data-theme="dark"] .cal-chip.mountain{background:#7048e8} :root[data-theme="dark"] .cal-chip.city{background:#be2a63} :root[data-theme="dark"] .cal-chip.travel{background:#1c64c4} :root[data-theme="dark"] .cal-chip.rest{background:#566372}
+:root[data-theme="dark"] footer.foot .brand-mark { filter: invert(1); }
+</style>
+<script>
+/* Resolve theme before first paint (no flash). Choice ("auto"|"light"|"dark") persists in
+   localStorage; <html data-theme> always carries the resolved light|dark for the CSS above. */
+(function () {
+  try {
+    var c = localStorage.getItem("periplus:theme") || "auto";
+    var dark = c === "dark" || (c === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+  } catch (e) {}
+})();
+</script>
+</head>
+<body>
+
+<!-- Sticky top bar -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <span class="brand-pill"><span class="dot"></span>AJ &middot; NC Summer Residency</span>
+    <span id="status-chip" class="status-chip pre">Loading…</span>
+    <button id="share-btn" class="share-btn" type="button" aria-label="Share this itinerary" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.6 13.5l6.8 3M15.4 7.5l-6.8 3"/></svg>
+      <span>Share</span>
+    </button>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Theme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"></svg>
+    </button>
+  </div>
+  <div class="trip-progress" role="progressbar" aria-label="Trip progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div class="fill" id="trip-progress-fill"></div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero" id="overview" aria-label="Overview">
+  <h1 id="hero-title" data-edit="title">North Carolina Summer Residency</h1>
+  <p class="sub" id="hero-sub" data-edit="subtitle">SCADS Research Residency &middot; NC State LAS &middot; <strong>Sun May 31 → Sat Jul 25, 2026</strong></p>
+
+  <aside class="now-card" id="now-card" aria-live="polite">
+    <span class="now-ico" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    </span>
+    <div class="now-body">
+      <span class="now-label" id="now-label">Loading…</span>
+      <span class="now-headline" id="now-headline"></span>
+      <span class="now-sub" id="now-sub"></span>
+    </div>
+    <a class="now-jump" id="now-jump" href="#arrival">Jump in</a>
+  </aside>
+
+  <div class="kv-grid" id="kv-grid">
+  </div>
+</section>
+
+<!-- TOC -->
+<nav class="toc" aria-label="Sections">
+  <div class="toc-inner">
+    <a href="#intel">Intel</a>
+    <a href="#calendar">Calendar</a>
+    <a href="#arrival">Arrival</a>
+    <a href="#day-one">Day 1</a>
+    <a href="#venue">Venue</a>
+    <a href="#anchors">Anchors</a>
+    <a href="#weeks">Weeks</a>
+    <a href="#food">Food</a>
+    <a href="#outdoor">Outdoor</a>
+    <a href="#pretrip">Pre-trip</a>
+    <a href="#packing">Packing</a>
+    <a href="#contacts">Contacts</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- Critical intel — closed accordion (verified pre-trip; kept a tap away, expands for print) -->
+<section id="intel">
+  <details class="accordion intel-acc">
+    <summary>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+      <h2>Critical Intel</h2>
+    </summary>
+    <div class="body">
+      <p class="lede">Late-May 2026 research turned up items that change the math on this trip. Color-coded by type: red = risk, green = opportunity, blue = info.</p>
+      <div class="intel-grid" id="intel-grid"></div>
+    </div>
+  </details>
+</section>
+
+<hr class="div">
+
+<!-- 8-week calendar -->
+<section id="calendar">
+  <h2>The 8 Weeks at a Glance <span class="badge">Calendar</span></h2>
+  <p class="lede">Color-coded by what's happening, with today highlighted. <strong>Tap any event to add it to Google or Apple Calendar.</strong></p>
+
+  <div class="cal-legend">
+    <span class="swatch"><i style="background:var(--brand)"></i> Travel day</span>
+    <span class="swatch"><i style="background:var(--hike)"></i> Hike / parks</span>
+    <span class="swatch"><i style="background:var(--beach)"></i> Beach</span>
+    <span class="swatch"><i style="background:var(--mountain)"></i> Mountains (Asheville)</span>
+    <span class="swatch"><i style="background:var(--city)"></i> City day-trip</span>
+    <span class="swatch"><i style="background:var(--rest)"></i> Rest / catch-up</span>
+  </div>
+  <fieldset class="maps-toggle cal-toggle" aria-label="Calendar app for events">
+    <legend class="sr-only">Calendar app for events</legend>
+    <span class="maps-toggle-label">Add events to</span>
+    <label><input type="radio" name="cal" id="cal-google" value="google"> Google</label>
+    <label><input type="radio" name="cal" id="cal-apple" value="apple"> Apple</label>
+  </fieldset>
+
+  <div id="cal-months" class="cal-months"></div>
+  <div id="cal-agenda" class="cal-agenda"></div>
+</section>
+
+<hr class="div">
+
+<!-- Arrival day -->
+<section id="arrival">
+  <h2>Arrival Day <span class="badge">Sun May 31</span></h2>
+  <p class="lede">~652 mi / ~10 hr 11 min of pure driving — ~11.5 hr door-to-door. Single-day drive. Target arrival 4:00–5:00 PM.</p>
+
+  <div class="timeline" id="arrival-timeline">
+  </div>
+</section>
+
+<!-- Day 1 -->
+<section id="day-one">
+  <h2>Day 1 — Monday, June 1 <span class="badge">Hour-by-hour</span></h2>
+  <p class="lede">The single highest-stakes day of the residency. You like arriving early; drive yourself so you get the prime pre-kickoff hour.</p>
+
+  <div class="timeline" id="dayone-timeline">
+  </div>
+
+  <div class="card" style="margin-top: 0.85rem;">
+    <h3>Day 1 bag</h3>
+    <p style="margin:0; color: var(--ink-2);">Laptop + charger &middot; notebook + 2 pens &middot; water bottle &middot; RIT ID, license, NCSU Unity ID info &middot; light layer (offices over-AC) &middot; phone fully charged + battery pack.</p>
+  </div>
+</section>
+
+<!-- Venue -->
+<section id="venue">
+  <h2>Venue Logistics</h2>
+
+  <div id="venue-card"></div>
+</section>
+
+<!-- Trip anchors -->
+<section id="anchors">
+  <h2>Trip Anchors</h2>
+  <p class="lede">Two multi-night trips bookend the local exploration. Everything else stays within ~1 hr of Raleigh.</p>
+
+  <div class="dir-grid" id="anchors-grid">
+  </div>
+</section>
+
+<!-- Week-by-week -->
+<section id="weeks">
+  <h2>Week-by-Week</h2>
+  <p class="lede">Weeknights are intentionally light — one sandwich lunch, one dinner, one easy activity. Food + outdoor sections below are a menu; swap freely. The current week auto-expands.</p>
+  <div id="weeks-list"></div>
+
+</section>
+
+<!-- Food directory -->
+<section id="food">
+  <h2>Food Directory <span class="badge">Locals' picks</span></h2>
+  <p class="lede">No seafood. Sort by category or type to filter; tap a chip to narrow the list.</p>
+
+  <search class="dir-toolbar">
+    <input id="food-search" class="dir-search" type="search" placeholder="Search food spots…" aria-label="Search food spots">
+    <div class="dir-chips" role="group" aria-label="Food filters">
+      <button class="dir-chip" data-filter-target="food" aria-pressed="true" data-filter="all">All</button>
+      <button class="dir-chip" data-filter-target="food" aria-pressed="false" data-filter="sandwich">Sandwiches</button>
+      <button class="dir-chip" data-filter-target="food" aria-pressed="false" data-filter="bbq">BBQ</button>
+      <button class="dir-chip" data-filter-target="food" aria-pressed="false" data-filter="breakfast">Breakfast</button>
+      <button class="dir-chip" data-filter-target="food" aria-pressed="false" data-filter="dessert">Sweet</button>
+    </div>
+    <fieldset class="maps-toggle" aria-label="Directions provider">
+      <legend class="sr-only">Maps app for directions</legend>
+      <span class="maps-toggle-label">Directions via</span>
+      <label><input type="radio" name="maps" id="maps-google" value="google"> Google</label>
+      <label><input type="radio" name="maps" id="maps-apple" value="apple"> Apple</label>
+    </fieldset>
+  </search>
+
+  <p class="dir-count" id="food-count" aria-live="polite"></p>
+  <div class="dir-grid" id="food-grid">
+  </div>
+</section>
+
+<!-- Outdoor directory -->
+<section id="outdoor">
+  <h2>Outdoor &amp; Cultural <span class="badge">Parks · Hikes · Beaches · Museums</span></h2>
+  <p class="lede">Filter by category, search by name or trail.</p>
+
+  <div class="note-box" style="margin-bottom: 1rem;">
+    <strong>Heat rule.</strong> July heat index averages ~106°F. Start every hike before <strong>10 AM</strong>; treat noon–4 PM as indoor time (Hunt Library, NCMA, Natural Sciences). None of Umstead, Eno River, Raven Rock, or Hanging Rock require day-use reservations or fees.
+  </div>
+
+  <search class="dir-toolbar">
+    <input id="outdoor-search" class="dir-search" type="search" placeholder="Search parks, hikes, beaches…" aria-label="Search outdoor spots">
+    <div class="dir-chips" role="group" aria-label="Outdoor filters">
+      <button class="dir-chip" data-filter-target="outdoor" aria-pressed="true" data-filter="all">All</button>
+      <button class="dir-chip" data-filter-target="outdoor" aria-pressed="false" data-filter="park">In-town parks</button>
+      <button class="dir-chip" data-filter-target="outdoor" aria-pressed="false" data-filter="hike">Hikes</button>
+      <button class="dir-chip" data-filter-target="outdoor" aria-pressed="false" data-filter="beach">Beaches</button>
+      <button class="dir-chip" data-filter-target="outdoor" aria-pressed="false" data-filter="museum">Museums</button>
+    </div>
+    <fieldset class="maps-toggle" aria-label="Directions provider">
+      <legend class="sr-only">Maps app for directions</legend>
+      <span class="maps-toggle-label">Directions via</span>
+      <label><input type="radio" name="maps-o" value="google"> Google</label>
+      <label><input type="radio" name="maps-o" value="apple"> Apple</label>
+    </fieldset>
+  </search>
+
+  <p class="dir-count" id="outdoor-count" aria-live="polite"></p>
+  <div class="dir-grid" id="outdoor-grid">
+  </div>
+</section>
+
+<!-- Pre-trip -->
+<section id="pretrip">
+  <h2>Pre-Trip <span class="badge">Setup &amp; Checklist</span></h2>
+
+  <div id="pretrip-list"></div>
+</section>
+
+<!-- Packing -->
+<section id="packing">
+  <h2>Packing Checklist <span class="badge">8 weeks</span></h2>
+  <p class="lede">Hyatt House has in-suite kitchen + on-site laundry. Pack <strong>2 weeks of clothes</strong>, wash weekly. Each section is collapsible; tap any checkbox and it persists.</p>
+
+  <div id="packing-list"></div>
+</section>
+
+<!-- Contacts — closed accordion (reference info; a tap away) -->
+<section id="contacts">
+  <details class="accordion">
+    <summary>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+      <h2>Key Contacts</h2>
+    </summary>
+    <div class="body">
+      <div class="contacts-grid" id="contacts-grid"></div>
+    </div>
+  </details>
+</section>
+
+</main>
+
+<footer class="foot">
+  <span>2026 <img src="assets/brand.png" alt="" aria-hidden="true" class="brand-mark"> AJ Barea</span>
+  <a href="https://github.com/ajbarea/periplus" aria-label="Periplus on GitHub" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+</footer>
+
+<script>
+// ===========================================================================
+// Trip dates + live-status state — derived from TRIP.meta (set below)
+// ===========================================================================
+// research(2026-06): parse YYYY-MM-DD via the local Date constructor, NOT new Date(str)
+// (parses as UTC midnight → off-by-one west of GMT) and NOT Temporal.PlainDate — Temporal
+// is unshipped in Safari/WebKit through ~late 2026, so on an installed iOS PWA it would
+// need a 20–56 KB polyfill that breaks the zero-dependency invariant (caniuse.com/temporal).
+const DEFAULT_META = { start: "2026-05-31", end: "2026-07-25", destination: "Raleigh" };
+const parseDate = (s) => { const [y, m, d] = String(s).split("-").map(Number); return new Date(y, m - 1, d); };
+// computeTripState() (re)derives these on load and on every import.
+let TRIP_START, TRIP_END, TRIP_DAYS, TRIP_TOTAL_MS, today, tripEnd, tripActive, tripPre, tripPost;
+
+const TRIP = {
+  food: [
+    { name:"Lunchbox Deli", cat:"sandwich", meta:"Sandwich · Raleigh", note:"Turkey Basil on Rosemary Focaccia.", text:"lunchbox deli turkey basil rosemary focaccia raleigh", maps:"Lunchbox Deli, Raleigh, NC" },
+    { name:"Eastcut Sandwich Bar", cat:"sandwich", meta:"Sandwich · Raleigh", note:"Rotating chalkboard specials; locals' top pick.", text:"eastcut sandwich bar chalkboard raleigh", maps:"Eastcut Sandwich Bar, Raleigh, NC" },
+    { name:"Oakwood Deli", cat:"sandwich", meta:"Sandwich · Raleigh (Oakwood)", note:"Neighborhood favorite, walkable from downtown.", text:"oakwood deli downtown raleigh neighborhood", maps:"Oakwood Deli, Raleigh, NC" },
+    { name:"Fratelli's Delicatessen", cat:"sandwich", meta:"Sandwich · Apex (~20 min)", note:"Old-school Italian deli, hot subs. 1481 Richardson Rd, Apex.", text:"fratellis delicatessen italian hot sub apex", maps:"Fratelli's Delicatessen, 1481 Richardson Rd, Apex, NC" },
+    { name:"Southern Craft Sandwiches", cat:"sandwich", meta:"Sandwich · Raleigh", note:"Scratch-made, Southern twist.", text:"southern craft sandwiches scratch raleigh", maps:"Southern Craft Sandwiches, Raleigh, NC" },
+    { name:"MoJoe's Burger Joint", cat:"sandwich", meta:"Burger · Raleigh", note:"Burgers + sandwiches. Add your Polaroid to the wall.", text:"mojoes burger joint polaroid raleigh", maps:"MoJoe's Burger Joint, Raleigh, NC" },
+    { name:"Union Special Bread", cat:"sandwich", meta:"Sandwich · Raleigh", note:"Sourdough-driven, locally sourced. 2409 Crabtree Blvd — downtown spot closed.", text:"union special bread sourdough crabtree raleigh", maps:"Union Special Bread, 2409 Crabtree Blvd, Raleigh, NC" },
+    { name:"Ideal Sandwich & Grocery", cat:"sandwich", meta:"Sandwich · Durham", note:"Scratch specials; pair with the Durham day-trip.", text:"ideal sandwich grocery durham specials", warn:"Thu–Mon 12–3 PM, sells out — go early", maps:"Ideal Sandwich & Grocery, Durham, NC" },
+    { name:"The Common Market", cat:"sandwich", meta:"Sandwich · Seaboard Station", note:"Slated to open later in 2026 at 807 Halifax St, Seaboard Station — a short walk from the Hyatt. Sandwiches/grocer/bar. The early-2026 target slipped, so it likely won't be open during your stay; check before walking over.", text:"common market seaboard station hotel sandwich grocer", warn:"Now later-2026 — likely closed during your trip", maps:"The Common Market, 807 Halifax St, Raleigh, NC" },
+    { name:"Idle Hour Coffee", cat:"sandwich", meta:"Sandwich + Coffee · Five Points", note:"Globally-inspired sandwiches; hidden-gem pick on locals' lists.", text:"idle hour coffee five points sandwich globally", maps:"Idle Hour Coffee, Five Points, Raleigh, NC" },
+    { name:"Poppyseed Market", cat:"sandwich", meta:"Sandwich · Raleigh", note:"Locals' best-club-sandwich pick. Solid lunch stop.", text:"poppyseed market club sandwich raleigh", maps:"Poppyseed Market, Raleigh, NC" },
+    { name:"Figulina", cat:"sandwich", meta:"Italian · Raleigh", note:"James Beard \"Best New Restaurant\" nominee — fresh pasta lunch. Not a sandwich, but a swap-in for one weekday.", text:"figulina james beard fresh pasta italian raleigh", maps:"Figulina, Raleigh, NC" },
+    { name:"Clyde Cooper's Barbecue", cat:"bbq", meta:"BBQ · Raleigh", note:"Open since 1938. Eastern NC vinegar style. 1326 E Millbrook Rd (moved from downtown). Tue–Sat to 8 PM.", text:"clyde coopers barbecue eastern nc vinegar 1938 millbrook raleigh", maps:"Clyde Cooper's Barbecue, 1326 E Millbrook Rd, Raleigh, NC" },
+    { name:"The Pit Authentic BBQ", cat:"bbq", meta:"BBQ · Raleigh", note:"Sit-down dinner option; Ed Mitchell legacy.", text:"the pit ed mitchell raleigh sit-down", maps:"The Pit Authentic Barbecue, Raleigh, NC" },
+    { name:"Sam Jones BBQ", cat:"bbq", meta:"BBQ · Raleigh", note:"Whole-hog smokehouse, hearty sandwiches.", text:"sam jones bbq whole hog raleigh", maps:"Sam Jones BBQ, Raleigh, NC" },
+    { name:"Allen & Son Bar-B-Que", cat:"bbq", meta:"BBQ · Pittsboro", note:"Wood-fired, locals' road-trip pick. 5650 US-15/501 N, Pittsboro — the Chapel Hill location closed.", text:"allen son barbecue pittsboro wood fired", maps:"Allen & Son Bar-B-Que, 5650 US-15/501 N, Pittsboro, NC" },
+    { name:"Hog Heaven", cat:"bbq", meta:"BBQ · Durham", note:"Vinegar-based chopped 'cue.", text:"hog heaven durham vinegar chopped", maps:"Hog Heaven, Durham, NC" },
+    { name:"Pam's Farmhouse", cat:"bbq", meta:"Southern · Raleigh", note:"Southern homestyle, plate-lunch energy. 5111 Western Blvd.", text:"pams farmhouse southern homestyle plate lunch raleigh", warn:"Tue–Sat 6 AM–2 PM · closed Sun & Mon", maps:"Pam's Farmhouse, 5111 Western Blvd, Raleigh, NC" },
+    { name:"Side Street Restaurant", cat:"bbq", meta:"Pub · Raleigh", note:"Classic pub fare, low-key local. Lunch M–Thu; dinner Tue/Wed only.", text:"side street restaurant pub fare raleigh", warn:"Confirm hours before going", maps:"Side Street Restaurant, Raleigh, NC" },
+    { name:"Lawrence Barbecue", cat:"bbq", meta:"BBQ · Raleigh", note:"Top of every 2025 Triangle list. Jake Wood — brisket birria, smoked-fried wings. Smoke + Tex-Mex/coastal fusion. <strong>Must-add.</strong>", text:"lawrence barbecue jake wood brisket birria tex mex raleigh", maps:"Lawrence Barbecue, Raleigh, NC" },
+    { name:"Lewis Barbecue", cat:"bbq", meta:"BBQ · Raleigh", note:"Michelin-recognized Texas BBQ from Charleston, opening at Raleigh Iron Works' Salvage Yard — its first NC location.", text:"lewis barbecue texas charleston michelin raleigh iron works salvage yard", warn:"No confirmed open date as of late May 2026 — likely closed during your trip", maps:"Raleigh Iron Works, Raleigh, NC" },
+    { name:"Big Ed's City Market", cat:"breakfast", meta:"Breakfast · Raleigh", note:"Loaded breakfast bowl with biscuits, gravy, sausage, cheese, eggs. 220 Wolfe St.", text:"big eds city market breakfast bowl biscuits gravy raleigh", warn:"Tue–Sun 7 AM–2 PM · closed Mon", maps:"Big Ed's City Market, 220 Wolfe St, Raleigh, NC" },
+    { name:"Daily Planet Cafe", cat:"breakfast", meta:"Cafe · Raleigh", note:"Inside the NC Museum of Natural Sciences — pair with a museum visit.", text:"daily planet cafe museum natural sciences lunch raleigh", maps:"Daily Planet Cafe, Raleigh, NC" },
+    { name:"Two Roosters Ice Cream", cat:"dessert", meta:"Sweet · Raleigh", note:"Rotating unique local flavors.", text:"two roosters ice cream rotating flavors raleigh", maps:"Two Roosters Ice Cream, Raleigh, NC" },
+  ],
+  outdoor: [
+    { name:"Pullen Park", cat:"park", meta:"Park · 5 min", note:"Adjacent to NCSU campus; lunch-hour walk.", text:"pullen park ncsu campus lunch walk", maps:"Pullen Park, Raleigh, NC" },
+    { name:"Dorothea Dix Park", cat:"park", meta:"Park · in-town", note:"Skyline views, wide-open fields for reading.", text:"dorothea dix park skyline reading fields raleigh", maps:"Dorothea Dix Park, Raleigh, NC" },
+    { name:"JC Raulston Arboretum", cat:"park", meta:"Garden · 5 min", note:"Quiet botanical gardens, ~5 min from campus.", text:"jc raulston arboretum botanical gardens", maps:"JC Raulston Arboretum, Raleigh, NC" },
+    { name:"William B. Umstead State Park", cat:"hike", meta:"Hike · 15 min", note:"Company Mill Trail (5.8 mi loop) — Raleigh's marquee hike.", text:"umstead state park company mill trail raleigh marquee", maps:"William B. Umstead State Park, NC" },
+    { name:"Eno River State Park", cat:"hike", meta:"Hike · 45 min", note:"Cox Mountain or Bobbitt Hole — river swimming spot.", text:"eno river state park durham cox mountain bobbitt hole swimming", maps:"Eno River State Park, Durham, NC" },
+    { name:"Raven Rock State Park", cat:"hike", meta:"Hike · 1 hr", note:"Raven Rock Loop (~2.5 mi); cliff overlook + rapids.", text:"raven rock state park loop cliff overlook rapids", maps:"Raven Rock State Park, NC" },
+    { name:"Hanging Rock State Park", cat:"hike", meta:"Hike · ~2 hr 10", note:"Hidden Falls + Window Falls + Upper Cascades — three waterfalls in one day.", text:"hanging rock state park hidden falls window falls upper cascades waterfalls", maps:"Hanging Rock State Park, NC" },
+    { name:"Wrightsville Beach", cat:"beach", meta:"Beach · ~2 hr", note:"Closest real beach; clean sand, college-town energy in Wilmington. Paid parking Mar 1–Oct 31: $5/hr ($6 premium), $25/day ($30 premium). Lifeguards 10 AM–5 PM.", text:"wrightsville beach closest ocean wilmington", warn:"Pay with PivotGO! (Pivot Parking) — the town dropped ParkMobile in 2026", maps:"Wrightsville Beach, NC" },
+    { name:"Carolina Beach", cat:"beach", meta:"Beach · ~2 hr 20", note:"Boardwalk + Friday-night fireworks.", text:"carolina beach boardwalk fireworks", maps:"Carolina Beach, NC" },
+    { name:"Topsail Island", cat:"beach", meta:"Beach · ~2 hr 20", note:"Quieter, laid-back.", text:"topsail island laid back quiet", maps:"Topsail Island, NC" },
+    { name:"Outer Banks (Nags Head / Corolla)", cat:"beach", meta:"Beach · ~3.5 hr", note:"Wild, historic — save for an overnight if doing OBX.", text:"outer banks nags head corolla wild historic", maps:"Outer Banks, Nags Head, NC" },
+    { name:"NC Museum of Natural Sciences", cat:"museum", meta:"Museum · Free", note:"Pair with lunch at Daily Planet Cafe inside.", text:"nc museum natural sciences free downtown daily planet", maps:"NC Museum of Natural Sciences, Raleigh, NC" },
+    { name:"NC Museum of Art", cat:"museum", meta:"Museum · Free", note:"Massive outdoor sculpture park — golden-hour walk.", text:"nc museum art sculpture park outdoor grounds golden hour", maps:"NC Museum of Art, Raleigh, NC" },
+  ],
+};
+window.TRIP = TRIP;
+
+// Portable trip facts — dates + destination travel with an export so import authors an
+// arbitrary trip (its calendar range + live status), not just restores this one's content.
+TRIP.meta = { ...DEFAULT_META };
+
+TRIP.calendar = {
+  weekNotes: ["Settle in", "Umstead hike", "Durham day", "Beach overnight", "Asheville", "Hanging Rock", "Raven Rock", "Wrap-up"],
+  events: [
+    { date:"2026-05-31", cls:"travel",   tag:"Drive",      title:"Drive: Rochester → Raleigh",     loc:"Raleigh, NC",                        note:"~652 mi single-day drive. Target arrival 4–5 PM." },
+    { date:"2026-06-01", cls:"travel",   tag:"Day 1",      title:"SCADS Residency — Day 1",        loc:"LAS, Centennial Campus, Raleigh, NC", note:"Business casual. Arrive early." },
+    { date:"2026-06-06", cls:"rest",     tag:"BBQ",        title:"BBQ night",                          loc:"Raleigh, NC",                        note:"" },
+    { date:"2026-06-07", cls:"rest",     tag:"Rest",       title:"Rest / catch-up",                    loc:"",                                   note:"" },
+    { date:"2026-06-13", cls:"hike",     tag:"Umstead",    title:"Hike: Umstead State Park",           loc:"William B. Umstead State Park, NC",  note:"Company Mill Trail (5.8 mi). Start before 10 AM." },
+    { date:"2026-06-14", cls:"rest",     tag:"Museum",     title:"Museum day",                         loc:"Raleigh, NC",                        note:"NCMA or Natural Sciences." },
+    { date:"2026-06-20", cls:"city",     tag:"Durham",     title:"Durham day-trip",                    loc:"Durham, NC",                         note:"" },
+    { date:"2026-06-21", cls:"rest",     tag:"Rest",       title:"Rest / catch-up",                    loc:"",                                   note:"" },
+    { date:"2026-06-27", cls:"beach",    tag:"Beach",      title:"Beach overnight — Wrightsville", loc:"Wrightsville Beach, NC",             note:"Download ParkMobile. Lifeguards 10–5." },
+    { date:"2026-06-28", cls:"beach",    tag:"Beach",      title:"Beach day — Wrightsville",       loc:"Wrightsville Beach, NC",             note:"" },
+    { date:"2026-07-03", cls:"mountain", tag:"Drive",      title:"Drive to Asheville",                 loc:"Asheville, NC",                      note:"" },
+    { date:"2026-07-04", cls:"mountain", tag:"Asheville",  title:"Asheville — Blue Ridge / Pisgah", loc:"Asheville, NC",                    note:"Parkway MP 317–355 closed til ~end 2026; re-confirm Mt. Pisgah + plan backups." },
+    { date:"2026-07-05", cls:"mountain", tag:"Drive back", title:"Drive back to Raleigh",              loc:"Raleigh, NC",                        note:"" },
+    { date:"2026-07-11", cls:"hike",     tag:"Hanging Rk", title:"Hike: Hanging Rock State Park",      loc:"Hanging Rock State Park, NC",        note:"Hidden, Window & Upper Cascades falls." },
+    { date:"2026-07-12", cls:"rest",     tag:"Rest",       title:"Rest / catch-up",                    loc:"",                                   note:"" },
+    { date:"2026-07-18", cls:"hike",     tag:"Raven Rk",   title:"Hike: Raven Rock State Park",        loc:"Raven Rock State Park, NC",          note:"Raven Rock Loop (~2.5 mi)." },
+    { date:"2026-07-19", cls:"rest",     tag:"Pack",       title:"Pack / wind down",                   loc:"",                                   note:"" },
+    { date:"2026-07-24", cls:"rest",     tag:"Farewell",   title:"Farewell + final presentations",     loc:"Raleigh, NC",                        note:"" },
+    { date:"2026-07-25", cls:"travel",   tag:"Check out",  title:"Check out — drive home",         loc:"Raleigh, NC",                        note:"" },
+  ],
+};
+
+// activity map (yyyy-mm-dd -> {cls, tag})
+const A = (k,v)=>v;
+const activity = {};
+function computeTripState() {
+  const m = (TRIP && TRIP.meta) || DEFAULT_META;
+  TRIP_START = parseDate(m.start || DEFAULT_META.start);
+  TRIP_END   = parseDate(m.end   || DEFAULT_META.end);
+  TRIP_DAYS  = Math.round((TRIP_END - TRIP_START) / 86400000) + 1; // inclusive of checkout day
+  TRIP_TOTAL_MS = TRIP_END - TRIP_START;
+  today = new Date();
+  tripEnd = new Date(TRIP_END); tripEnd.setHours(23, 59, 59, 999); // checkout day still counts as in-trip
+  tripActive = today >= TRIP_START && today <= tripEnd;
+  tripPre = today < TRIP_START;
+  tripPost = today > tripEnd;
+  for (const k in activity) delete activity[k];          // import can swap the whole calendar
+  ((TRIP.calendar && TRIP.calendar.events) || []).forEach(e => { activity[e.date] = e; });
+}
+computeTripState();
+
+function ymd(d){ const z=n=>String(n).padStart(2,"0"); return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`; }
+function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function sameDate(a,b){ return ymd(a)===ymd(b); }
+
+// ---- Add-to-calendar: Google Calendar deep-link or Apple ICS (mirrors the Maps toggle) ----
+const CAL_KEY = "periplus:cal-provider";
+function getCalProvider(){ try { return localStorage.getItem(CAL_KEY) || "google"; } catch { return "google"; } }
+function setCalProvider(p){ try { localStorage.setItem(CAL_KEY, p); } catch {} }
+function calRange(dateStr){
+  const start = dateStr.replace(/-/g, "");
+  const end = ymd(addDays(new Date(dateStr + "T00:00:00"), 1)).replace(/-/g, "");
+  return { start, end };
+}
+function gcalUrl(e){
+  const { start, end } = calRange(e.date);
+  const p = new URLSearchParams({
+    action: "TEMPLATE", text: e.title || e.tag, dates: start + "/" + end,
+    details: (e.note ? e.note + "\n\n" : "") + "Periplus itinerary", location: e.loc || "",
+  });
+  return "https://calendar.google.com/calendar/render?" + p.toString();
+}
+function icsUri(e){
+  const { start, end } = calRange(e.date);
+  const esc = v => (v || "").replace(/([,;\\])/g, "\\$1").replace(/\n/g, "\\n");
+  const ics = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Periplus//EN","BEGIN:VEVENT",
+    "UID:" + e.date + "-" + (e.tag||"").replace(/\s+/g,"") + "@periplus",
+    "DTSTART;VALUE=DATE:" + start, "DTEND;VALUE=DATE:" + end,
+    "SUMMARY:" + esc(e.title||e.tag), "DESCRIPTION:" + esc(e.note), "LOCATION:" + esc(e.loc),
+    "END:VEVENT","END:VCALENDAR"].join("\r\n");
+  return "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+}
+function addToCalHref(e, provider = getCalProvider()){ return provider === "apple" ? icsUri(e) : gcalUrl(e); }
+
+// Render calendar — Google-Calendar-style month grids (desktop) + agenda list (mobile)
+function renderCalendar(){
+  const monthHost = document.getElementById("cal-months");
+  const agendaHost = document.getElementById("cal-agenda");
+  if (!monthHost || !agendaHost) return;
+  const events = (TRIP.calendar && TRIP.calendar.events) || [];
+  const byDate = {};
+  events.forEach(e => { byDate[e.date] = e; });
+  const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const monthName = (y, m) => new Date(y, m, 1).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  const chip = (ev, key) => `<a class="cal-chip ${ev.cls}" href="${addToCalHref(ev)}" target="_blank" rel="noopener" data-cal-date="${key}" title="Add to calendar: ${ev.title || ev.tag}">${ev.tag}</a>`;
+
+  const months = [];
+  let sy = TRIP_START.getFullYear(), sm = TRIP_START.getMonth();
+  const lastDay = new Date(sy, sm + 1, 0).getDate();
+  if (TRIP_START.getDate() > lastDay - 3) { sm++; if (sm > 11) { sm = 0; sy++; } } // skip a near-empty travel-in month
+  const cur = new Date(sy, sm, 1);
+  const stop = new Date(TRIP_END.getFullYear(), TRIP_END.getMonth(), 1);
+  while (cur <= stop) { months.push([cur.getFullYear(), cur.getMonth()]); cur.setMonth(cur.getMonth() + 1); }
+
+  monthHost.innerHTML = months.map(([y, m]) => {
+    const lead = new Date(y, m, 1).getDay();
+    const days = new Date(y, m + 1, 0).getDate();
+    let cells = "";
+    for (let i = 0; i < lead; i++) cells += `<div class="cal-day cal-day--pad"></div>`;
+    for (let d = 1; d <= days; d++) {
+      const key = ymd(new Date(y, m, d));
+      const ev = byDate[key];
+      const today_ = key === ymd(today);
+      cells += `<div class="cal-day${today_ ? " is-today" : ""}${ev ? " has-ev" : ""}"><span class="cal-dnum">${d}</span>${ev ? chip(ev, key) : ""}</div>`;
+    }
+    return `<div class="cal-month"><h3 class="cal-mh">${monthName(y, m)}</h3>`
+      + `<div class="cal-dow">${DOW.map(x => `<span>${x}</span>`).join("")}</div>`
+      + `<div class="cal-cells">${cells}</div></div>`;
+  }).join("");
+
+  const sorted = events.slice().sort((a, b) => a.date.localeCompare(b.date));
+  agendaHost.innerHTML = sorted.map(ev => {
+    const dt = new Date(ev.date + "T00:00:00");
+    const dl = dt.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+    return `<a class="cal-ag ${ev.cls}" href="${addToCalHref(ev)}" target="_blank" rel="noopener" data-cal-date="${ev.date}">`
+      + `<span class="cal-ag-dot"></span><span class="cal-ag-date">${dl}</span>`
+      + `<span class="cal-ag-title">${ev.title || ev.tag}</span><span class="cal-ag-add" aria-hidden="true">+</span></a>`;
+  }).join("");
+}
+renderCalendar();
+
+// ===========================================================================
+// Status chip in topbar
+// ===========================================================================
+const chip = document.getElementById("status-chip");
+const progressFill = document.getElementById("trip-progress-fill");
+const progressBar = progressFill?.parentElement;
+function setStatus() {
+  const dest = (TRIP.meta && TRIP.meta.destination) || DEFAULT_META.destination;
+  let pct = 0;
+  if (tripPre) {
+    const days = Math.ceil((TRIP_START - today) / 86400000);
+    chip.textContent = `T-${days} days to ${dest}`;
+    chip.className = "status-chip pre";
+    pct = 0;
+  } else if (tripActive) {
+    const day = Math.floor((today - TRIP_START) / 86400000) + 1;
+    chip.textContent = `Day ${day} of ${TRIP_DAYS}`;
+    chip.className = "status-chip live";
+    pct = Math.max(0, Math.min(100, ((today - TRIP_START) / TRIP_TOTAL_MS) * 100));
+  } else {
+    chip.textContent = "Trip complete";
+    chip.className = "status-chip post";
+    pct = 100;
+  }
+  if (progressFill) {
+    // requestAnimationFrame so the CSS transition runs from 0 -> pct
+    requestAnimationFrame(() => { progressFill.style.width = pct.toFixed(1) + "%"; });
+    progressBar?.setAttribute("aria-valuenow", Math.round(pct));
+  }
+}
+setStatus();
+
+// ===========================================================================
+// "Today / Up next" widget — populates from activity[]
+// ===========================================================================
+function setNowCard() {
+  const card = document.getElementById("now-card");
+  const lab  = document.getElementById("now-label");
+  const head = document.getElementById("now-headline");
+  const sub  = document.getElementById("now-sub");
+  const jump = document.getElementById("now-jump");
+  if (!card) return;
+  card.classList.remove("is-pre", "is-live", "is-post"); // re-callable: reset before re-deriving
+
+  const fmt = (d) => d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+  const todayKey = ymd(today);
+  const todayAct = activity[todayKey];
+
+  // Find next activity from today forward
+  function findNext(fromDate) {
+    for (let i = 0; i < 90; i++) {
+      const d = addDays(fromDate, i);
+      const a = activity[ymd(d)];
+      if (a) return { date: d, act: a };
+    }
+    return null;
+  }
+
+  if (tripPre) {
+    const days = Math.ceil((TRIP_START - today) / 86400000);
+    card.classList.add("is-pre");
+    lab.textContent = days <= 1 ? "Tomorrow" : `In ${days} days`;
+    head.textContent = `Trip begins ${fmt(TRIP_START)} — drive day.`;
+    sub.textContent = days > 14
+      ? "Focus on the pre-trip checklist; hotel & parking asks first."
+      : "Pre-trip checklist + packing. Confirm Hyatt parking rate with your host.";
+    jump.textContent = "Pre-trip checklist";
+    jump.href = "#pretrip";
+  } else if (tripActive) {
+    card.classList.add("is-live");
+    const dayNum = Math.floor((today - TRIP_START) / 86400000) + 1;
+    lab.textContent = `Day ${dayNum} of ${TRIP_DAYS} · ${today.toLocaleDateString("en-US",{weekday:"long"})}`;
+    if (todayAct) {
+      head.textContent = `Today: ${todayAct.tag}`;
+      sub.textContent = "See your week card below for the full plan.";
+    } else {
+      // find next activity within 7 days
+      const next = findNext(addDays(today, 1));
+      if (next) {
+        const dd = Math.ceil((next.date - today) / 86400000);
+        head.textContent = `Up next: ${next.act.tag} — ${fmt(next.date)}`;
+        sub.textContent = dd === 1 ? "Tomorrow. Pack the day-pack tonight."
+                       : dd <= 7  ? `${dd} days out. This weekend's anchor.`
+                       :            `${dd} days out. Plenty of time to prep.`;
+      } else {
+        head.textContent = "Quiet week — focus on SCADS work.";
+        sub.textContent = "Use the food directory below for lunch picks.";
+      }
+    }
+    jump.textContent = "Today's week";
+    // Jump to current week card
+    const wkSection = document.querySelector(".week-card.is-current") || document.getElementById("weeks");
+    jump.href = "#" + (wkSection.id || "weeks");
+  } else {
+    card.classList.add("is-post");
+    const wks = Math.max(1, Math.round(TRIP_DAYS / 7));
+    lab.textContent = "Trip complete";
+    head.textContent = `${wks} week${wks === 1 ? "" : "s"} done.`;
+    sub.textContent = "Calendar + checklists below stay as a record.";
+  }
+}
+setNowCard();
+
+// ===========================================================================
+// Web Share API — share-from-laptop, native sheet on phone
+// ===========================================================================
+(function wireShare(){
+  const btn = document.getElementById("share-btn");
+  if (!btn) return;
+  if (!navigator.canShare || !navigator.canShare({title:"x"})) {
+    btn.hidden = true; return;
+  }
+  btn.addEventListener("click", async () => {
+    try {
+      await navigator.share({
+        title: "AJ — NC Summer Residency 2026",
+        text: "8-week SCADS residency itinerary",
+        url: location.href,
+      });
+    } catch (e) { /* user cancelled — fine */ }
+  });
+})();
+
+// ===========================================================================
+// Auto-expand the current week (only if trip is active)
+// ===========================================================================
+function expandCurrentWeek() { document.querySelectorAll(".week-card").forEach(card => {
+  const start = new Date(card.dataset.weekStart);
+  const end = new Date(card.dataset.weekEnd);
+  end.setHours(23,59,59);
+  if (today >= start && today <= end) {
+    card.classList.add("is-current");
+    card.open = true;
+  }
+}); }
+
+// ===========================================================================
+// Checklist persistence (localStorage)
+// ===========================================================================
+const STORAGE_KEY = "ajscads2026:checks:v1";
+function loadChecks(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; } }
+function saveChecks(state){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {} }
+
+function refreshCounts(){
+  document.querySelectorAll("details.accordion").forEach(acc => {
+    const boxes = acc.querySelectorAll("ul.checklist input[type=checkbox]");
+    const done = Array.from(boxes).filter(b => b.checked).length;
+    const total = boxes.length;
+    const c = acc.querySelector("[data-count]");
+    if (c) c.textContent = `${done} / ${total}`;
+    const pf = acc.querySelector(".acc-progress .fill");
+    if (pf) pf.style.width = total ? ((done / total) * 100).toFixed(1) + "%" : "0%";
+  });
+}
+// Apply saved check state to the rendered boxes — called after every (re-)render.
+function applyCheckState(){
+  const checkState = loadChecks();
+  document.querySelectorAll("ul.checklist input[type=checkbox]").forEach(box => {
+    const on = !!checkState[box.id];
+    box.checked = on;
+    const li = box.closest("li"); if (li) li.classList.toggle("checked", on);
+  });
+  refreshCounts();
+}
+// research(2026-05): one delegated change listener per stable list container, not a
+// listener per checkbox — survives the structural re-render with no rebind and no
+// duplicate-firing (gomakethings / jasonformat event-delegation guidance).
+function wireChecklists(){
+  ["pretrip-list", "packing-list"].forEach(id => {
+    const c = document.getElementById(id);
+    if (!c || c.dataset.checkWired) return;
+    c.dataset.checkWired = "1";
+    c.addEventListener("change", (e) => {
+      const box = e.target.closest("input[type=checkbox]"); if (!box) return;
+      const li = box.closest("li"); if (li) li.classList.toggle("checked", box.checked);
+      const st = loadChecks(); st[box.id] = box.checked; saveChecks(st);
+      refreshCounts();
+    });
+  });
+  applyCheckState();
+}
+
+// ===========================================================================
+// Search + filter (food + outdoor)
+// ===========================================================================
+// ===========================================================================
+// Directory data (single source) + tap-to-navigate
+// ===========================================================================
+
+
+// ---- More trip data (intel / anchors / contacts) ----
+TRIP.intel = [
+  { type:"risk", icon:"heat", label:"July heat", value:"Heat index ~106°F", note:"Start every hike before 10 AM. Treat noon–4 PM as indoor time (Hunt Library, NCMA, Natural Sciences)." },
+  { type:"risk", icon:"peak", label:"Asheville (Jul 3–5)", value:"Parkway closed through 2026", note:"~35 mi of Blue Ridge Parkway closed since Helene (MP 317 Linville Falls → MP 355 Mt. Mitchell); NPS expects full NC reopening only by end of 2026, so it stays closed for your visit. Mt. Pisgah (MP 408, south of the closure) is likely open — re-confirm with the Pisgah Ranger District. Backups: DuPont, Graveyard Fields, Heartbreak Ridge." },
+  { type:"risk", icon:"road", label:"I-95 at Benson", value:"NC-50 bridge closed May 28–~Jul 12", note:"I-95 itself stays open — only the NC-50 bridge over it at Exit 79 is closed for rehab. Exit 79 still works (local detour via S Market St / Cub Rd, or use Exit 77). Exits 71–81 are an active widening zone through 2028, so the I-81 corridor is the smoother drive in." },
+  { type:"info", icon:"clock", label:"Raven Rock weekends", value:"Up to 90-min entry wait", note:"Arrive before 9 AM Sat Jul 18 or shift to a weekday afternoon. No reservations required." },
+  { type:"opportunity", icon:"home", label:"Common Market", value:"Now slated later in 2026", note:"Sandwiches/grocer/bar at 807 Halifax St, Seaboard Station, near the Hyatt. The early-2026 target slipped to later in the year — likely closed during your stay, but it's a short walk, so check." },
+  { type:"info", icon:"waves", label:"2026 hurricane season", value:"Below normal (NOAA)", note:"8–14 named storms forecast; El Niño wind shear suppressing development. Lower risk than 2024, but still real." },
+];
+TRIP.anchors = [
+  { name:"Wrightsville Beach", tag:"beach", tagLabel:"Beach", dates:"Sat Jun 27 – Sun Jun 28", drive:"~2 hr (I-40 E)", note:"Closest real ocean beach. Overnight; book early — peak season." },
+  { name:"Asheville long weekend", tag:"mountain", tagLabel:"Mountains", dates:"Fri Jul 3 – Sun Jul 5", drive:"~4 hr (I-40 W)", note:"July 4 falls Saturday — the holiday is observed Fri Jul 3, a built-in 3-day weekend. Blue Ridge Parkway + downtown food." },
+];
+TRIP.contacts = [
+  { who:"LAS Host (via organizing team)", info:'<a href="mailto:scads-apply@ncsu.edu">scads-apply@ncsu.edu</a>', use:"Primary contact — logistics, master account, hotel issues" },
+  { who:"SCADS Organizing Team", info:'<a href="mailto:scads-apply@ncsu.edu">scads-apply@ncsu.edu</a>', use:"General SCADS questions, Unity ID, paperwork" },
+  { who:"Hyatt House — Front desk", info:'<a href="tel:+19843267710">(984) 326-7710</a><br>11 Seaboard Ave, Raleigh NC 27604', use:"Shuttle, room issues, in-room dining, laundry" },
+  { who:"NCSU Unity ID Help", info:'<a href="https://help.ncsu.edu" rel="noopener" target="_blank">help.ncsu.edu</a>', use:"Login or account access problems" },
+  { who:"RIT Service Center", info:'<a href="tel:+15854755000">585-475-5000</a>', use:"Backup for anything RIT-side" },
+  { who:"AAA Roadside", info:'<a href="tel:+18002224357">1-800-AAA-HELP</a>', use:"Breakdown on the drive (if member)" },
+  { who:"Emergency", info:'<a href="tel:911">911</a>', use:"Medical / safety" },
+];
+
+const INTEL_ICONS = {
+  heat: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>',
+  peak: '<path d="M3 20 12 4l9 16Z"/><path d="M12 10v5M12 18h.01"/>',
+  road: '<path d="M3 12h18M5 6h14M5 18h14"/><path d="M9 6v12M15 6v12"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  home: '<path d="M3 9l9-6 9 6v11a1 1 0 0 1-1 1h-5v-7H10v7H5a1 1 0 0 1-1-1V9"/>',
+  waves: '<path d="M21 12c-4 0-4 4-8 4s-4-4-8-4M21 6c-4 0-4 4-8 4S9 6 5 6M21 18c-4 0-4 4-8 4s-4-4-8-4"/>',
+};
+const icoSvg = (k) => `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${INTEL_ICONS[k] || ''}</svg>`;
+
+function renderIntel(){
+  const g = document.getElementById("intel-grid"); if (!g) return;
+  g.innerHTML = (TRIP.intel || []).map((c, i) => `<div class="intel-card" data-type="${c.cat || c.type}">
+    ${ctrls("intel", i)}
+    <span class="label">${icoSvg(c.icon)} <span data-edit="intel.${i}.label">${c.label}</span></span>
+    <span class="value" data-edit="intel.${i}.value">${c.value}</span>
+    <span class="small" data-edit="intel.${i}.note">${c.note}</span>
+  </div>`).join("");
+}
+function renderAnchors(){
+  const g = document.getElementById("anchors-grid"); if (!g) return;
+  g.innerHTML = (TRIP.anchors || []).map((a, i) => `<div class="card">
+    ${ctrls("anchors", i)}
+    <h3 style="display:flex; align-items:center; gap:0.5rem;"><span data-edit="anchors.${i}.name">${a.name}</span> <span class="tag ${a.tag}">${a.tagLabel}</span></h3>
+    <div class="row"><div><span class="k">Dates</span> <span data-edit="anchors.${i}.dates">${a.dates}</span></div><div><span class="k">Drive</span> <span data-edit="anchors.${i}.drive">${a.drive}</span></div></div>
+    <p style="margin:0.5rem 0 0; color: var(--ink-2);" data-edit="anchors.${i}.note">${a.note}</p>
+  </div>`).join("");
+}
+function renderContacts(){
+  const g = document.getElementById("contacts-grid"); if (!g) return;
+  g.innerHTML = (TRIP.contacts || []).map((c, i) => `<div class="contact">
+    ${ctrls("contacts", i)}
+    <div class="who" data-edit="contacts.${i}.who">${c.who}</div>
+    <div class="info" data-edit="contacts.${i}.info">${c.info}</div>
+    <div class="use" data-edit="contacts.${i}.use">${c.use}</div>
+  </div>`).join("");
+}
+renderIntel(); renderAnchors(); renderContacts();
+
+// ---- Hero (title / subtitle / overview KV) ----
+TRIP.title = "North Carolina Summer Residency";
+TRIP.subtitle = "SCADS Research Residency · NC State LAS · <strong>Sun May 31 → Sat Jul 25, 2026</strong>";
+TRIP.overview = [
+  { label:"Anchor", value:"SCADS @ NC State LAS", small:"Centennial Campus, Raleigh NC" },
+  { label:"Lodging", value:"Hyatt House Downtown / Seaboard Station", small:"11 Seaboard Ave, Raleigh NC 27604 · (984) 326-7710" },
+  { label:"Drive", value:"~652 mi · ~10 hr 11 min", small:"~11.5 hr door-to-door from Rochester" },
+  { label:"Constraints", value:"No seafood. No nightlife.", small:"Hikes, beaches, sandwiches, BBQ, locals-only" },
+];
+function renderHero(){
+  const t = document.getElementById("hero-title"); if (t) t.textContent = TRIP.title;
+  const s = document.getElementById("hero-sub"); if (s) s.innerHTML = TRIP.subtitle;
+  const g = document.getElementById("kv-grid"); if (!g) return;
+  g.innerHTML = (TRIP.overview || []).map((k, i) => `<div class="kv"><span class="label" data-edit="overview.${i}.label">${k.label}</span><span class="value" data-edit="overview.${i}.value">${k.value}</span><span class="small" data-edit="overview.${i}.small">${k.small}</span></div>`).join("");
+}
+renderHero();
+
+TRIP.venue = {
+  commute: "<strong>Drive yourself by default.</strong> ~3 mi / ~10 min from Hyatt House to Centennial Campus. You like arriving early; the SCADS shuttle pickup is fixed and may land you on campus right at kickoff. Use the shuttle occasionally for cohort social time.",
+  rows: [
+    { k: "Host", v: "Laboratory for Analytic Sciences (LAS) &middot; Centennial Campus" },
+    { k: "Dress code", v: "Business casual for Day 1 + presentations; smart-casual or casual on normal work days" },
+  ],
+};
+function renderVenue(){
+  const el = document.getElementById("venue-card");
+  if (!el || !TRIP.venue) return;
+  const rows = TRIP.venue.rows.map((r, i) =>
+    `<div class="row"${i ? ' style="margin-top: 0.4rem;"' : ''}><div><span class="k">${r.k}</span> <span data-edit="venue.rows.${i}.v">${r.v}</span></div></div>`).join("");
+  el.innerHTML = `<div class="card"><h3>Commute</h3><p style="margin:0 0 0.5rem; color: var(--ink-2);" data-edit="venue.commute">${TRIP.venue.commute}</p>${rows}</div>`;
+}
+renderVenue();
+
+// ---- Week-by-week plan ----
+TRIP.weeks = [
+  { start:"2026-05-31", end:"2026-06-07", n:1, dates:"Jun 1 – Jun 7", title:"Settle in", tag:"rest", tagLabel:"Settle", items:[
+    `<b>Mon–Fri</b> — SCADS Week 1; map the daily drive; one Pullen Park lunch walk`,
+    `<b>Sat Jun 6</b> — Big Ed's breakfast → Dorothea Dix Park → Clyde Cooper's BBQ lunch → easy evening`,
+    `<b>Sun Jun 7</b> — JC Raulston Arboretum (quiet morning) → laundry + prep`,
+  ]},
+  { start:"2026-06-08", end:"2026-06-14", n:2, dates:"Jun 8 – Jun 14", title:"Umstead hike", tag:"hike", tagLabel:"Hike", items:[
+    `<b>Weekday lunch</b> — Lunchbox Deli (Turkey Basil on Rosemary Focaccia)`,
+    `<b>Weekday evening</b> — Two Roosters Ice Cream walk after work`,
+    `<b>Sat Jun 13</b> — Umstead State Park, Company Mill Trail (~5.8 mi)`,
+    `<b>Sun Jun 14</b> — NC Museum of Natural Sciences + Daily Planet Cafe → easy hotel evening (Side Street closed Sun)`,
+  ]},
+  { start:"2026-06-15", end:"2026-06-21", n:3, dates:"Jun 15 – Jun 21", title:"Durham day", tag:"city", tagLabel:"Day-trip", items:[
+    `<b>Weekday lunch</b> — Eastcut Sandwich Bar`,
+    `<b>Weekday evening</b> — Fratelli's Delicatessen sit-down`,
+    `<b>Sat Jun 20</b> — Durham day: Ideal Sandwich → Eno River State Park → Hog Heaven BBQ`,
+    `<b>Sun Jun 21</b> — Big Ed's Sunday breakfast (Pam's closed Sun) → recovery`,
+  ]},
+  { start:"2026-06-22", end:"2026-06-28", n:4, dates:"Jun 22 – Jun 28", title:"Beach overnight", tag:"beach", tagLabel:"Beach", items:[
+    `<b>Weekday lunch</b> — Oakwood Deli`,
+    `<b>Weekday evening</b> — NC Museum of Art sculpture park (golden hour, outdoor grounds stay open)`,
+    `<b>Sat Jun 27</b> — Drive to Wrightsville Beach (~2 hr). Beach day + overnight`,
+    `<b>Sun Jun 28</b> — Beach morning → Wilmington lunch → drive back`,
+  ]},
+  { start:"2026-06-29", end:"2026-07-05", n:5, dates:"Jun 29 – Jul 5", title:"Asheville long weekend", tag:"mountain", tagLabel:"Mountains", items:[
+    `<b>Weekday lunch</b> — Pam's Farmhouse plate-lunch (Tue–Sat)`,
+    `<b>Weekday evening</b> — The Pit Authentic Barbecue dinner`,
+    `<b>Fri Jul 3</b> — Drive to Asheville (~4 hr). Federal holiday observed`,
+    `<b>Sat Jul 4</b> — Blue Ridge Parkway (MP 317–355, Linville Falls &amp; Mt. Mitchell, still Helene-closed til ~end 2026) + <strong>Mt. Pisgah Trail if open, else DuPont State Forest waterfalls or Graveyard Fields</strong> + downtown Asheville food crawl evening`,
+    `<b>Sun Jul 5</b> — Biltmore Estate + "Luminere" after-dark light experience (select evenings Mar 26–Oct 18 2026 — book ahead) → drive back. Enter via main gate, not Biltmore Village (still rebuilding post-Helene).`,
+  ]},
+  { start:"2026-07-06", end:"2026-07-12", n:6, dates:"Jul 6 – Jul 12", title:"Hanging Rock waterfalls", tag:"hike", tagLabel:"Hike", items:[
+    `<b>Weekday lunch</b> — Union Special Bread`,
+    `<b>Weekday evening</b> — Pullen Park or Dorothea Dix walk`,
+    `<b>Sat Jul 11</b> — Hanging Rock State Park: Hidden Falls + Window Falls + Upper Cascades (~2 hr drive each way; pack lunch)`,
+    `<b>Sun Jul 12</b> — Sam Jones BBQ lunch → rest`,
+  ]},
+  { start:"2026-07-13", end:"2026-07-19", n:7, dates:"Jul 13 – Jul 19", title:"Raven Rock + Chapel Hill BBQ", tag:"hike", tagLabel:"Hike", items:[
+    `<b>Weekday lunch</b> — Southern Craft Sandwiches`,
+    `<b>Weekday evening</b> — MoJoe's Burger Joint (add the Polaroid)`,
+    `<b>Sat Jul 18</b> — Raven Rock State Park hike — <strong>arrive by 9 AM</strong> (summer-weekend entry lines hit 90 min) → Allen &amp; Son BBQ in Pittsboro on the way home (Chapel Hill location closed). Alternative: shift to a weekday afternoon (Centennial parking free after 5 PM).`,
+    `<b>Sun Jul 19</b> — JC Raulston Arboretum farewell visit → start packing`,
+  ]},
+  { start:"2026-07-20", end:"2026-07-25", n:8, dates:"Jul 20 – Jul 25", title:"Wrap-up", tag:"travel", tagLabel:"Travel", items:[
+    `<b>Weekday lunch</b> — loop back to your favorite sandwich spot`,
+    `<b>Weekday evening</b> — Two Roosters Ice Cream closing dessert`,
+    `<b>Fri Jul 24</b> — SCADS closing day; farewell dinner with the cohort`,
+    `<b>Sat Jul 25</b> — Check out by hotel deadline. Drive home, or split with a stopover.`,
+  ]},
+];
+function renderWeeks(){
+  const host = document.getElementById("weeks-list"); if (!host) return;
+  host.innerHTML = (TRIP.weeks || []).map((w, wi) => `<details class="week-card" data-okey="wk${w.n}" data-week-start="${w.start}" data-week-end="${w.end}">
+    <summary>
+      <span class="wk">Week ${w.n} <small>${w.dates} · <span data-edit="weeks.${wi}.title">${w.title}</span></small></span>
+      <span class="tag ${w.tag}">${w.tagLabel}</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+    </summary>
+    <div class="body"><div class="grp-bar"><span class="grp-bar-label">Whole week</span>${ctrls("weeks", wi, "week")}</div><ul>${w.items.map((it, j) => `<li><span data-edit="weeks.${wi}.items.${j}">${it}</span>${ctrls("weeks." + wi + ".items", j, "plan")}</li>`).join("")}</ul><button type="button" class="li-add" data-act="add" data-arr="weeks.${wi}.items">+ Add plan</button></div>
+  </details>`).join("");
+}
+renderWeeks();
+expandCurrentWeek();
+
+// ---- Arrival + Day 1 timelines ----
+TRIP.arrival = [
+  { t:"5:30 AM", a:"Leave Rochester" },
+  { t:"9:00 AM", a:"Stop 1 — Scranton / Wilkes-Barre area (~3.5 hr in), gas + breakfast" },
+  { t:"12:30 PM", a:"Stop 2 — Hagerstown MD or Winchester VA (~7 hr in), lunch + leg stretch" },
+  { t:"4:30–5 PM", a:"Arrive Hyatt House Downtown / Seaboard Station, check in" },
+  { t:"6:00 PM", a:"Grocery run (Harris Teeter / Whole Foods) + easy dinner — save BBQ joints for when you're rested" },
+  { t:"9:30 PM", a:"Lights out — sharp for Monday" },
+];
+TRIP.dayOne = [
+  { t:"6:00 AM", a:"Wake" },
+  { t:"6:15 AM", a:"Free hot breakfast at Hyatt House" },
+  { t:"6:45 AM", a:"Shower, business-casual (chinos + button-down or polo; closed-toe shoes; belt)" },
+  { t:"7:30 AM", a:"Drive to Centennial Campus (~10 min)" },
+  { t:"7:45 AM", a:"Arrive. Park, walk in." },
+  { t:"7:55 AM", a:"Find SCADS check-in / orientation room. Sign in, name tag." },
+  { t:"8:00 AM", a:"<strong>Coffee + low-pressure cohort chats</strong> — fewer people, longer conversations. Prime early-arrival networking.", hl:true },
+  { t:"9:00 AM", a:"SCADS Day 1 kickoff — welcomes, intros, problem-book overview" },
+  { t:"12:00 PM", a:"<strong>Lunch with the cohort</strong> — the second prime networking window of Day 1", hl:true },
+  { t:"1:00 PM", a:"Project team formation / problem assignment" },
+  { t:"5:00 PM", a:"Day wraps — drive back to the Hyatt" },
+  { t:"6:00 PM", a:"Light dinner (in-suite kitchen) or grocery" },
+  { t:"7:00 PM", a:"Decompress; review project assignment; first-day notes" },
+  { t:"9:30 PM", a:"Lights out — sustainable pace from Day 1" },
+];
+function renderTimeline(id, rows, arr){
+  const g = document.getElementById(id); if (!g) return;
+  g.innerHTML = (rows || []).map((r, i) => `<div class="row${r.hl ? " highlight" : ""}"><span class="t" data-edit="${arr}.${i}.t">${r.t}</span><span class="a" data-edit="${arr}.${i}.a">${r.a}</span>${ctrls(arr, i, "step")}</div>`).join("");
+}
+renderTimeline("arrival-timeline", TRIP.arrival, "arrival");
+renderTimeline("dayone-timeline", TRIP.dayOne, "dayOne");
+
+TRIP.pretrip = [
+    { id: "pretrip-setup", open: true, title: "Saturday May 30 \u2014 time-anchored prep", items: [
+        { id: "ps1", label: "<strong>5:00 PM</strong> \u2014 Top off the gas tank at home" },
+        { id: "ps2", label: "<strong>6:00 PM</strong> \u2014 Pack the car (suitcase, laptop, hike bag, beach bag, snack bag, water bottle)" },
+        { id: "ps3", label: "<strong>7:00 PM</strong> \u2014 EZ-Pass balance or stash $30 in singles/fives for cash tolls" },
+        { id: "ps4", label: "<strong>8:00 PM</strong> \u2014 Offline Google Maps for Rochester\u2192Raleigh; AllTrails maps for Umstead, Eno River, Raven Rock, Hanging Rock" },
+        { id: "ps5", label: "<strong>8:30 PM</strong> \u2014 Spotify / podcast downloads for offline (10+ hr)" },
+        { id: "ps6", label: "<strong>9:00 PM</strong> \u2014 Save offline: Hyatt conf, host emails, this itinerary, Unity ID info" },
+        { id: "ps7", label: "<strong>9:30 PM</strong> \u2014 Alarms 5:00 AM + 5:25 AM Sun; lay out driving outfit + Day 1 work outfit" },
+        { id: "ps8", label: "<strong>10:00 PM</strong> \u2014 Lights out" }
+    ] },
+    { id: "pretrip-master", title: "Master checklist (before May 31)", items: [
+        { id: "m1", label: "Confirm hotel confirmation number with the LAS host" },
+        { id: "m2", label: "<strong>Call the hotel about an extended-stay parking rate</strong>" },
+        { id: "m2b", label: "<strong>Ask your host about a sponsored campus parking permit</strong>" },
+        { id: "m3", label: "Download offline Google Maps for the Rochester \u2192 Raleigh route" },
+        { id: "m4", label: "Reserve Wrightsville Beach lodging for Sat Jun 27 (book early \u2014 peak season)" },
+        { id: "m5", label: "Reserve Asheville lodging for Fri Jul 3 \u2013 Sun Jul 5" },
+        { id: "m5b", label: "Re-confirm Blue Ridge Parkway milepost status + Mt. Pisgah Trail with the Pisgah Ranger District the week of Jul 3" },
+        { id: "m6", label: "Confirm whether LAS observes Fri Jul 3 federal holiday" },
+        { id: "m6b", label: "Download PivotGO! / Pivot Parking for Wrightsville Beach ($5/hr, $25/day); the town dropped ParkMobile in 2026" },
+        { id: "m6c", label: "Check if The Common Market (807 Halifax St, Seaboard Station) has opened; now slated for later in 2026, so likely not yet" },
+        { id: "m8", label: "Download AllTrails offline maps (Umstead, Eno River, Raven Rock, Hanging Rock) + DuPont State Forest &amp; Graveyard Fields as Helene-era Asheville backups" }
+    ] }
+  ];
+TRIP.packing = [
+    { id: "pack-docs", title: "Documents &amp; money", items: [
+        { id: "d1", label: "Driver's license + passport (backup ID)" },
+        { id: "d2", label: "Primary credit card + backup card" },
+        { id: "d3", label: "$80\u2013100 cash for emergencies and tolls" },
+        { id: "d4", label: "Health insurance card" },
+        { id: "d5", label: "RIT ID + NCSU Unity ID printout" },
+        { id: "d6", label: "AAA membership card (if applicable)" }
+    ] },
+    { id: "pack-tech", title: "Tech (never leave in the car overnight)", items: [
+        { id: "t1", label: "Laptop + charger" },
+        { id: "t2", label: "External monitor cable (HDMI + USB-C adapter)" },
+        { id: "t3", label: "Wireless mouse" },
+        { id: "t4", label: "Headphones / earbuds" },
+        { id: "t5", label: "Phone + cable + small wall plug" },
+        { id: "t6", label: "Portable battery pack (10,000mAh)" },
+        { id: "t7", label: "USB drive (for poster/presentation handoffs)" },
+        { id: "t8", label: "Business cards or QR cards (portfolio)" },
+        { id: "t9", label: "Camera body + spare battery + SD cards + charger (if bringing)" }
+    ] },
+    { id: "pack-work", title: "Work outfits (business casual)", items: [
+        { id: "w1", label: "3 button-downs or polos" },
+        { id: "w2", label: "2 pairs chinos" },
+        { id: "w3", label: "Blazer or sport coat (final-week presentations)" },
+        { id: "w4", label: "Belt (do not forget the belt)" },
+        { id: "w5", label: "Closed-toe loafers / dress shoes" },
+        { id: "w6", label: "Dress socks (one per work day; laundry midweek)" }
+    ] },
+    { id: "pack-casual", title: "Casual &amp; lounge", items: [
+        { id: "c1", label: "6 t-shirts" },
+        { id: "c2", label: "2 pairs gym shorts" },
+        { id: "c3", label: "Hoodie / light sweater (offices over-AC, mountain evenings)" },
+        { id: "c4", label: "2 pairs jeans" },
+        { id: "c5", label: "Pajamas / sleep clothes" },
+        { id: "c6", label: "Underwear + socks (10 days, laundry weekly)" }
+    ] },
+    { id: "pack-outdoor", title: "Outdoor &amp; beach kit", items: [
+        { id: "o1", label: "Hiking shoes / trail runners" },
+        { id: "o2", label: "Daypack (15\u201320L)" },
+        { id: "o3", label: "Swim trunks" },
+        { id: "o4", label: "Beach towel" },
+        { id: "o5", label: "Water shoes (shell-heavy NC beaches)" },
+        { id: "o6", label: "Sunglasses + spare pair" },
+        { id: "o7", label: "Wide-brim hat or cap" },
+        { id: "o8", label: "Sunscreen (SPF 50+)" },
+        { id: "o9", label: "Bug spray (DEET or picaridin)" },
+        { id: "o10", label: "After-sun lotion / aloe" }
+    ] },
+    { id: "pack-toiletries", title: "Toiletries", items: [
+        { id: "tt1", label: "Toothbrush + toothpaste + floss" },
+        { id: "tt2", label: "Deodorant" },
+        { id: "tt3", label: "Razor + cartridges" },
+        { id: "tt4", label: "Body wash + shampoo (or use hotel)" },
+        { id: "tt5", label: "Face wash + lip balm" },
+        { id: "tt6", label: "Glasses, contacts, solution" }
+    ] },
+    { id: "pack-meds", title: "Health &amp; meds", items: [
+        { id: "h1", label: "Prescriptions in original labeled bottles + buffer days" },
+        { id: "h2", label: "OTC: Advil, Tylenol, Pepto, Band-Aids, Benadryl, hydrocortisone" },
+        { id: "h3", label: "Hand sanitizer" },
+        { id: "h4", label: "Electrolyte packets (NC summer heat)" }
+    ] },
+    { id: "pack-car", title: "Day-pack / car kit", items: [
+        { id: "ca1", label: "Reusable water bottle (24 oz+)" },
+        { id: "ca2", label: "Snack bag: granola bars, jerky, trail mix, fruit" },
+        { id: "ca3", label: "Phone car charger + mount" },
+        { id: "ca4", label: "Paper map of NC as backup" },
+        { id: "ca5", label: "Notebook + 2 pens" },
+        { id: "ca6", label: "Sunglasses" }
+    ] },
+    { id: "pack-forget", title: "Easy to forget", items: [
+        { id: "f1", label: "Laundry detergent pods + dryer sheets" },
+        { id: "f2", label: "Reusable grocery bags" },
+        { id: "f3", label: "Slippers / shower sandals" },
+        { id: "f4", label: "Travel umbrella (NC summer thunderstorms)" },
+        { id: "f5", label: "Refillable coffee tumbler" }
+    ] }
+  ];
+function renderChecklist(containerId, sections, arr){
+  const el = document.getElementById(containerId);
+  if (!el || !sections) return;
+  const chev = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>';
+  el.innerHTML = sections.map((sec, si) => {
+    const items = sec.items.map((it, ii) => `<li><input type="checkbox" id="${it.id}"><label for="${it.id}"><span data-edit="${arr}.${si}.items.${ii}.label">${it.label}</span></label>${ctrls(arr + "." + si + ".items", ii, "item")}</li>`).join("");
+    return `<details class="accordion" data-okey="${sec.id}"${sec.open ? " open" : ""} data-checklist-id="${sec.id}"><summary>${chev}<span data-edit="${arr}.${si}.title">${sec.title}</span><span class="count" data-count>0 / ${sec.items.length}</span></summary><div class="acc-progress" aria-hidden="true"><div class="fill"></div></div><div class="body"><div class="grp-bar"><span class="grp-bar-label">Whole group</span>${ctrls(arr, si, "group")}</div><ul class="checklist">${items}</ul><button type="button" class="li-add" data-act="add" data-arr="${arr}.${si}.items">+ Add item</button></div></details>`;
+  }).join("");
+}
+renderChecklist("pretrip-list", TRIP.pretrip, "pretrip");
+renderChecklist("packing-list", TRIP.packing, "packing");
+wireChecklists();
+
+const MAPS_KEY = "periplus:maps-provider";
+function getMapsProvider(){ try { return localStorage.getItem(MAPS_KEY) || "google"; } catch { return "google"; } }
+function setMapsProvider(p){ try { localStorage.setItem(MAPS_KEY, p); } catch {} }
+function directionsUrl(query, provider = getMapsProvider()){
+  const q = encodeURIComponent(query);
+  return provider === "apple"
+    ? `https://maps.apple.com/?daddr=${q}`
+    : `https://www.google.com/maps/dir/?api=1&destination=${q}`;
+}
+
+// Edit-mode reorder/delete controls (shown only in edit mode via CSS). Shared by
+// every structurally-editable card section; WCAG 2.2 SC 2.5.7 single-pointer buttons.
+function ctrls(arr, i, noun){
+  noun = noun || "entry";
+  return '<div class="card-ctrls">'
+    + `<button type="button" class="cc" data-act="up" data-arr="${arr}" data-i="${i}" title="Move ${noun} up" aria-label="Move ${noun} up">↑</button>`
+    + `<button type="button" class="cc" data-act="down" data-arr="${arr}" data-i="${i}" title="Move ${noun} down" aria-label="Move ${noun} down">↓</button>`
+    + `<button type="button" class="cc cc-del" data-act="del" data-arr="${arr}" data-i="${i}" title="Delete ${noun}" aria-label="Delete ${noun}">&times;</button>`
+    + '</div>';
+}
+function dirCard(item, arr, i){
+  const warn = item.warn ? `<span class="warn" data-edit="${arr}.${i}.warn">${item.warn}</span>` : "";
+  const go = item.maps
+    ? `<a class="dir-go" href="${directionsUrl(item.maps)}" target="_blank" rel="noopener">Directions</a>`
+    : "";
+  return `<article class="dir-item" data-cat="${item.cat}" data-text="${item.text}">
+    ${ctrls(arr, i)}
+    <div class="name"><span data-edit="${arr}.${i}.name">${item.name}</span> <span class="meta" data-edit="${arr}.${i}.meta">${item.meta}</span></div>
+    <div class="note" data-edit="${arr}.${i}.note">${item.note}</div>${warn}${go}
+  </article>`;
+}
+function renderDir(gridId, items, arr){
+  const grid = document.getElementById(gridId);
+  if (grid) grid.innerHTML = items.map((it, i) => dirCard(it, arr, i)).join("");
+}
+function renderDirectories(){
+  renderDir("food-grid", TRIP.food, "food");
+  renderDir("outdoor-grid", TRIP.outdoor, "outdoor");
+}
+renderDirectories();
+
+(function wireMapsToggle(){
+  // Food + outdoor each carry a Directions toggle but share one global provider —
+  // reflect the stored choice on both, and keep them in sync when either changes.
+  const radios = document.querySelectorAll('.maps-toggle:not(.cal-toggle) input[type="radio"]');
+  const sync = () => { const p = getMapsProvider(); radios.forEach((r) => { r.checked = r.value === p; }); };
+  sync();
+  radios.forEach((r) => r.addEventListener("change", () => {
+    if (r.checked) { setMapsProvider(r.value); renderDirectories(); sync(); }
+  }));
+})();
+
+function refreshCalLinks(){
+  document.querySelectorAll("[data-cal-date]").forEach(el => {
+    const e = activity[el.dataset.calDate];
+    if (e) el.href = addToCalHref(e);
+  });
+}
+(function wireCalToggle(){
+  const cur = getCalProvider();
+  const r0 = document.getElementById(cur === "apple" ? "cal-apple" : "cal-google");
+  if (r0) r0.checked = true;
+  document.querySelectorAll('input[name="cal"]').forEach((r) => {
+    r.addEventListener("change", () => { if (r.checked) { setCalProvider(r.value); refreshCalLinks(); } });
+  });
+})();
+
+function wireDir(searchId, gridId) {
+  const search = document.getElementById(searchId);
+  const grid = document.getElementById(gridId);
+  const target = grid.id.replace("-grid","");
+  const chips = document.querySelectorAll(`.dir-chip[data-filter-target="${target}"]`);
+  const countEl = document.getElementById(target + "-count");
+  let activeFilter = "all";
+
+  function apply() {
+    const q = (search.value || "").trim().toLowerCase();
+    let visible = 0;
+    grid.querySelectorAll(".dir-item").forEach(item => {
+      const matchCat = activeFilter === "all" || item.dataset.cat === activeFilter;
+      const matchText = !q || item.dataset.text.includes(q);
+      const show = matchCat && matchText;
+      item.hidden = !show;
+      if (show) visible++;
+    });
+    // empty state
+    let empty = grid.querySelector(".dir-empty");
+    if (visible === 0) {
+      if (!empty) {
+        empty = document.createElement("div");
+        empty.className = "dir-empty";
+        empty.textContent = "Nothing matches that yet.";
+        grid.appendChild(empty);
+      }
+    } else if (empty) {
+      empty.remove();
+    }
+    if (countEl) {
+      const total = grid.querySelectorAll(".dir-item").length;
+      countEl.textContent = visible === total
+        ? `${total} ${total === 1 ? "spot" : "spots"}`
+        : `${visible} of ${total} shown`;
+    }
+  }
+
+  search.addEventListener("input", apply);
+  chips.forEach(chip => {
+    chip.addEventListener("click", () => {
+      chips.forEach(c => c.setAttribute("aria-pressed", "false"));
+      chip.setAttribute("aria-pressed", "true");
+      activeFilter = chip.dataset.filter;
+      apply();
+    });
+  });
+  apply();   // initialize the count + filter state on load
+}
+wireDir("food-search", "food-grid");
+wireDir("outdoor-search", "outdoor-grid");
+
+// ===========================================================================
+// TOC active section highlighting via IntersectionObserver
+// ===========================================================================
+const tocLinks = document.querySelectorAll(".toc a");
+const idToLink = new Map();
+tocLinks.forEach(a => idToLink.set(a.getAttribute("href").slice(1), a));
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      tocLinks.forEach(a => a.classList.remove("active"));
+      const link = idToLink.get(e.target.id);
+      if (link) link.classList.add("active");
+    }
+  });
+}, { rootMargin: "-30% 0px -65% 0px" });
+document.querySelectorAll("section[id]").forEach(s => io.observe(s));
+
+// Service worker registration (offline + installable)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+// ===========================================================================
+// Theme — Auto (follow OS) / Light / Dark, persisted on-device. The head script
+// set the initial resolved theme; here we wire the toggle and live OS changes.
+// ===========================================================================
+(function themeToggle(){
+  const KEY = "periplus:theme";
+  const order = ["auto", "light", "dark"];
+  const ICONS = {
+    auto:  '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/>',
+    light: '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.2v2M12 19.8v2M4.5 4.5l1.4 1.4M18.1 18.1l1.4 1.4M2.2 12h2M19.8 12h2M4.5 19.5l1.4-1.4M18.1 5.9l1.4-1.4"/>',
+    dark:  '<path d="M20 14.4A8 8 0 1 1 9.6 4 6.4 6.4 0 0 0 20 14.4z"/>',
+  };
+  const btn = document.getElementById("theme-toggle");
+  if (!btn) return;
+  const svg = btn.querySelector("svg");
+  const mq = matchMedia("(prefers-color-scheme: dark)");
+  const get = () => { try { return localStorage.getItem(KEY) || "auto"; } catch { return "auto"; } };
+  const resolved = (c) => c === "auto" ? (mq.matches ? "dark" : "light") : c;
+  function apply(c){
+    document.documentElement.setAttribute("data-theme", resolved(c));
+    svg.innerHTML = ICONS[c];
+    const label = c[0].toUpperCase() + c.slice(1);
+    btn.setAttribute("aria-label", "Theme: " + label + " — tap to change");
+    btn.title = "Theme: " + label;
+  }
+  apply(get());
+  btn.addEventListener("click", () => {
+    const next = order[(order.indexOf(get()) + 1) % order.length];
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+    apply(next);
+  });
+  mq.addEventListener("change", () => { if (get() === "auto") apply("auto"); });
+})();
+
+// ===========================================================================
+// Keep the sticky TOC docked below the topbar even when it wraps to a second
+// row on phones — topbar height is dynamic, so feed it (and TOC height) to CSS.
+// ===========================================================================
+(function stickyOffsets(){
+  const header = document.querySelector(".topbar");
+  const toc = document.querySelector(".toc");
+  if (!header) return;
+  const root = document.documentElement.style;
+  const update = () => {
+    root.setProperty("--topbar-h", header.offsetHeight + "px");
+    if (toc) root.setProperty("--toc-h", toc.offsetHeight + "px");
+  };
+  update();
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(update);
+    ro.observe(header); if (toc) ro.observe(toc);
+  }
+  window.addEventListener("resize", update);
+})();
+
+// ===========================================================================
+// No-code editing — inline-edit any [data-edit] field, saved as a sparse
+// path->value diff in localStorage. research(2026-05): in-place contenteditable
+// (Atlassian inline-edit), no re-render, so search / maps / calendar listeners
+// survive. TRIP is the export source of truth; reset restores the original.
+// ===========================================================================
+(function noCodeEditing(){
+  const EDITS_KEY = "periplus.edits.v1";
+  const loadEdits = () => { try { return JSON.parse(localStorage.getItem(EDITS_KEY)) || {}; } catch (e) { return {}; } };
+  let edits = loadEdits();
+  const saveEdits = () => { try { localStorage.setItem(EDITS_KEY, JSON.stringify(edits)); } catch (e) {} };
+  const esc = (s) => (window.CSS && CSS.escape) ? CSS.escape(s) : s.replace(/"/g, '\\"');
+
+  // Stage 2: structural edits (add/delete/reorder) persist the whole array, not a
+  // field diff — indices shift, so a snapshot is the honest unit. Directory field
+  // edits ride along in the same snapshot. LISTS registers each editable array:
+  // its grid container, a re-render, and a blank-entry template.
+  const ARRAYS_KEY = "periplus.arrays.v1";
+  const STORED_TRIP_KEY = "periplus.trip.v1";
+  const uid = () => "c" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  const LISTS = {
+    food:     { grid: "food-grid",     render: () => renderDir("food-grid", TRIP.food, "food"),         blank: () => ({ name: "New entry", cat: (TRIP.food[0] || {}).cat || "", meta: "", note: "Add a description.", text: "new entry", maps: "" }) },
+    outdoor:  { grid: "outdoor-grid",  render: () => renderDir("outdoor-grid", TRIP.outdoor, "outdoor"), blank: () => ({ name: "New entry", cat: (TRIP.outdoor[0] || {}).cat || "", meta: "", note: "Add a description.", text: "new entry", maps: "" }) },
+    intel:    { grid: "intel-grid",    render: renderIntel,    blank: () => ({ type: "info", icon: "clock", label: "New note", value: "", note: "Add detail." }) },
+    contacts: { grid: "contacts-grid", render: renderContacts, blank: () => ({ who: "New contact", info: "", use: "When to use this." }) },
+    anchors:  { grid: "anchors-grid",  render: renderAnchors,  blank: () => ({ name: "New trip", tag: "rest", tagLabel: "Trip", dates: "", drive: "", note: "Add detail." }) },
+    // Flat timeline sections — top-level rows, controls placed inline (thin rows).
+    arrival:  { grid: "arrival-timeline", render: () => renderTimeline("arrival-timeline", TRIP.arrival, "arrival"), blank: () => ({ t: "", a: "New step" }), addLabel: "+ Add step" },
+    dayOne:   { grid: "dayone-timeline",  render: () => renderTimeline("dayone-timeline", TRIP.dayOne, "dayOne"),    blank: () => ({ t: "", a: "New step" }), addLabel: "+ Add step" },
+    // Two-level sections — render re-runs the per-render wiring (current-week open /
+    // checkbox state via delegation). itemBlank seeds a sub-item; blank seeds a whole
+    // week / group (one item). Their CRUD controls render in the body, never the
+    // <summary> (a11y: a summary is itself a button — no nested interactive controls).
+    weeks:    { grid: "weeks-list",   render: () => { renderWeeks(); expandCurrentWeek(); }, itemBlank: () => "New plan", blank: () => ({ n: Math.max(0, ...TRIP.weeks.map((w) => +w.n || 0)) + 1, start: "", end: "", dates: "", title: "New week", tag: "rest", tagLabel: "Week", items: ["New plan"] }), addLabel: "+ Add week" },
+    pretrip:  { grid: "pretrip-list", render: () => { renderChecklist("pretrip-list", TRIP.pretrip, "pretrip"); applyCheckState(); }, itemBlank: () => ({ id: uid(), label: "New item" }), blank: () => ({ id: uid(), title: "New group", open: true, items: [{ id: uid(), label: "New item" }] }), addLabel: "+ Add group" },
+    packing:  { grid: "packing-list", render: () => { renderChecklist("packing-list", TRIP.packing, "packing"); applyCheckState(); }, itemBlank: () => ({ id: uid(), label: "New item" }), blank: () => ({ id: uid(), title: "New group", open: true, items: [{ id: uid(), label: "New item" }] }), addLabel: "+ Add group" },
+  };
+  let arraysState = (() => { try { return JSON.parse(localStorage.getItem(ARRAYS_KEY)) || {}; } catch (e) { return {}; } })();
+  const saveArray = (arr) => { arraysState[arr] = TRIP[arr]; try { localStorage.setItem(ARRAYS_KEY, JSON.stringify(arraysState)); } catch (e) {} };
+
+  function setPath(obj, path, val){
+    const parts = path.split(".");
+    let o = obj;
+    for (let k = 0; k < parts.length - 1; k++){
+      const key = /^\d+$/.test(parts[k]) ? +parts[k] : parts[k];
+      if (o == null || o[key] == null) return false;
+      o = o[key];
+    }
+    const last = parts[parts.length - 1];
+    o[/^\d+$/.test(last) ? +last : last] = val;
+    return true;
+  }
+
+  // Patch only the edited fields into TRIP + the already-rendered DOM (no re-render).
+  function applyEdits(){
+    for (const [path, val] of Object.entries(edits)){
+      const root = path.split(".")[0];
+      if (LISTS[root] && Array.isArray(arraysState[root])) continue;   // array snapshot is authoritative
+      setPath(TRIP, path, val);
+      document.querySelectorAll('[data-edit="' + esc(path) + '"]').forEach(el => { el.innerHTML = val; });
+    }
+  }
+
+  // Re-apply contenteditable to freshly-rendered nodes after a structural re-render.
+  function refreshEditable(root){
+    if (!document.body.classList.contains("editing")) return;
+    (root || document).querySelectorAll("[data-edit]").forEach(el => el.setAttribute("contenteditable", "true"));
+  }
+  // Re-render a whole top-level section, preserving which accordions the user has
+  // open (weeks/checklists re-render the whole block, so capture + restore open state).
+  function rerenderList(arr){
+    const grid = document.getElementById(LISTS[arr].grid);
+    const open = new Set();
+    if (grid) grid.querySelectorAll("details[data-okey]").forEach(d => { if (d.open) open.add(d.dataset.okey); });
+    LISTS[arr].render();
+    if (grid) grid.querySelectorAll("details[data-okey]").forEach(d => { if (open.has(d.dataset.okey)) d.open = true; });
+    refreshEditable(grid);
+  }
+  // On load, swap edited arrays for their saved snapshots, then render.
+  function applyArrays(){
+    for (const arr of Object.keys(LISTS)){
+      if (Array.isArray(arraysState[arr])) { TRIP[arr] = arraysState[arr]; rerenderList(arr); }
+    }
+  }
+
+  // Re-render every content section from the current TRIP (used by import).
+  function renderAll(){
+    computeTripState();   // re-derive dates/activity from TRIP.meta (import may change them)
+    renderHero(); renderIntel(); renderAnchors(); renderContacts(); renderVenue();
+    renderDirectories();
+    renderWeeks(); expandCurrentWeek();
+    renderTimeline("arrival-timeline", TRIP.arrival, "arrival");
+    renderTimeline("dayone-timeline", TRIP.dayOne, "dayOne");
+    renderChecklist("pretrip-list", TRIP.pretrip, "pretrip");
+    renderChecklist("packing-list", TRIP.packing, "packing");
+    applyCheckState();
+    renderCalendar();
+    setStatus(); setNowCard();   // live status follows the (re-derived) dates
+    refreshEditable(document);
+  }
+
+  // Replace the whole trip from pasted JSON. Returns an error string, or null on success.
+  // The whole TRIP serializes/round-trips, including TRIP.meta (dates + destination), so
+  // renderAll() → computeTripState() re-derives the calendar range + live status from it.
+  function importTrip(text){
+    let data;
+    try { data = JSON.parse(text); }
+    catch (e) { return "That's not valid JSON — check for a missing comma or brace."; }
+    if (!data || typeof data !== "object" || Array.isArray(data)) return "Expected a trip object (the JSON you exported).";
+    if (!("title" in data) && !("weeks" in data) && !("food" in data)) return "This doesn't look like a periplus trip.";
+    try { localStorage.setItem(STORED_TRIP_KEY, JSON.stringify(data)); }
+    catch (e) { return "Couldn't save the trip (device storage full?)."; }
+    edits = {}; saveEdits();
+    arraysState = {}; try { localStorage.removeItem(ARRAYS_KEY); } catch (e) {}
+    for (const k of Object.keys(TRIP)) delete TRIP[k];
+    Object.assign(TRIP, data);
+    renderAll();
+    return null;
+  }
+
+  // Add / delete / reorder — single-pointer buttons, keyboard-operable (WCAG 2.2 SC 2.5.7;
+  // no drag required). Each mutates the TRIP array, snapshots it, and re-renders the grid.
+  // Resolve a dotted data-arr path (e.g. "weeks.0.items") to its live array in TRIP.
+  function getArr(path){
+    let o = TRIP;
+    for (const p of path.split(".")){ if (o == null) return null; o = o[/^\d+$/.test(p) ? +p : p]; }
+    return Array.isArray(o) ? o : null;
+  }
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest && e.target.closest("[data-act]");
+    if (!btn || !document.body.classList.contains("editing")) return;
+    // data-arr is the array path: top-level for cards/timelines, nested for week /
+    // checklist items. The whole top-level array is snapshotted + re-rendered either way.
+    const act = btn.dataset.act, arr = btn.dataset.arr, root = arr.split(".")[0];
+    const list = getArr(arr);
+    if (!list) return;
+    if (act === "add"){
+      list.push(arr === root ? LISTS[root].blank() : LISTS[root].itemBlank());
+      saveArray(root); rerenderList(root);
+      const itemPath = arr + "." + (list.length - 1);
+      const el = document.querySelector('[data-edit="' + esc(itemPath) + '"]')
+              || document.querySelector('[data-edit^="' + esc(itemPath + ".") + '"]');
+      if (el){ el.focus(); const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+      return;
+    }
+    const i = +btn.dataset.i;
+    if (act === "up" && i > 0){ const t = list[i - 1]; list[i - 1] = list[i]; list[i] = t; }
+    else if (act === "down" && i < list.length - 1){ const t = list[i + 1]; list[i + 1] = list[i]; list[i] = t; }
+    else if (act === "del"){
+      const it = list[i];
+      const nm = (typeof it === "string" ? it : (it.name || it.label || it.who || it.title || it.a)) || "this entry";
+      if (!confirm('Delete "' + String(nm).slice(0, 60) + '"?')) return;
+      list.splice(i, 1);
+    }
+    else return;
+    saveArray(root); rerenderList(root);
+    // a11y: return focus to a stable nearby control after the re-render (WCAG focus order).
+    const at = act === "del" ? i : (act === "up" ? i - 1 : i + 1);
+    const idx = Math.max(0, Math.min(at, list.length - 1));
+    const f = document.querySelector('[data-act][data-arr="' + esc(arr) + '"][data-i="' + idx + '"]')
+           || document.querySelector('[data-act="add"][data-arr="' + esc(arr) + '"]');
+    if (f) f.focus();
+  });
+
+  function setEditing(on){
+    document.body.classList.toggle("editing", on);
+    document.querySelectorAll("[data-edit]").forEach(el => {
+      if (on) el.setAttribute("contenteditable", "true");
+      else el.removeAttribute("contenteditable");
+    });
+    const t = document.getElementById("edit-toggle");
+    if (t){ t.setAttribute("aria-pressed", String(on)); t.textContent = on ? "Done" : "Edit"; }
+    const bar = document.getElementById("edit-bar");
+    if (bar) bar.hidden = !on;
+  }
+
+  // Save a field when focus leaves it.
+  document.addEventListener("focusout", (e) => {
+    const el = e.target.closest && e.target.closest("[data-edit]");
+    if (!el || !document.body.classList.contains("editing")) return;
+    const path = el.getAttribute("data-edit");
+    const val = el.innerHTML.trim();
+    setPath(TRIP, path, val);
+    const root = path.split(".")[0];
+    if (LISTS[root]) { saveArray(root); }   // field edit rides in the array snapshot
+    else { edits[path] = val; saveEdits(); }
+  });
+  // Enter commits a single-line field instead of inserting a newline.
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey && document.body.classList.contains("editing")
+        && e.target.closest && e.target.closest("[data-edit]")){
+      e.preventDefault();
+      e.target.blur();
+    }
+  });
+  // Editing a heading nested in a <summary>/<label> must not toggle the accordion/checkbox.
+  document.addEventListener("click", (e) => {
+    if (!document.body.classList.contains("editing")) return;
+    const ed = e.target.closest && e.target.closest("[data-edit]");
+    if (ed && ed.closest("summary, label")) e.preventDefault();
+  }, true);
+
+  // --- Injected UI: styles, topbar toggle, toolbar, export modal ---
+  const style = document.createElement("style");
+  style.textContent = `
+    .edit-toggle{ font:inherit; font-size:.8rem; font-weight:600; padding:.3rem .7rem; border-radius:999px;
+      border:1px solid var(--border,#e5e7eb); background:var(--surface,#fff); color:var(--ink-2,#374151); cursor:pointer; }
+    .edit-toggle[aria-pressed="true"]{ background:var(--brand,#2563eb); color:#fff; border-color:var(--brand,#2563eb); }
+    body.editing [data-edit]{ outline:1px dashed color-mix(in oklab,var(--brand,#2563eb) 55%,transparent);
+      outline-offset:2px; border-radius:4px; cursor:text; transition:background .12s ease; }
+    body.editing [data-edit]:hover{ background:color-mix(in oklab,var(--brand,#2563eb) 8%,transparent); }
+    body.editing [data-edit]:focus{ outline:2px solid var(--brand,#2563eb); background:var(--surface,#fff); }
+    .edit-bar{ position:fixed; left:0; right:0; bottom:0; z-index:50; display:flex; gap:.5rem; align-items:center;
+      padding:.6rem max(.9rem,env(safe-area-inset-right)) max(.6rem,env(safe-area-inset-bottom)) max(.9rem,env(safe-area-inset-left));
+      background:var(--surface,#fff); border-top:1px solid var(--border,#e5e7eb);
+      box-shadow:0 -4px 16px rgb(0 0 0 / 12%); flex-wrap:wrap; }
+    .edit-bar[hidden]{ display:none; }
+    .edit-bar-label{ flex:1; min-width:12rem; font-size:.82rem; color:var(--ink-2,#374151); }
+    .edit-bar button{ font:inherit; font-size:.82rem; font-weight:600; padding:.4rem .85rem; border-radius:8px;
+      border:1px solid var(--border,#e5e7eb); background:var(--surface,#fff); color:var(--ink,#111); cursor:pointer; }
+    #edit-done{ background:var(--brand,#2563eb); color:#fff; border-color:var(--brand,#2563eb); }
+    .edit-modal{ position:fixed; inset:0; z-index:60; background:rgb(0 0 0 / 50%); display:flex;
+      align-items:center; justify-content:center; padding:1rem; }
+    .edit-modal[hidden]{ display:none; }
+    .edit-modal-card{ background:var(--surface,#fff); color:var(--ink,#111); border-radius:14px; padding:1.25rem;
+      max-width:680px; width:100%; box-shadow:0 12px 48px rgb(0 0 0 / 35%); }
+    .edit-modal-card h3{ margin:0 0 .35rem; }
+    .edit-modal-card p{ margin:0 0 .75rem; font-size:.88rem; color:var(--ink-2,#374151); }
+    #edit-json{ width:100%; height:46vh; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.78rem;
+      border:1px solid var(--border,#e5e7eb); border-radius:8px; padding:.6rem; resize:vertical; box-sizing:border-box; }
+    .edit-err{ margin:.5rem 0 0; font-size:.82rem; font-weight:600; color:#b91c1c; }
+    .edit-err[hidden]{ display:none; }
+    .edit-modal-actions{ display:flex; gap:.5rem; justify-content:flex-end; margin-top:.75rem; }
+    .edit-modal-actions button{ font:inherit; font-weight:600; padding:.45rem 1rem; border-radius:8px; cursor:pointer;
+      border:1px solid var(--border,#e5e7eb); background:var(--surface,#fff); }
+    #edit-copy{ background:var(--brand,#2563eb); color:#fff; border-color:var(--brand,#2563eb); }
+    .card-ctrls{ display:none; }
+    body.editing .dir-item,
+    body.editing .intel-card,
+    body.editing .contact,
+    body.editing #anchors-grid .card{ position:relative; }
+    body.editing #anchors-grid .card h3,
+    body.editing .intel-card .label,
+    body.editing .contact .who{ padding-right:5.25rem; }
+    body.editing .card-ctrls{ display:flex; gap:.2rem; position:absolute; top:6px; right:6px; z-index:2; }
+    .card-ctrls .cc{ font:inherit; font-size:.85rem; line-height:1; width:1.55rem; height:1.55rem; display:grid; place-items:center;
+      border:1px solid var(--border,#e5e7eb); background:var(--surface,#fff); color:var(--ink-2,#374151); border-radius:6px; cursor:pointer; box-shadow:0 1px 3px rgb(0 0 0 / 12%); }
+    .card-ctrls .cc:hover{ background:color-mix(in oklab,var(--brand,#2563eb) 12%,transparent); }
+    .card-ctrls .cc-del:hover{ background:#fee2e2; color:#b91c1c; border-color:#fecaca; }
+    .dir-add{ display:none; }
+    body.editing .dir-add{ display:inline-block; margin:.7rem 0 0; font:inherit; font-size:.85rem; font-weight:600;
+      padding:.45rem .9rem; border-radius:8px; border:1px dashed var(--brand,#2563eb); background:transparent; color:var(--brand,#2563eb); cursor:pointer; }
+    body.editing .dir-add:hover{ background:color-mix(in oklab,var(--brand,#2563eb) 10%,transparent); }
+    .li-add{ display:none; }
+    body.editing .li-add{ display:inline-block; margin:.5rem 0 .25rem; font:inherit; font-size:.8rem; font-weight:600;
+      padding:.35rem .8rem; border-radius:8px; border:1px dashed var(--brand,#2563eb); background:transparent; color:var(--brand,#2563eb); cursor:pointer; }
+    body.editing .li-add:hover{ background:color-mix(in oklab,var(--brand,#2563eb) 10%,transparent); }
+    /* Whole-week / whole-group controls — in the accordion body (never the summary), labeled. */
+    .grp-bar{ display:none; }
+    body.editing .grp-bar{ display:flex; align-items:center; gap:.5rem; margin:0 0 .6rem; padding-bottom:.5rem; border-bottom:1px dashed var(--border,#e5e7eb); }
+    body.editing .grp-bar-label{ font-size:.72rem; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--ink-2,#374151); }
+    body.editing .grp-bar .card-ctrls{ position:static; inset:auto; margin-left:auto; box-shadow:none; }
+    /* Thin list/row contexts: controls sit inline at the row end, not the card corner. */
+    body.editing .week-card .body li{ display:flex; align-items:flex-start; gap:.4rem; }
+    body.editing .week-card .body li > span[data-edit]{ flex:1; }
+    body.editing .timeline .row{ grid-template-columns:minmax(86px,110px) 1fr auto; }
+    body.editing .week-card .body li .card-ctrls,
+    body.editing .checklist li .card-ctrls,
+    body.editing .timeline .row .card-ctrls{ position:static; inset:auto; margin-left:auto; box-shadow:none; flex:0 0 auto; align-self:center; }
+    @media print{ .edit-toggle, .edit-bar, .edit-modal, .dir-add, .li-add, .card-ctrls{ display:none !important; } }
+  `;
+  document.head.appendChild(style);
+
+  const toggle = document.createElement("button");
+  toggle.id = "edit-toggle"; toggle.type = "button"; toggle.className = "edit-toggle";
+  toggle.setAttribute("aria-pressed", "false"); toggle.textContent = "Edit";
+  toggle.addEventListener("click", () => setEditing(!document.body.classList.contains("editing")));
+  const ti = document.querySelector(".topbar-inner");
+  if (ti) ti.appendChild(toggle);
+
+  const bar = document.createElement("div");
+  bar.id = "edit-bar"; bar.className = "edit-bar"; bar.hidden = true;
+  bar.innerHTML = '<span class="edit-bar-label">Editing — tap any text to change it. Saved on this device.</span>'
+    + '<button type="button" id="edit-export">Export</button>'
+    + '<button type="button" id="edit-reset">Reset</button>'
+    + '<button type="button" id="edit-done">Done</button>';
+  document.body.appendChild(bar);
+
+  const modal = document.createElement("div");
+  modal.id = "edit-modal"; modal.className = "edit-modal"; modal.hidden = true;
+  modal.innerHTML = '<div class="edit-modal-card" role="dialog" aria-modal="true" aria-label="Export or import trip">'
+    + '<h3>Export or import your trip</h3>'
+    + '<p>Copy this JSON to back up or share your trip. Or paste a trip you exported earlier and load it — it replaces the content on this device, including the trip dates that drive the calendar and live status.</p>'
+    + '<textarea id="edit-json" spellcheck="false"></textarea>'
+    + '<p id="edit-import-err" class="edit-err" hidden role="alert"></p>'
+    + '<div class="edit-modal-actions"><button type="button" id="edit-copy">Copy</button>'
+    + '<button type="button" id="edit-import">Load trip</button>'
+    + '<button type="button" id="edit-close">Close</button></div></div>';
+  document.body.appendChild(modal);
+
+  document.getElementById("edit-done").addEventListener("click", () => setEditing(false));
+  document.getElementById("edit-reset").addEventListener("click", () => {
+    if (confirm("Reset to the original itinerary? Your edits on this device will be cleared.")){
+      edits = {}; saveEdits();
+      arraysState = {}; try { localStorage.removeItem(ARRAYS_KEY); } catch (e) {}
+      try { localStorage.removeItem(STORED_TRIP_KEY); } catch (e) {}
+      location.reload();
+    }
+  });
+  const closeModal = () => { modal.hidden = true; };
+  document.getElementById("edit-export").addEventListener("click", () => {
+    document.getElementById("edit-json").value = JSON.stringify(TRIP, null, 2);
+    const box = document.getElementById("edit-import-err"); if (box) box.hidden = true;
+    modal.hidden = false;
+  });
+  document.getElementById("edit-close").addEventListener("click", closeModal);
+  modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !modal.hidden) closeModal(); });
+  document.getElementById("edit-copy").addEventListener("click", async () => {
+    const ta = document.getElementById("edit-json");
+    try { await navigator.clipboard.writeText(ta.value); }
+    catch (e) { ta.focus(); ta.select(); try { document.execCommand("copy"); } catch (e2) {} }
+    const btn = document.getElementById("edit-copy");
+    btn.textContent = "Copied"; setTimeout(() => { btn.textContent = "Copy"; }, 1200);
+  });
+  document.getElementById("edit-import").addEventListener("click", () => {
+    const err = importTrip(document.getElementById("edit-json").value);
+    const box = document.getElementById("edit-import-err");
+    if (err) { box.textContent = err; box.hidden = false; }
+    else { box.hidden = true; closeModal(); }
+  });
+
+  // Section-level "Add entry" button after each flat grid (cards + timelines).
+  // Two-level lists (weeks/checklists) render their own inline per-group add buttons.
+  for (const arr of Object.keys(LISTS)){
+    if (!LISTS[arr].blank) continue;
+    const grid = document.getElementById(LISTS[arr].grid);
+    if (!grid) continue;
+    const add = document.createElement("button");
+    add.type = "button"; add.className = "dir-add"; add.dataset.act = "add"; add.dataset.arr = arr;
+    add.textContent = LISTS[arr].addLabel || "+ Add entry";
+    grid.insertAdjacentElement("afterend", add);
+  }
+
+  // A previously imported trip replaces the built-in content; edits/arrays then layer on.
+  const storedTrip = (() => { try { return JSON.parse(localStorage.getItem(STORED_TRIP_KEY)); } catch (e) { return null; } })();
+  if (storedTrip && typeof storedTrip === "object" && !Array.isArray(storedTrip)) {
+    for (const k of Object.keys(TRIP)) delete TRIP[k];
+    Object.assign(TRIP, storedTrip);
+    renderAll();
+  }
+  applyArrays();
+  applyEdits();
+})();
+</script>
+</body>
+</html>

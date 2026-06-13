@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{# Dedupe the home <title> (H1 == site_name) and keep "Page - Site" elsewhere #}
+{% block htmltitle %}
+  <title>{% if page and page.title and page.title != config.site_name %}{{ page.title }} - {{ config.site_name }}{% else %}{{ config.site_name }}{% endif %}</title>
+{% endblock %}
+
+{# Social / SEO meta (static, so crawlers that don't run JS still see it) #}
+{% block extrahead %}
+  <meta name="description" content="An offline-first travel-itinerary planner you install to your phone. Fork it for your own multi-week trip.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Periplus">
+  <meta property="og:title" content="Periplus: offline-first travel itinerary">
+  <meta property="og:description" content="An installable travel-itinerary planner that works offline. Fork it for your own multi-week trip.">
+  <meta property="og:image" content="https://ajbarea.github.io/periplus/assets/og.jpg">
+  <meta property="og:url" content="https://ajbarea.github.io/periplus/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Periplus: offline-first travel itinerary">
+  <meta name="twitter:description" content="An installable travel-itinerary planner that works offline. Fork it for your own multi-week trip.">
+  <meta name="twitter:image" content="https://ajbarea.github.io/periplus/assets/og.jpg">
+{% endblock %}

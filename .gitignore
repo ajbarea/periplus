@@ -1,0 +1,18 @@
+node_modules/
+test-results/
+playwright-report/
+.DS_Store
+
+# local image candidates (not part of the app)
+/Screenshot*.png
+
+# python / zensical build artifacts
+.venv/
+site/
+
+# WSL download metadata
+*:Zone.Identifier
+
+# build caches
+.cache/
+C:*
