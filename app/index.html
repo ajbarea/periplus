@@ -2099,6 +2099,8 @@ if ('serviceWorker' in navigator) {
     for (const k of Object.keys(TRIP)) delete TRIP[k];
     Object.assign(TRIP, data);
     renderAll();
+    TRIP.layout = normalizeLayout(TRIP.layout);   // imported layout wins; else default
+    saveLayout(); applyLayout();
     return null;
   }
 
@@ -2251,7 +2253,36 @@ if ('serviceWorker' in navigator) {
     body.editing .week-card .body li .card-ctrls,
     body.editing .checklist li .card-ctrls,
     body.editing .timeline .row .card-ctrls{ position:static; inset:auto; margin-left:auto; box-shadow:none; flex:0 0 auto; align-self:center; }
-    @media print{ .edit-toggle, .edit-bar, .edit-modal, .dir-add, .li-add, .card-ctrls{ display:none !important; } }
+    @media print{ .edit-toggle, .edit-bar, .edit-modal, .sections-modal, .dir-add, .li-add, .card-ctrls{ display:none !important; } }
+    /* Manage Sections sheet — reorder / show-hide whole sections */
+    .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+    section[hidden], .toc-inner a[hidden]{ display:none !important; }
+    .sections-card{ background:var(--surface,#fff); color:var(--ink,#111); border-radius:14px; width:100%; max-width:520px;
+      max-height:85vh; display:flex; flex-direction:column; box-shadow:0 12px 48px rgb(0 0 0 / 35%); padding:1.1rem 1.25rem 1.25rem; box-sizing:border-box; }
+    .sections-head{ display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+    .sections-head h3{ margin:0; }
+    .sections-x{ font:inherit; font-size:1.5rem; line-height:1; width:2.1rem; height:2.1rem; flex:0 0 auto; cursor:pointer;
+      border:1px solid var(--border,#e5e7eb); background:var(--surface,#fff); color:var(--ink-2,#374151); border-radius:8px; }
+    .sections-modal p{ margin:.45rem 0 .8rem; font-size:.85rem; color:var(--ink-2,#374151); }
+    .sections-list{ list-style:none; margin:0; padding:0; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+    .sec-row{ display:flex; align-items:center; gap:.6rem; padding:.5rem .15rem; border-bottom:1px solid var(--border,#e5e7eb); }
+    .sec-row:last-child{ border-bottom:0; }
+    .sec-name{ flex:1; min-width:0; font-weight:600; font-size:.95rem; }
+    .sec-row.is-hidden .sec-name{ color:var(--ink-2,#9ca3af); text-decoration:line-through; opacity:.75; }
+    .sec-ctrls{ display:flex; gap:.3rem; align-items:center; flex:0 0 auto; }
+    .sec-ctrls .sc{ font:inherit; font-size:.82rem; font-weight:600; min-width:2.4rem; height:2.4rem; padding:0 .5rem; display:grid; place-items:center;
+      border:1px solid var(--border,#e5e7eb); background:var(--surface,#fff); color:var(--ink-2,#374151); border-radius:8px; cursor:pointer; }
+    .sec-ctrls .sc-toggle{ min-width:3.4rem; }
+    .sec-ctrls .sc:hover:not(:disabled){ background:color-mix(in oklab,var(--brand,#2563eb) 12%,transparent); border-color:var(--brand,#2563eb); }
+    .sec-ctrls .sc:disabled{ opacity:.35; cursor:default; }
+    .sec-row.is-hidden .sc-toggle{ color:var(--brand,#2563eb); border-color:var(--brand,#2563eb); }
+    @media (max-width:560px){
+      .sections-modal{ align-items:flex-end; padding:0; }
+      .sections-card{ max-width:none; max-height:88vh; border-radius:16px 16px 0 0;
+        padding-bottom:max(1.25rem,env(safe-area-inset-bottom)); animation:sheet-up .22s ease; }
+      .sec-ctrls .sc{ height:2.6rem; }
+    }
+    @keyframes sheet-up{ from{ transform:translateY(100%); } to{ transform:translateY(0); } }
   `;
   document.head.appendChild(style);
 
@@ -2265,6 +2296,7 @@ if ('serviceWorker' in navigator) {
   const bar = document.createElement("div");
   bar.id = "edit-bar"; bar.className = "edit-bar"; bar.hidden = true;
   bar.innerHTML = '<span class="edit-bar-label">Editing — tap any text to change it. Saved on this device.</span>'
+    + '<button type="button" id="edit-sections">Sections</button>'
     + '<button type="button" id="edit-export">Export</button>'
     + '<button type="button" id="edit-reset">Reset</button>'
     + '<button type="button" id="edit-done">Done</button>';
@@ -2288,6 +2320,7 @@ if ('serviceWorker' in navigator) {
       edits = {}; saveEdits();
       arraysState = {}; try { localStorage.removeItem(ARRAYS_KEY); } catch (e) {}
       try { localStorage.removeItem(STORED_TRIP_KEY); } catch (e) {}
+      try { localStorage.removeItem(SECTIONS_KEY); } catch (e) {}
       location.reload();
     }
   });
@@ -2333,8 +2366,101 @@ if ('serviceWorker' in navigator) {
     Object.assign(TRIP, storedTrip);
     renderAll();
   }
+  // -------------------------------------------------------------------------
+  // Manage sections — reorder / show-hide whole sections in edit mode.
+  // Buttons-first + aria-live (WCAG 2.5.7; no drag). Layout rides in TRIP.layout
+  // so it exports, and persists on-device under SECTIONS_KEY. Design:
+  // planning/specs/2026-06-13-manage-sections-design.md
+  // -------------------------------------------------------------------------
+  const SECTIONS_KEY = "periplus.sections.v1";
+  const SECTION_DEFS = Array.from(document.querySelectorAll(".toc-inner a")).map(a => ({
+    id: a.getAttribute("href").slice(1), label: a.textContent.trim()
+  }));
+  const sectionLabel = (id) => (SECTION_DEFS.find(s => s.id === id) || {}).label || id;
+  function normalizeLayout(lay){
+    const known = SECTION_DEFS.map(s => s.id);
+    const order = (lay && Array.isArray(lay.order) ? lay.order : []).filter(id => known.includes(id));
+    for (const id of known) if (!order.includes(id)) order.push(id);   // append any new section
+    const hidden = (lay && Array.isArray(lay.hidden) ? lay.hidden : []).filter(id => known.includes(id));
+    return { order, hidden };
+  }
+  function loadLayout(){
+    let lay = null;
+    try { lay = JSON.parse(localStorage.getItem(SECTIONS_KEY)); } catch (e) {}
+    if (!lay && TRIP.layout) lay = TRIP.layout;   // imported trip carried a layout
+    TRIP.layout = normalizeLayout(lay);
+  }
+  function saveLayout(){ try { localStorage.setItem(SECTIONS_KEY, JSON.stringify(TRIP.layout)); } catch (e) {} }
+  function applyLayout(){
+    const main = document.querySelector("main");
+    const toc = document.querySelector(".toc-inner");
+    if (!main || !TRIP.layout) return;
+    const hidden = new Set(TRIP.layout.hidden);
+    for (const id of TRIP.layout.order){
+      const sec = document.getElementById(id);
+      if (sec && sec.parentElement === main) main.appendChild(sec);
+      const link = toc && toc.querySelector('a[href="#' + id + '"]');
+      if (link) toc.appendChild(link);
+      if (sec) sec.hidden = hidden.has(id);
+      if (link) link.hidden = hidden.has(id);
+    }
+  }
+  function announce(msg){
+    const el = document.getElementById("sections-live");
+    if (el){ el.textContent = ""; requestAnimationFrame(() => { el.textContent = msg; }); }
+  }
+  function renderSectionsList(){
+    const list = document.getElementById("sections-list");
+    if (!list || !TRIP.layout) return;
+    const hidden = new Set(TRIP.layout.hidden), n = TRIP.layout.order.length;
+    list.innerHTML = TRIP.layout.order.map((id, i) => {
+      const h = hidden.has(id), lab = sectionLabel(id);
+      return '<li class="sec-row' + (h ? ' is-hidden' : '') + '" data-id="' + id + '">'
+        + '<span class="sec-name">' + lab + '</span>'
+        + '<div class="sec-ctrls">'
+        + '<button type="button" class="sc sc-toggle" data-sact="toggle" data-id="' + id + '" aria-label="' + (h ? 'Show' : 'Hide') + ' ' + lab + ' section">' + (h ? 'Show' : 'Hide') + '</button>'
+        + '<button type="button" class="sc" data-sact="up" data-id="' + id + '"' + (i === 0 ? ' disabled' : '') + ' aria-label="Move ' + lab + ' up">↑</button>'
+        + '<button type="button" class="sc" data-sact="down" data-id="' + id + '"' + (i === n - 1 ? ' disabled' : '') + ' aria-label="Move ' + lab + ' down">↓</button>'
+        + '</div></li>';
+    }).join("");
+  }
+  const smodal = document.createElement("div");
+  smodal.id = "sections-modal"; smodal.className = "edit-modal sections-modal"; smodal.hidden = true;
+  smodal.innerHTML = '<div class="sections-card" role="dialog" aria-modal="true" aria-label="Manage sections">'
+    + '<div class="sections-head"><h3>Manage sections</h3><button type="button" id="sections-close" class="sections-x" aria-label="Close manage sections">&times;</button></div>'
+    + '<p>Reorder or hide whole sections. Hidden sections keep their content and export with your trip; show them again anytime. The header stays pinned.</p>'
+    + '<ul id="sections-list" class="sections-list"></ul>'
+    + '<p id="sections-live" class="sr-only" role="status" aria-live="polite"></p></div>';
+  document.body.appendChild(smodal);
+  const openSections = () => { renderSectionsList(); smodal.hidden = false; const c = document.getElementById("sections-close"); if (c) c.focus(); };
+  const closeSections = () => { smodal.hidden = true; const b = document.getElementById("edit-sections"); if (b) b.focus(); };
+  const secBtn = document.getElementById("edit-sections");
+  if (secBtn) secBtn.addEventListener("click", openSections);
+  document.getElementById("sections-close").addEventListener("click", closeSections);
+  smodal.addEventListener("click", (e) => { if (e.target === smodal) closeSections(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !smodal.hidden) closeSections(); });
+  document.getElementById("sections-list").addEventListener("click", (e) => {
+    const btn = e.target.closest && e.target.closest("[data-sact]");
+    if (!btn) return;
+    const id = btn.dataset.id, act = btn.dataset.sact, order = TRIP.layout.order, i = order.indexOf(id);
+    let msg = "";
+    if (act === "up" && i > 0){ const t = order[i - 1]; order[i - 1] = order[i]; order[i] = t; msg = sectionLabel(id) + " moved up, now " + i + " of " + order.length; }
+    else if (act === "down" && i < order.length - 1){ const t = order[i + 1]; order[i + 1] = order[i]; order[i] = t; msg = sectionLabel(id) + " moved down, now " + (i + 2) + " of " + order.length; }
+    else if (act === "toggle"){
+      const set = new Set(TRIP.layout.hidden);
+      if (set.has(id)){ set.delete(id); msg = sectionLabel(id) + " shown"; } else { set.add(id); msg = sectionLabel(id) + " hidden"; }
+      TRIP.layout.hidden = Array.from(set);
+    } else return;
+    saveLayout(); applyLayout(); renderSectionsList(); announce(msg);
+    const same = document.querySelector('#sections-list [data-sact="' + act + '"][data-id="' + id + '"]');
+    if (same && !same.disabled) same.focus();
+    else { const row = document.querySelector('#sections-list [data-id="' + id + '"] .sc'); if (row) row.focus(); }
+  });
+
   applyArrays();
   applyEdits();
+  loadLayout();
+  applyLayout();
 })();
 </script>
 </body>
