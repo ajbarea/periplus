@@ -105,15 +105,21 @@ test('structural edits persist via array snapshot and reset clears them', async 
 test('card CRUD generalizes beyond directories (intel) and persists', async ({ page }) => {
   page.on('dialog', (d) => d.accept());
   await page.goto('/');
+  await page.locator('#edit-toggle').click();
+  // Show intel section (hidden by default)
+  await page.locator('#edit-sections').click();
+  await page.locator('.sec-row[data-id="intel"] [data-sact="toggle"]').click();
+  await page.locator('#sections-close').click();
+
   const cards = page.locator('#intel-grid .intel-card');
   const start = await cards.count();
-  await page.locator('#edit-toggle').click();
   await expect(page.locator('.dir-add')).toHaveCount(10); // 5 card grids + 2 timelines + weeks + pretrip + packing
 
   await page.locator('#intel summary').click(); // intel is a closed accordion — open it to reach its edit controls
   await page.locator('.dir-add[data-arr="intel"]').click();
   await expect(cards).toHaveCount(start + 1);
   await page.reload();
+  // intel section will be visible again after reload due to the edit
   await expect(page.locator('#intel-grid .intel-card')).toHaveCount(start + 1);
 
   await page.locator('#edit-toggle').click();
@@ -170,6 +176,11 @@ test('adding a week item preserves the open state of other weeks', async ({ page
 test('checklist items can be added; a new checkbox toggles and persists (delegation)', async ({ page }) => {
   await page.goto('/');
   await page.locator('#edit-toggle').click();
+  // Show pretrip section (hidden by default)
+  await page.locator('#edit-sections').click();
+  await page.locator('.sec-row[data-id="pretrip"] [data-sact="toggle"]').click();
+  await page.locator('#sections-close').click();
+
   const sec0 = page.locator('#pretrip-list details.accordion').first();
   const items = sec0.locator('ul.checklist li');
   const start = await items.count();
@@ -191,6 +202,11 @@ test('timeline rows can be added, reordered, and deleted', async ({ page }) => {
   page.on('dialog', (d) => d.accept());
   await page.goto('/');
   await page.locator('#edit-toggle').click();
+  // Show arrival section (hidden by default)
+  await page.locator('#edit-sections').click();
+  await page.locator('.sec-row[data-id="arrival"] [data-sact="toggle"]').click();
+  await page.locator('#sections-close').click();
+
   const rows = page.locator('#arrival-timeline .row');
   const start = await rows.count();
 
@@ -244,6 +260,11 @@ test('whole checklist groups can be added and deleted, and persist', async ({ pa
   page.on('dialog', (d) => d.accept());
   await page.goto('/');
   await page.locator('#edit-toggle').click();
+  // Show packing section (hidden by default)
+  await page.locator('#edit-sections').click();
+  await page.locator('.sec-row[data-id="packing"] [data-sact="toggle"]').click();
+  await page.locator('#sections-close').click();
+
   const groups = page.locator('#packing-list details.accordion');
   const start = await groups.count();
 
