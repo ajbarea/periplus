@@ -41,14 +41,14 @@ test('moving a section up reorders <main> and the TOC together, and persists', a
 
 test('hiding a section removes it and its nav link, and persists', async ({ page }) => {
   await openManage(page);
-  await page.locator('.sec-row[data-id="venue"] [data-sact="toggle"]').click();
+  await page.locator('.sec-row[data-id="calendar"] [data-sact="toggle"]').click();
 
-  await expect(page.locator('section#venue')).toBeHidden();
-  await expect(page.locator('.toc-inner a[href="#venue"]')).toBeHidden();
-  await expect(page.locator('.sec-row[data-id="venue"] [data-sact="toggle"]')).toHaveText('Show');
+  await expect(page.locator('section#calendar')).toBeHidden();
+  await expect(page.locator('.toc-inner a[href="#calendar"]')).toBeHidden();
+  await expect(page.locator('.sec-row[data-id="calendar"] [data-sact="toggle"]')).toHaveText('Show');
 
   await page.reload();
-  await expect(page.locator('section#venue')).toBeHidden();
+  await expect(page.locator('section#calendar')).toBeHidden();
 });
 
 test('a hidden section can be shown again', async ({ page }) => {
@@ -62,12 +62,12 @@ test('a hidden section can be shown again', async ({ page }) => {
 
 test('the section layout round-trips in the JSON export', async ({ page }) => {
   await openManage(page);
-  await page.locator('.sec-row[data-id="intel"] [data-sact="toggle"]').click();   // hide intel
+  await page.locator('.sec-row[data-id="calendar"] [data-sact="toggle"]').click();   // hide calendar
   await page.locator('#sections-close').click();
   await page.locator('#edit-export').click();
 
   const trip = JSON.parse(await page.locator('#edit-json').inputValue());
   expect(Array.isArray(trip.layout.order)).toBe(true);
   expect(trip.layout.order).toHaveLength(12);
-  expect(trip.layout.hidden).toContain('intel');
+  expect(trip.layout.hidden).toContain('calendar');
 });

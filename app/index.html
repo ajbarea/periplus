@@ -2377,11 +2377,12 @@ if ('serviceWorker' in navigator) {
     id: a.getAttribute("href").slice(1), label: a.textContent.trim()
   }));
   const sectionLabel = (id) => (SECTION_DEFS.find(s => s.id === id) || {}).label || id;
+  const DEFAULT_HIDDEN = ["intel", "arrival", "day-one", "venue", "anchors", "pretrip", "packing", "contacts"];
   function normalizeLayout(lay){
     const known = SECTION_DEFS.map(s => s.id);
     const order = (lay && Array.isArray(lay.order) ? lay.order : []).filter(id => known.includes(id));
     for (const id of known) if (!order.includes(id)) order.push(id);   // append any new section
-    const hidden = (lay && Array.isArray(lay.hidden) ? lay.hidden : []).filter(id => known.includes(id));
+    const hidden = (lay && Array.isArray(lay.hidden) ? lay.hidden : DEFAULT_HIDDEN).filter(id => known.includes(id));
     return { order, hidden };
   }
   function loadLayout(){
