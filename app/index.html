@@ -1168,7 +1168,7 @@ window.TRIP = TRIP;
 TRIP.meta = { ...DEFAULT_META };
 
 TRIP.calendar = {
-  weekNotes: ["Settle in", "Umstead hike", "Durham day", "Beach overnight", "Asheville", "Hanging Rock", "Raven Rock", "Wrap-up"],
+  weekNotes: ["Settle in", "Umstead hike", "Wrightsville Beach", "Durham day", "Asheville", "Hanging Rock", "Raven Rock", "Wrap-up"],
   events: [
     { date:"2026-05-31", cls:"travel",   tag:"Drive",      title:"Drive: Rochester → Raleigh",     loc:"Raleigh, NC",                        note:"~652 mi single-day drive. Target arrival 4–5 PM." },
     { date:"2026-06-01", cls:"travel",   tag:"Day 1",      title:"SCADS Residency — Day 1",        loc:"LAS, Centennial Campus, Raleigh, NC", note:"Business casual. Arrive early." },
@@ -1176,10 +1176,10 @@ TRIP.calendar = {
     { date:"2026-06-07", cls:"rest",     tag:"Rest",       title:"Rest / catch-up",                    loc:"",                                   note:"" },
     { date:"2026-06-13", cls:"hike",     tag:"Umstead",    title:"Hike: Umstead State Park",           loc:"William B. Umstead State Park, NC",  note:"Company Mill Trail (5.8 mi). Start before 10 AM." },
     { date:"2026-06-14", cls:"rest",     tag:"Museum",     title:"Museum day",                         loc:"Raleigh, NC",                        note:"NCMA or Natural Sciences." },
-    { date:"2026-06-20", cls:"beach",    tag:"Beach",      title:"Beach overnight — Wrightsville", loc:"Wrightsville Beach, NC",             note:"Check in at Suburban Studios after beach (~7:15 PM). Sunset around 8:15 PM." },
-    { date:"2026-06-21", cls:"beach",    tag:"Beach",      title:"Beach morning — Wrightsville",    loc:"Wrightsville Beach, NC",             note:"Final beach session 9:30–11:30 AM. Check out by 12 PM." },
-    { date:"2026-06-27", cls:"beach",    tag:"Beach",      title:"Beach overnight — Wrightsville", loc:"Wrightsville Beach, NC",             note:"Download ParkMobile. Lifeguards 10–5." },
-    { date:"2026-06-28", cls:"beach",    tag:"Beach",      title:"Beach day — Wrightsville",       loc:"Wrightsville Beach, NC",             note:"" },
+    { date:"2026-06-20", cls:"beach",    tag:"Beach",      title:"Beach overnight — Wrightsville", loc:"Wrightsville Beach, NC",             note:"Beach 3:30–7 PM (sunset ~8:15; park via PivotGO!). Check in at Suburban Studios ~7:30 PM, dinner at Catch, then Wilmington brewery crawl: Screen Door → Wilmington Brewing → Wrightsville Beach Brewing → Airlie." },
+    { date:"2026-06-21", cls:"beach",    tag:"Beach",      title:"Beach morning — Wrightsville",    loc:"Wrightsville Beach, NC",             note:"Breakfast, then final beach session 9:30–11:30 AM. Check out by 12 PM, drive back to Raleigh (~2 hr)." },
+    { date:"2026-06-27", cls:"city",     tag:"Durham",     title:"Durham day-trip",                    loc:"Durham, NC",                         note:"Ideal Sandwich → Eno River State Park → Hog Heaven BBQ." },
+    { date:"2026-06-28", cls:"rest",     tag:"Rest",       title:"Rest / catch-up",                    loc:"",                                   note:"" },
     { date:"2026-07-03", cls:"mountain", tag:"Drive",      title:"Drive to Asheville",                 loc:"Asheville, NC",                      note:"" },
     { date:"2026-07-04", cls:"mountain", tag:"Asheville",  title:"Asheville — Blue Ridge / Pisgah", loc:"Asheville, NC",                    note:"Parkway MP 317–355 closed til ~end 2026; re-confirm Mt. Pisgah + plan backups." },
     { date:"2026-07-05", cls:"mountain", tag:"Drive back", title:"Drive back to Raleigh",              loc:"Raleigh, NC",                        note:"" },
@@ -1491,7 +1491,7 @@ TRIP.intel = [
   { type:"info", icon:"waves", label:"2026 hurricane season", value:"Below normal (NOAA)", note:"8–14 named storms forecast; El Niño wind shear suppressing development. Lower risk than 2024, but still real." },
 ];
 TRIP.anchors = [
-  { name:"Wrightsville Beach", tag:"beach", tagLabel:"Beach", dates:"Sat Jun 27 – Sun Jun 28", drive:"~2 hr (I-40 E)", note:"Closest real ocean beach. Overnight; book early — peak season." },
+  { name:"Wrightsville Beach", tag:"beach", tagLabel:"Beach", dates:"Sat Jun 20 – Sun Jun 21", drive:"~2 hr (I-40 E)", note:"Booked: Suburban Studios of Wilmington (245 Eastwood Rd). Beach Sat afternoon + Wilmington brewery crawl; beach Sun morning before the noon checkout." },
   { name:"Asheville long weekend", tag:"mountain", tagLabel:"Mountains", dates:"Fri Jul 3 – Sun Jul 5", drive:"~4 hr (I-40 W)", note:"July 4 falls Saturday — the holiday is observed Fri Jul 3, a built-in 3-day weekend. Blue Ridge Parkway + downtown food." },
 ];
 TRIP.contacts = [
@@ -1589,17 +1589,17 @@ TRIP.weeks = [
     `<b>Sat Jun 13</b> — Umstead State Park, Company Mill Trail (~5.8 mi)`,
     `<b>Sun Jun 14</b> — NC Museum of Natural Sciences + Daily Planet Cafe → easy hotel evening (Side Street closed Sun)`,
   ]},
-  { start:"2026-06-15", end:"2026-06-21", n:3, dates:"Jun 15 – Jun 21", title:"Durham day", tag:"city", tagLabel:"Day-trip", items:[
+  { start:"2026-06-15", end:"2026-06-21", n:3, dates:"Jun 15 – Jun 21", title:"Wrightsville Beach weekend", tag:"beach", tagLabel:"Beach", items:[
     `<b>Weekday lunch</b> — Eastcut Sandwich Bar`,
     `<b>Weekday evening</b> — Fratelli's Delicatessen sit-down`,
-    `<b>Sat Jun 20</b> — Durham day: Ideal Sandwich → Eno River State Park → Hog Heaven BBQ`,
-    `<b>Sun Jun 21</b> — Big Ed's Sunday breakfast (Pam's closed Sun) → recovery`,
+    `<b>Sat Jun 20 — Wrightsville Beach + Wilmington brewery crawl.</b> Drive Raleigh → beach (~2 hr). <b>Beach 3:30–7 PM</b> (sunset ~8:15; pack sandwiches — no alcohol on the sand; park via the PivotGO! app, $5/hr or $25/day). <b>~7:30 PM</b> check in at Suburban Studios (245 Eastwood Rd). <b>8 PM</b> dinner at Catch (waterfront seafood). <b>Brewery crawl</b> (walkable downtown — use Uber/Lyft to get there): 1) Screen Door Brewing → 2) Wilmington Brewing Co. → 3) Wrightsville Beach Brewing Co. → 4) Airlie Brewing.`,
+    `<b>Sun Jun 21</b> — Breakfast → <b>final beach session 9:30–11:30 AM</b> (or Carolina Beach boardwalk for a change of scene) → check out by <b>12 PM</b> → drive back to Raleigh (~2 hr).`,
   ]},
-  { start:"2026-06-22", end:"2026-06-28", n:4, dates:"Jun 22 – Jun 28", title:"Beach overnight", tag:"beach", tagLabel:"Beach", items:[
+  { start:"2026-06-22", end:"2026-06-28", n:4, dates:"Jun 22 – Jun 28", title:"Durham day", tag:"city", tagLabel:"Day-trip", items:[
     `<b>Weekday lunch</b> — Oakwood Deli`,
     `<b>Weekday evening</b> — NC Museum of Art sculpture park (golden hour, outdoor grounds stay open)`,
-    `<b>Sat Jun 27</b> — Drive to Wrightsville Beach (~2 hr). Beach day + overnight`,
-    `<b>Sun Jun 28</b> — Beach morning → Wilmington lunch → drive back`,
+    `<b>Sat Jun 27</b> — Durham day: Ideal Sandwich → Eno River State Park → Hog Heaven BBQ`,
+    `<b>Sun Jun 28</b> — Big Ed's Sunday breakfast (Pam's closed Sun) → recovery`,
   ]},
   { start:"2026-06-29", end:"2026-07-05", n:5, dates:"Jun 29 – Jul 5", title:"Asheville long weekend", tag:"mountain", tagLabel:"Mountains", items:[
     `<b>Weekday lunch</b> — Pam's Farmhouse plate-lunch (Tue–Sat)`,
@@ -1689,7 +1689,7 @@ TRIP.pretrip = [
         { id: "m2", label: "<strong>Call the hotel about an extended-stay parking rate</strong>" },
         { id: "m2b", label: "<strong>Ask your host about a sponsored campus parking permit</strong>" },
         { id: "m3", label: "Download offline Google Maps for the Rochester \u2192 Raleigh route" },
-        { id: "m4", label: "Reserve Wrightsville Beach lodging for Sat Jun 27 (book early \u2014 peak season)" },
+        { id: "m4", label: "Wrightsville Beach lodging booked \u2014 Suburban Studios of Wilmington, Sat Jun 20 (check-in 3 PM, check-out 12 PM)" },
         { id: "m5", label: "Reserve Asheville lodging for Fri Jul 3 \u2013 Sun Jul 5" },
         { id: "m5b", label: "Re-confirm Blue Ridge Parkway milepost status + Mt. Pisgah Trail with the Pisgah Ranger District the week of Jul 3" },
         { id: "m6", label: "Confirm whether LAS observes Fri Jul 3 federal holiday" },
