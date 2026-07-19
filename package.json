@@ -9,7 +9,7 @@
     "icons": "node scripts/gen-icons.mjs"
   },
   "devDependencies": {
-    "@playwright/test": "^1.60.0",
-    "sharp": "^0.34.5"
+    "@playwright/test": "^1.61.1",
+    "sharp": "^0.35.2"
   }
 }
