@@ -11,6 +11,15 @@ on:
       - "pyproject.toml"
       - "uv.lock"
       - ".github/workflows/docs.yml"
+  # Build on PRs as well, so a dependency bump that breaks the site fails on the
+  # PR rather than on the deploy after it merges. Only the publish steps below
+  # are push-only; the build is byte-identical to the one that deploys.
+  #
+  # Deliberately unfiltered, unlike the push trigger above. This job is a required
+  # check, and a required check that is skipped by a paths filter leaves every
+  # unrelated PR waiting on a status that will never arrive. The build is
+  # sub-second.
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -49,9 +58,11 @@ jobs:
         run: cp -r app site/app
 
       - name: Configure Pages
+        if: github.event_name != 'pull_request'
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
       - name: Upload Artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: site
