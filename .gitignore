@@ -16,3 +16,6 @@ site/
 # build caches
 .cache/
 C:*
+
+# per-session git worktrees
+.claude/worktrees/
