@@ -1,0 +1,418 @@
+/* Periplus landing: hero, sections, cards, steps, CTA. Colours come from variables.css. */
+
+body.hero-page .md-footer {
+  display: none;
+}
+
+body.hero-page .md-main__inner,
+body.hero-page .md-content__inner {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* ---------- Hero ---------- */
+
+.md-typeset .hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  min-height: min(76vh, 42rem);
+  padding: clamp(2rem, 5vw, 4rem) 0 clamp(1.5rem, 4vw, 3rem);
+}
+
+.md-typeset .hero h1 {
+  margin: 0 0 0.6rem;
+  font-size: clamp(2.8rem, 6vw, 4.4rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  color: var(--pp-ink);
+}
+
+.md-typeset .hero .headerlink {
+  display: none;
+}
+
+.md-typeset .hero-pitch {
+  margin: 0 0 0.6rem;
+  text-wrap: balance;
+  font-size: clamp(1.25rem, 2.3vw, 1.55rem);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--pp-ink);
+}
+
+.md-typeset .hero-subtitle {
+  max-width: 34ch;
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--pp-muted);
+}
+
+.md-typeset .hero-buttons > p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.8rem 0 1.4rem;
+}
+
+.md-typeset .md-button {
+  padding: 0.75rem 1.5rem;
+  border: 1.5px solid var(--pp-line);
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--pp-ink);
+  background: var(--pp-surface);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.md-typeset .md-button:hover,
+.md-typeset .md-button:focus-visible {
+  color: var(--pp-ink);
+  border-color: var(--pp-accent);
+  background: var(--pp-surface);
+  transform: translateY(-2px);
+}
+
+.md-typeset .md-button--primary,
+.md-typeset .md-button--primary:hover,
+.md-typeset .md-button--primary:focus-visible {
+  color: var(--pp-primary-ink);
+  border-color: var(--pp-primary-bg);
+  background: var(--pp-primary-bg);
+  font-weight: 700;
+}
+
+.md-typeset .md-button--primary:hover,
+.md-typeset .md-button--primary:focus-visible {
+  border-color: var(--pp-primary-bg-hover);
+  background: var(--pp-primary-bg-hover);
+  box-shadow: 0 8px 24px var(--pp-glow);
+}
+
+.md-typeset .hero-chips ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[dir] .md-typeset .hero-chips ul li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--pp-line);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--pp-muted);
+  background: var(--pp-surface);
+}
+
+.md-typeset .hero-chips .twemoji {
+  color: var(--pp-accent);
+}
+
+.hero-art {
+  aspect-ratio: 972 / 768;
+  background: var(--pp-art) center / cover no-repeat;
+  border-radius: 28px;
+  /* Feather all four edges so the art dissolves into the page in either scheme. */
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent, #000 22%, #000 82%, transparent),
+    linear-gradient(180deg, transparent, #000 18%, #000 80%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(90deg, transparent, #000 22%, #000 82%, transparent),
+    linear-gradient(180deg, transparent, #000 18%, #000 80%, transparent);
+  mask-composite: intersect;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-copy {
+    animation: pp-rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .hero-art {
+    animation: pp-fade 0.9s ease-out 0.1s both;
+  }
+
+  @keyframes pp-rise {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes pp-fade {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* ---------- Sections ---------- */
+
+.md-typeset .landing-section {
+  padding: clamp(2.5rem, 6vw, 4.25rem) 0;
+  border-top: 1px solid var(--pp-line);
+}
+
+.md-typeset .section-inner {
+  max-width: 64rem;
+}
+
+.md-typeset .section-eyebrow {
+  margin: 0 0 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pp-link);
+}
+
+.md-typeset .landing-section h2 {
+  margin: 0 0 1rem;
+  text-wrap: balance;
+  font-size: clamp(1.55rem, 3vw, 2.05rem);
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.md-typeset .landing-section h2 .headerlink,
+.md-typeset .landing-section h3 .headerlink {
+  display: none;
+}
+
+.md-typeset .section-lead {
+  max-width: 60ch;
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--pp-muted);
+}
+
+.md-typeset .section-link {
+  display: inline-block;
+  margin-top: 1.4rem;
+  font-weight: 600;
+}
+
+/* ---------- Feature cards ---------- */
+
+.md-typeset .feature-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.md-typeset .feature-card {
+  padding: 1.35rem 1.35rem 1.25rem;
+  border: 1px solid var(--pp-line);
+  border-radius: 16px;
+  background: var(--pp-surface);
+}
+
+.md-typeset .feature-card h3 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.md-typeset .feature-card h3 .twemoji {
+  display: inline-grid;
+  place-items: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 12px;
+  color: var(--pp-accent);
+  background: color-mix(in oklab, var(--pp-accent) 14%, transparent);
+}
+
+.md-typeset .feature-card h3 .twemoji svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.md-typeset .feature-card p {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--pp-muted);
+}
+
+/* ---------- Steps ---------- */
+
+.md-typeset .steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+  counter-reset: step;
+}
+
+.md-typeset .step {
+  position: relative;
+  padding: 1.35rem 1.35rem 1.25rem;
+  border: 1px solid var(--pp-line);
+  border-radius: 16px;
+  background: var(--pp-surface);
+}
+
+.md-typeset .step::before {
+  counter-increment: step;
+  content: counter(step);
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--pp-primary-ink);
+  background: var(--pp-primary-bg);
+}
+
+.md-typeset .step h3 {
+  margin: 0 0 0.45rem;
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
+.md-typeset .step p {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--pp-muted);
+}
+
+/* ---------- CTA ---------- */
+
+.md-typeset .cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem 2rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border: 1px solid var(--pp-line);
+  border-radius: 24px;
+  background:
+    radial-gradient(ellipse 60% 120% at 100% 0%, color-mix(in oklab, var(--pp-accent) 16%, transparent), transparent 70%),
+    var(--pp-surface);
+}
+
+.md-typeset .cta h2 {
+  margin: 0 0 0.4rem;
+}
+
+.md-typeset .cta p {
+  max-width: 52ch;
+  margin: 0;
+  color: var(--pp-muted);
+}
+
+.md-typeset .cta .md-button {
+  flex-shrink: 0;
+}
+
+/* ---------- Footer ---------- */
+
+.landing-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.5rem;
+  padding: 2rem 0 2.5rem;
+  border-top: 1px solid var(--pp-line);
+  font-size: 0.78rem;
+  color: var(--pp-muted);
+}
+
+.landing-footer a {
+  color: var(--pp-muted);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.landing-footer a:hover {
+  color: var(--pp-link);
+}
+
+/* ---------- Tablet and phone ---------- */
+
+@media (max-width: 60em) {
+  .md-typeset .feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 48em) {
+  .md-typeset .hero {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+  }
+
+  .hero-art {
+    order: -1;
+    width: calc(100% + 1.6rem);
+    margin: 0 -0.8rem;
+    aspect-ratio: 4 / 3;
+    border-radius: 0;
+    -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+    -webkit-mask-composite: source-over;
+    mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+    mask-composite: add;
+  }
+
+  .md-typeset .hero-buttons > p {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .md-typeset .hero-buttons .md-button {
+    text-align: center;
+  }
+
+  .md-typeset .steps {
+    grid-template-columns: 1fr;
+  }
+
+  .md-typeset .cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 36em) {
+  .md-typeset .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -9,7 +9,7 @@ copyright = "AJ Barea"
 extra_css = [
   "stylesheets/variables.css",
   "stylesheets/base.css",
-  "stylesheets/hero.css",
+  "stylesheets/landing.css",
 ]
 extra_javascript = ["javascripts/reveal.js"]
 
@@ -51,10 +51,23 @@ features = [
     "toc.follow",
 ]
 
+# Light and dark follow the reader's system setting; the toggle overrides it. Every colour
+# is a token in docs/stylesheets/variables.css.
 [[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
 scheme = "slate"
 primary = "custom"
 accent = "custom"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "custom"
+accent = "custom"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to dark mode"
 
 # ---------------------------------------------------------------------------
 # Plugins

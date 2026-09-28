@@ -1,21 +1,88 @@
-:root {
-  /* Periplus palette — matches the app + icon */
-  --periplus-navy: #0f172a;
-  --periplus-navy-2: #1e293b;
-  --periplus-sky: #38bdf8;
-  --periplus-sky-bright: #7dd3fc;
-  --periplus-ink: #f8fafc;
-  --periplus-amber: #f59e0b;
-  --periplus-muted: #94a3b8;
+/* Periplus palette: navy and sky, with the amber of the destination pin. Every colour the
+   site paints comes from these tokens, set once per scheme. */
 
-  --hero-image: url('../assets/hero.jpeg');
+[data-md-color-scheme="slate"] {
+  --pp-bg: #0f172a;
+  --pp-surface: #16213a;
+  --pp-surface-2: #1e293b;
+  --pp-line: rgba(148, 163, 184, 0.18);
+  --pp-ink: #f1f5f9;
+  --pp-muted: #a3b1c6;
+  --pp-link: #7dd3fc;
+  --pp-accent: #38bdf8;
+  --pp-pin: #fbbf24;
+  --pp-primary-bg: #38bdf8;
+  --pp-primary-bg-hover: #7dd3fc;
+  --pp-primary-ink: #0b1324;
+  --pp-glow: rgba(56, 189, 248, 0.28);
+  --pp-art: url("../assets/hero-map.jpg");
+
+  --md-default-bg-color: var(--pp-bg);
+  --md-default-fg-color: var(--pp-ink);
+  --md-default-fg-color--light: var(--pp-muted);
+  --md-default-fg-color--lighter: rgba(163, 177, 198, 0.55);
+  --md-default-fg-color--lightest: rgba(163, 177, 198, 0.16);
+  --md-primary-fg-color: var(--pp-bg);
+  --md-primary-fg-color--light: var(--pp-surface-2);
+  --md-primary-fg-color--dark: var(--pp-bg);
+  --md-primary-bg-color: var(--pp-ink);
+  --md-primary-bg-color--light: var(--pp-muted);
+  --md-accent-fg-color: var(--pp-link);
+  --md-typeset-a-color: var(--pp-link);
+  --md-code-bg-color: var(--pp-surface);
+  --md-footer-bg-color: var(--pp-surface);
+  --md-footer-bg-color--dark: var(--pp-bg);
+  --md-footer-fg-color: var(--pp-ink);
+  --md-footer-fg-color--light: var(--pp-muted);
+  --md-footer-fg-color--lighter: var(--pp-muted);
 }
 
-/* Drive Material's slate scheme from the Periplus palette */
-[data-md-color-scheme="slate"] {
-  --md-primary-fg-color: var(--periplus-navy);
-  --md-primary-fg-color--light: var(--periplus-navy-2);
-  --md-accent-fg-color: var(--periplus-sky);
-  --md-default-bg-color: var(--periplus-navy);
-  --md-typeset-a-color: var(--periplus-sky);
+[data-md-color-scheme="default"] {
+  --pp-bg: #f4f7fb;
+  --pp-surface: #ffffff;
+  --pp-surface-2: #e8eef6;
+  --pp-line: rgba(15, 23, 42, 0.1);
+  --pp-ink: #0f172a;
+  --pp-muted: #475569;
+  --pp-link: #0369a1;
+  --pp-accent: #0284c7;
+  --pp-pin: #b45309;
+  --pp-primary-bg: #0369a1;
+  --pp-primary-bg-hover: #075985;
+  --pp-primary-ink: #ffffff;
+  --pp-glow: rgba(3, 105, 161, 0.22);
+  --pp-art: url("../assets/hero-map-light.jpg");
+
+  --md-default-bg-color: var(--pp-bg);
+  --md-default-fg-color: var(--pp-ink);
+  --md-default-fg-color--light: var(--pp-muted);
+  --md-default-fg-color--lighter: rgba(71, 85, 105, 0.6);
+  --md-default-fg-color--lightest: rgba(71, 85, 105, 0.14);
+  --md-primary-fg-color: var(--pp-surface);
+  --md-primary-fg-color--light: var(--pp-surface-2);
+  --md-primary-fg-color--dark: var(--pp-surface);
+  --md-primary-bg-color: var(--pp-ink);
+  --md-primary-bg-color--light: var(--pp-muted);
+  --md-accent-fg-color: var(--pp-accent);
+  --md-typeset-a-color: var(--pp-link);
+  --md-code-bg-color: var(--pp-surface-2);
+  --md-footer-bg-color: var(--pp-surface-2);
+  --md-footer-bg-color--dark: var(--pp-surface-2);
+  --md-footer-fg-color: var(--pp-ink);
+  --md-footer-fg-color--light: var(--pp-muted);
+  --md-footer-fg-color--lighter: var(--pp-muted);
+
+  /* Code highlighting, each token at least 4.5:1 on the light code background. */
+  --md-code-hl-keyword-color: #6d28d9;
+  --md-code-hl-string-color: #166534;
+  --md-code-hl-number-color: #9a3412;
+  --md-code-hl-constant-color: #9d174d;
+  --md-code-hl-special-color: #9d174d;
+  --md-code-hl-function-color: #1d4ed8;
+  --md-code-hl-name-color: var(--pp-ink);
+  --md-code-hl-variable-color: var(--pp-ink);
+  --md-code-hl-operator-color: #334155;
+  --md-code-hl-punctuation-color: #334155;
+  --md-code-hl-comment-color: #475569;
+  --md-code-hl-generic-color: #475569;
 }
