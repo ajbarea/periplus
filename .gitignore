@@ -19,3 +19,4 @@ C:*
 
 # per-session git worktrees
 .claude/worktrees/
+COMMITS.md
