@@ -7,7 +7,7 @@ Periplus is an offline-first, installable travel-itinerary planner: one static, 
 `make help` lists every target. Before a PR:
 
 - `make setup` installs Node and Python dependencies
-- `make test` runs the Playwright e2e suite (the `e2e` check); the first run needs `npx playwright install chromium`
+- `make test` runs the Playwright e2e suite (the `e2e` check); the first run needs `npx playwright install chromium`; it reuses any server already on port 5173 (`reuseExistingServer: true`), so check the port is free first, or it tests another checkout
 - `make build` builds the docs site into `site/`
 
 `make serve` and `uv run zensical serve` start servers: run them only when the task says to.
