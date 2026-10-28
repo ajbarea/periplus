@@ -83,7 +83,6 @@ search = {}
 [project.extra]
 generator = false
 og_image = "assets/og.jpg"
-brand_mark = "assets/brand.png"
 
 [[project.extra.social]]
 icon = "fontawesome/brands/github"
